@@ -1,4 +1,4 @@
-import mariadb from "mariadb";
+import mariadb, { PoolConnection } from "mariadb";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -10,4 +10,8 @@ const pool = mariadb.createPool({
     database: process.env.DB_NAME
 });
 
-export default pool;
+function getPoolConnection(): Promise<PoolConnection> {
+    return pool.getConnection();
+}
+
+export default getPoolConnection;
