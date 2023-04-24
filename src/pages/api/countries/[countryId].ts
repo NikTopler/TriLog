@@ -1,60 +1,60 @@
-import AthleteQueries from "@/server/shared/lib/database/queries/AthleteQueries";
+import CountryQueries from "@/server/shared/lib/database/queries/CountryQueries";
 import deleteQuery from "@/server/shared/lib/database/queries/helpers/deleteQuery";
 import updateQuery from "@/server/shared/lib/database/queries/helpers/updateQuery";
-import validatePlaceIds from "@/server/shared/lib/database/queries/helpers/validatePlaceIds";
 import validateRequestBody from "@/server/shared/lib/database/queries/helpers/validateRequestBody";
 import { SPECIFIC_API_ROUTE_SUPPORTED_METHODS } from "@/shared/helpers/constants";
 import isNumber from "@/shared/helpers/isNumber";
-import { athleteProps } from "@/shared/models";
+import validateObjects from "@/shared/helpers/validateObjects";
+import { countryProps } from "@/shared/models";
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<any>) {
 
-    const athleteId = Number(req.query.athleteId);
+    const countryId = Number(req.query.countryId);
 
-    if (!isNumber(athleteId)) {
-        return res.status(400).json({ message: 'Invalid athlete ID' });
+    if (!isNumber(countryId)) {
+        return res.status(400).json({ message: "Invalid country ID" });
     }
 
     if (!SPECIFIC_API_ROUTE_SUPPORTED_METHODS.includes(req.method as string)) {
         return res.status(200).json({ message: "Method not supported!" });
     }
 
-    const athlete = await AthleteQueries.getById(athleteId);
-    if (athlete === null) {
-        return res.status(404).json({ message: 'Athlete not found' });
+    const country = await CountryQueries.getById(countryId);
+    if (country === null) {
+        return res.status(404).json({ message: "Country not found" });
     }
 
     switch (req.method) {
         case 'GET':
             return res.status(200).json({
                 success: true,
-                message: "Athlete found",
+                message: "Country found",
                 data: {
-                    athlete
+                    country
                 }
             });
         case 'PUT':
-            return UPDATE(req, res, athleteId);
+            return UPDATE(req, res, countryId);
         case 'DELETE':
-            return DELETE(req, res, athleteId);
+            return DELETE(req, res, countryId);
         default:
             return res.status(501).json({ message: 'Method has not yet been implemented!' });
     }
 
 }
 
-async function UPDATE(req: NextApiRequest, res: NextApiResponse<any>, athleteId: number) {
+async function UPDATE(req: NextApiRequest, res: NextApiResponse<any>, countryId: number) {
 
     try {
 
-        const props = [...athleteProps];
+        const props = [...countryProps];
         props.shift();
 
-        const [athlete, errors] = validateRequestBody(
+        const [country, errors] = validateRequestBody(
             props,
             [],
-            ['age', 'cityID', 'stateID', 'countryID'],
+            [],
             req.body
         );
 
@@ -62,53 +62,50 @@ async function UPDATE(req: NextApiRequest, res: NextApiResponse<any>, athleteId:
             throw new Error(errors.join(','));
         }
 
-        if (Object.keys(athlete).length === 0) {
+        if (Object.keys(country).length === 0) {
             throw new Error("No valid fields to update");
         }
 
-        if (!AthleteQueries.isTypeAthlete(athlete, false)) {
-            throw new Error("Invalid athlete!");
+        if (!CountryQueries.isTypeCountry(country, false)) {
+            throw new Error("Invalid country!");
         }
 
-        await validatePlaceIds({
-            cityID: athlete.cityID,
-            stateID: athlete.stateID,
-            countryID: athlete.countryID
-        }, []);
-
-        await updateQuery('Athletes', athlete, { ID: athleteId });
+        await updateQuery('Countries', country, { ID: countryId });
 
         res.status(200).json({
             success: true,
-            message: "Athlete updated",
+            message: "Country updated",
             data: {
-                ID: athleteId
+                ID: countryId
             }
         });
 
     } catch (error: any) {
-
         res.status(500).json({
             success: false,
             message: "Internal server error",
             error: error.message
         });
-
     }
+
+    res.status(500).json({
+        success: false,
+        message: "Internal server error",
+    });
 
 }
 
-async function DELETE(req: NextApiRequest, res: NextApiResponse<any>, athleteId: number) {
+async function DELETE(req: NextApiRequest, res: NextApiResponse<any>, countryId: number) {
 
     try {
 
-        await deleteQuery('Athletes', { ID: athleteId });
+        await deleteQuery('Countries', { ID: countryId });
 
         res.status(200).json({
             success: true,
-            message: "Athlete deleted",
+            message: "Country deleted",
             data: {
-                ID: athleteId
+                ID: countryId
             }
         });
 
@@ -119,7 +116,6 @@ async function DELETE(req: NextApiRequest, res: NextApiResponse<any>, athleteId:
             message: "Internal server error",
             error: error.message
         });
-
     }
 
 }

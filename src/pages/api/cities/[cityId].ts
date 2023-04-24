@@ -1,90 +1,91 @@
-import AthleteQueries from "@/server/shared/lib/database/queries/AthleteQueries";
+import CityQueries from "@/server/shared/lib/database/queries/CityQueries";
+import { validatePlaceIds } from "@/server/shared/lib/database/queries/helpers";
 import deleteQuery from "@/server/shared/lib/database/queries/helpers/deleteQuery";
 import updateQuery from "@/server/shared/lib/database/queries/helpers/updateQuery";
-import validatePlaceIds from "@/server/shared/lib/database/queries/helpers/validatePlaceIds";
 import validateRequestBody from "@/server/shared/lib/database/queries/helpers/validateRequestBody";
 import { SPECIFIC_API_ROUTE_SUPPORTED_METHODS } from "@/shared/helpers/constants";
 import isNumber from "@/shared/helpers/isNumber";
-import { athleteProps } from "@/shared/models";
+import { cityProps } from "@/shared/models";
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<any>) {
 
-    const athleteId = Number(req.query.athleteId);
+    const cityId = Number(req.query.cityId);
 
-    if (!isNumber(athleteId)) {
-        return res.status(400).json({ message: 'Invalid athlete ID' });
+    if (!isNumber(cityId)) {
+        return res.status(400).json({ message: 'Invalid city ID' });
     }
 
     if (!SPECIFIC_API_ROUTE_SUPPORTED_METHODS.includes(req.method as string)) {
         return res.status(200).json({ message: "Method not supported!" });
     }
 
-    const athlete = await AthleteQueries.getById(athleteId);
-    if (athlete === null) {
-        return res.status(404).json({ message: 'Athlete not found' });
+    const city = await CityQueries.getById(cityId);
+    if (city === null) {
+        return res.status(404).json({ message: 'City not found' });
     }
 
     switch (req.method) {
         case 'GET':
             return res.status(200).json({
                 success: true,
-                message: "Athlete found",
+                message: "City found",
                 data: {
-                    athlete
+                    city
                 }
             });
         case 'PUT':
-            return UPDATE(req, res, athleteId);
+            return UPDATE(req, res, cityId);
         case 'DELETE':
-            return DELETE(req, res, athleteId);
+            return DELETE(req, res, cityId);
         default:
             return res.status(501).json({ message: 'Method has not yet been implemented!' });
     }
 
 }
 
-async function UPDATE(req: NextApiRequest, res: NextApiResponse<any>, athleteId: number) {
+async function UPDATE(req: NextApiRequest, res: NextApiResponse<any>, cityId: number) {
 
     try {
 
-        const props = [...athleteProps];
+        const props = [...cityProps];
         props.shift();
 
-        const [athlete, errors] = validateRequestBody(
+        const [city, errors] = validateRequestBody(
             props,
             [],
-            ['age', 'cityID', 'stateID', 'countryID'],
+            ['stateID', 'countryID'],
             req.body
-        );
+        )
 
         if (errors.length > 0) {
-            throw new Error(errors.join(','));
+            throw new Error(errors.join(', '));
         }
 
-        if (Object.keys(athlete).length === 0) {
+        if (Object.keys(city).length === 0) {
             throw new Error("No valid fields to update");
         }
 
-        if (!AthleteQueries.isTypeAthlete(athlete, false)) {
-            throw new Error("Invalid athlete!");
+        if (!CityQueries.isTypeCity(city, false)) {
+            throw new Error("Invalid city!");
         }
 
         await validatePlaceIds({
-            cityID: athlete.cityID,
-            stateID: athlete.stateID,
-            countryID: athlete.countryID
+            cityID: null,
+            stateID: city.stateID,
+            countryID: city.countryID
         }, []);
 
-        await updateQuery('Athletes', athlete, { ID: athleteId });
+        await updateQuery('Cities', city, { ID: cityId });
 
         res.status(200).json({
             success: true,
-            message: "Athlete updated",
+            message: "City updated",
             data: {
-                ID: athleteId
+                ID: cityId
             }
         });
+
 
     } catch (error: any) {
 
@@ -98,17 +99,17 @@ async function UPDATE(req: NextApiRequest, res: NextApiResponse<any>, athleteId:
 
 }
 
-async function DELETE(req: NextApiRequest, res: NextApiResponse<any>, athleteId: number) {
+async function DELETE(req: NextApiRequest, res: NextApiResponse<any>, cityId: number) {
 
     try {
 
-        await deleteQuery('Athletes', { ID: athleteId });
+        await deleteQuery('Cities', { ID: cityId });
 
         res.status(200).json({
             success: true,
-            message: "Athlete deleted",
+            message: "City deleted",
             data: {
-                ID: athleteId
+                ID: cityId
             }
         });
 

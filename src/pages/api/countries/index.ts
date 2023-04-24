@@ -1,13 +1,11 @@
-import { NextApiRequest, NextApiResponse } from "next";
 import sanitizeApiQueryParams from "@/server/modules/helpers/sanitizeApiQueryParams";
-import AthleteQueries from "@/server/shared/lib/database/queries/AthleteQueries";
+import CountryQueries from "@/server/shared/lib/database/queries/CountryQueries";
+import selectQuery from "@/server/shared/lib/database/queries/helpers/selectQuery";
+import validateRequestBody from "@/server/shared/lib/database/queries/helpers/validateRequestBody";
 import sanitizeObject from "@/shared/helpers/sanitizeObject";
 import ConfigOptions from "@/shared/interfaces/ConfigOptions";
-import { Athlete, athleteProps } from "@/shared/models";
-import selectQuery from "@/server/shared/lib/database/queries/helpers/selectQuery";
-import validatePlaceIds from "@/server/shared/lib/database/queries/helpers/validatePlaceIds";
-import sanitizeRequestNumber from "@/server/modules/helpers/sanitizeRequestNumber";
-import validateRequestBody from "@/server/shared/lib/database/queries/helpers/validateRequestBody";
+import { countryProps } from "@/shared/models";
+import { NextApiRequest, NextApiResponse } from "next";
 
 export default function handler(req: NextApiRequest, res: NextApiResponse<any>) {
 
@@ -26,7 +24,7 @@ async function GET(req: NextApiRequest, res: NextApiResponse<any>) {
 
     try {
 
-        const filterQueryOptions = sanitizeApiQueryParams(req, athleteProps);
+        const filterQueryOptions = sanitizeApiQueryParams(req, countryProps);
 
         const searchOptions = sanitizeObject(req.query as ConfigOptions, [
             {
@@ -34,43 +32,43 @@ async function GET(req: NextApiRequest, res: NextApiResponse<any>) {
                 type: 'number'
             },
             {
-                name: 'firstName',
+                name: 'name',
                 type: 'string'
             },
             {
-                name: 'lastName',
+                name: 'fullName',
                 type: 'string'
             },
             {
-                name: 'age',
-                type: 'number'
+                name: 'alpha2',
+                type: 'string'
             },
             {
-                name: 'countryID',
-                type: 'number'
+                name: 'alpha3',
+                type: 'string'
             },
             {
-                name: 'stateID',
-                type: 'number'
+                name: 'continentCode',
+                type: 'string'
             },
             {
-                name: 'cityID',
-                type: 'number'
+                name: 'number',
+                type: 'string'
             }
         ]);
 
         res.status(200).json({
             success: true,
-            message: "List of athletes",
+            message: "List of countries",
             data: {
                 count: await selectQuery(
-                    'Athletes',
+                    'Countries',
                     true,
                     searchOptions,
                     filterQueryOptions
                 ),
-                athletes: await selectQuery(
-                    'Athletes',
+                countries: await selectQuery(
+                    'Countries',
                     false,
                     searchOptions,
                     filterQueryOptions
@@ -94,13 +92,13 @@ async function POST(req: NextApiRequest, res: NextApiResponse<any>) {
 
     try {
 
-        const props = [...athleteProps];
+        const props = [...countryProps];
         props.shift();
 
-        const [athlete, errors] = validateRequestBody(
+        const [country, errors] = validateRequestBody(
             props,
             props,
-            ['age', 'cityID', 'stateID', 'countryID'],
+            [],
             req.body
         );
 
@@ -108,26 +106,19 @@ async function POST(req: NextApiRequest, res: NextApiResponse<any>) {
             throw new Error(errors.join(', '));
         }
 
-        if (!AthleteQueries.isTypeAthlete(athlete, true)) {
+        if (!CountryQueries.isTypeCountry(country, true)) {
             throw new Error("Invalid athlete!");
         }
 
-        await validatePlaceIds({
-            cityID: athlete.cityID,
-            stateID: athlete.stateID,
-            countryID: athlete.countryID
-        }, []);
-
         res.status(200).json({
             success: true,
-            message: "Athlete created!",
+            message: "Country created successfully!",
             data: {
-                ID: await AthleteQueries.create(athlete)
+                ID: await CountryQueries.create(country)
             }
         });
 
     } catch (error: any) {
-
         res.status(500).json({
             success: false,
             error: {
@@ -135,7 +126,6 @@ async function POST(req: NextApiRequest, res: NextApiResponse<any>) {
                 code: null
             }
         });
-
     }
 
 }

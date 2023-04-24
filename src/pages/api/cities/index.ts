@@ -1,13 +1,12 @@
-import { NextApiRequest, NextApiResponse } from "next";
 import sanitizeApiQueryParams from "@/server/modules/helpers/sanitizeApiQueryParams";
-import AthleteQueries from "@/server/shared/lib/database/queries/AthleteQueries";
-import sanitizeObject from "@/shared/helpers/sanitizeObject";
-import ConfigOptions from "@/shared/interfaces/ConfigOptions";
-import { Athlete, athleteProps } from "@/shared/models";
+import CityQueries from "@/server/shared/lib/database/queries/CityQueries";
 import selectQuery from "@/server/shared/lib/database/queries/helpers/selectQuery";
 import validatePlaceIds from "@/server/shared/lib/database/queries/helpers/validatePlaceIds";
-import sanitizeRequestNumber from "@/server/modules/helpers/sanitizeRequestNumber";
 import validateRequestBody from "@/server/shared/lib/database/queries/helpers/validateRequestBody";
+import sanitizeObject from "@/shared/helpers/sanitizeObject";
+import ConfigOptions from "@/shared/interfaces/ConfigOptions";
+import { cityProps } from "@/shared/models";
+import { NextApiRequest, NextApiResponse } from "next";
 
 export default function handler(req: NextApiRequest, res: NextApiResponse<any>) {
 
@@ -26,7 +25,7 @@ async function GET(req: NextApiRequest, res: NextApiResponse<any>) {
 
     try {
 
-        const filterQueryOptions = sanitizeApiQueryParams(req, athleteProps);
+        const filterQueryOptions = sanitizeApiQueryParams(req, cityProps);
 
         const searchOptions = sanitizeObject(req.query as ConfigOptions, [
             {
@@ -34,16 +33,8 @@ async function GET(req: NextApiRequest, res: NextApiResponse<any>) {
                 type: 'number'
             },
             {
-                name: 'firstName',
+                name: 'name',
                 type: 'string'
-            },
-            {
-                name: 'lastName',
-                type: 'string'
-            },
-            {
-                name: 'age',
-                type: 'number'
             },
             {
                 name: 'countryID',
@@ -52,25 +43,21 @@ async function GET(req: NextApiRequest, res: NextApiResponse<any>) {
             {
                 name: 'stateID',
                 type: 'number'
-            },
-            {
-                name: 'cityID',
-                type: 'number'
             }
         ]);
 
         res.status(200).json({
             success: true,
-            message: "List of athletes",
+            message: "List of cities",
             data: {
                 count: await selectQuery(
-                    'Athletes',
+                    'Cities',
                     true,
                     searchOptions,
                     filterQueryOptions
                 ),
-                athletes: await selectQuery(
-                    'Athletes',
+                cities: await selectQuery(
+                    'Cities',
                     false,
                     searchOptions,
                     filterQueryOptions
@@ -94,40 +81,40 @@ async function POST(req: NextApiRequest, res: NextApiResponse<any>) {
 
     try {
 
-        const props = [...athleteProps];
+        const props = [...cityProps];
         props.shift();
 
-        const [athlete, errors] = validateRequestBody(
+        const [city, errors] = validateRequestBody(
             props,
             props,
-            ['age', 'cityID', 'stateID', 'countryID'],
+            ['stateID', 'countryID'],
             req.body
-        );
+        )
 
         if (errors.length > 0) {
             throw new Error(errors.join(', '));
         }
 
-        if (!AthleteQueries.isTypeAthlete(athlete, true)) {
-            throw new Error("Invalid athlete!");
+        if (!CityQueries.isTypeCity(city, true)) {
+            throw new Error("Invalid city data");
         }
 
         await validatePlaceIds({
-            cityID: athlete.cityID,
-            stateID: athlete.stateID,
-            countryID: athlete.countryID
+            cityID: null,
+            stateID: city.stateID,
+            countryID: city.countryID
         }, []);
 
         res.status(200).json({
             success: true,
-            message: "Athlete created!",
+            message: "City created",
             data: {
-                ID: await AthleteQueries.create(athlete)
+                ID: await CityQueries.create(city)
             }
         });
 
-    } catch (error: any) {
 
+    } catch (error: any) {
         res.status(500).json({
             success: false,
             error: {
@@ -135,7 +122,6 @@ async function POST(req: NextApiRequest, res: NextApiResponse<any>) {
                 code: null
             }
         });
-
     }
 
 }
