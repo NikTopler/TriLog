@@ -1,6 +1,6 @@
 import GoogleIcon from "@mui/icons-material/Google";
 import FacebookIcon from "@mui/icons-material/Facebook";
-// import GithubIcon from "@mui/icons-material/Github";
+import GithubIcon from "@mui/icons-material/Github";
 import styles from "./SocialLoginButton.module.scss"
 
 interface SocialLoginButtonProps {
@@ -10,8 +10,7 @@ interface SocialLoginButtonProps {
 const providerIcons = {
     Google: <GoogleIcon className={styles['social_login__button-image_container__icon']} />,
     Facebook: <FacebookIcon className={styles['social_login__button-image_container__icon']} />,
-    Github: <FacebookIcon className={styles['social_login__button-image_container__icon']} />
-    // <GithubIcon className={styles['social_login__button-image_container__icon']} />
+    Github: <GithubIcon className={styles['social_login__button-image_container__icon']} />
 }
 
 function SocialLoginButton({ provider }: SocialLoginButtonProps) {
