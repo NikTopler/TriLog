@@ -15,7 +15,7 @@ export default function Login() {
     router.push('/auth/email-verification');
   }
 
-  const handleEmaulInputChange = (value: string) => {
+  const handleEmailInputChange = (value: string) => {
     setEmail(value);
   }
 
@@ -34,7 +34,7 @@ export default function Login() {
               placeholder="Enter your Email"
               type="email"
               isFocused={true}
-              handleInputChange={handleEmaulInputChange}
+              handleInputChange={handleEmailInputChange}
               style={{
                 borderRadius: '4px',
                 height: '50px',
