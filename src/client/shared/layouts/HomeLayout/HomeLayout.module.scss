@@ -1,6 +1,4 @@
-$navbar-height: 58px;
-$sidebar-full-width: 240px;
-$sidebar-collapse-width: 36px;
+@import "../../../../styles/variables.scss";
 
 .home {
     width: 100%;
@@ -9,7 +7,7 @@ $sidebar-collapse-width: 36px;
 
     &__navbar {
         position: relative;
-        z-index: 99;
+        z-index: 1000;
 
         &-main {
             height: $navbar-height;
@@ -20,104 +18,150 @@ $sidebar-collapse-width: 36px;
     }
 
     &__sidebar {
-        position: absolute;
+        position: fixed;
         top: $navbar-height;
-        right: 0;
         left: 0;
         bottom: 0;
-        height: calc(100% - $navbar-height);
-        transition: all ease-in-out .3s;
-        background-color: rgb(255, 255, 255);
-        width: calc($sidebar-full-width - 1rem);
+        background-color: white;
+        transition: width 0.3s ease-in-out;
+        z-index: 100;
 
-        &-slider {
-            position: absolute;
+        &-container {
             height: 100%;
-            width: auto;
-            right: 0;
-            top: 0;
-            bottom: 0;
-            padding-right: 1rem;
-            background-color: rgb(255, 255, 255);
+            overflow: auto;
 
-            &-content {
-                position: relative;
-                height: inherit;
-                width: 1rem;
-                background-color: rgb(251, 251, 251);
-                border-right: 4px solid rgb(235, 235, 235);
+            &__main {
+                height: 100%;
+                overflow: hidden;
+                width: $sidebar-full-width;
+            }
+
+            &__slider {
+                position: absolute;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                width: $sidebar-collapsed-width;
+                background-color: white;
+                transition: width 0.3s ease-in-out;
+                z-index: 1000;
                 cursor: pointer;
 
-                &-icon {
-                    height: 24px;
-                    width: 24px;
+                &-container {
+                    position: relative;
+                    z-index: inherit;
+                    height: 100%;
+                    overflow: auto;
+                    margin-right: 50%;
+                    border-right: 3px solid rgb(235, 235, 235);
+                }
+
+                &-button-container {
+                    transition: visibility 0.1s ease-in-out;
                     position: absolute;
-                    top: 40px;
-                    left: calc(50% - 2px);
-                    right: calc(50% - 2px);
-                    margin: auto;
-                    border: 1px solid rgb(235, 235, 235);
-                    background-color: white;
-                    box-shadow: 0 2px 8px rgba(0, 0, 0, .1);
-                    border-radius: 50%;
-                    cursor: pointer;
-                    transition: background-color ease-in .15s;
+                    z-index: 9999;
+                    top: 50px;
+                    left: calc(50% - 1px);
+                    transform: translate(-50%, -50%);
+                    padding: 0.75rem;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
 
-                    &:hover {
-                        background-color: #1a73e8;
+                    &--button {
+                        width: 24px;
+                        height: 24px;
                         border-radius: 50%;
+                        background-color: rgb(255, 255, 255);
+                        box-shadow: 0 0 5px rgba(0, 0, 0, 0.25);
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        cursor: pointer;
 
-                        svg {
-                            color: white
+                        & > div {
+                            width: 100%;
+                            height: 100%;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
                         }
 
+                        svg {
+                            stroke: black;
+                            stroke-width: 1;
+                            font-size: medium;
+                            fill: rgb(100, 100, 100);
+                        }
+
+                        &:hover {
+                            background-color: rgb(247, 247, 247);
+                        }
                     }
+
                 }
+
             }
 
         }
 
-        &-main {
-            height: calc(100% - 1.5rem);
-            width: calc(100% - 3rem);
-            padding: 1.5rem 1.5rem 0 1.5rem;
-            background-color: rgb(251, 251, 251);
-        }
-
     }
 
-    &__main {
+    &__content {
         position: relative;
-        height: calc(100% - $navbar-height);
-        overflow: hidden;
-        transition: all ease-in-out .3s;
-        background-color: white;
+        z-index: 1;
+        height: 100%;
+        overflow: auto;
+        transition: padding-left 0.3s ease-in-out;
     }
 
 }
 
-.home[data-sidebar-open="true"] {
+.home[data-sidebar-open=true] {
 
     .home__sidebar {
         width: $sidebar-full-width;
     }
 
-    .home__main {
-        width: calc(100% - $sidebar-full-width);
-        margin-left: $sidebar-full-width;
+    .home__content {
+        padding-left: $sidebar-full-width;
+    }
+
+    .home__sidebar-container__slider {
+
+        .home__sidebar-container__slider-button-container {
+            // visibility: hidden;
+        }
+
+    }
+
+    .home__sidebar:hover {
+
+        .home__sidebar-container__slider-button-container {
+            visibility: visible;
+        }
+
     }
 
 }
 
-.home[data-sidebar-open="false"] {
+.home[data-sidebar-open=false] {
 
     .home__sidebar {
-        width: $sidebar-collapse-width;
+        width: $sidebar-collapsed-width;
     }
 
-    .home__main {
-        width: calc(100% - $sidebar-collapse-width);
-        margin-left: $sidebar-collapse-width;
+
+    .home__content {
+        padding-left: $sidebar-collapsed-width;
+    }
+
+}
+
+.home[data-sidebar-open=false][data-hovering=true] {
+
+    .home__sidebar {
+        width: $sidebar-full-width;
     }
 
 }
