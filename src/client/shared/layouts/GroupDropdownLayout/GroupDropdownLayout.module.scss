@@ -1,0 +1,46 @@
+.group-dropdown-layout {
+    position: relative;
+    height: auto;
+    overflow: auto;
+    width: 100%;
+
+    &--container {
+        position: relative;
+        display: flex;
+        font-size: smaller;
+        height: auto;
+        overflow: hidden;
+        width: 100%;
+        padding: 0.5rem;
+        cursor: pointer;
+
+        h1 {
+            margin: 0;
+            padding: 0;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #000;
+            margin: auto 0;
+        }
+
+        svg {
+            background-color: transparent;
+            border: none;
+            font-size: large;
+            stroke: black;
+            stroke-width: 1.25;
+            cursor: pointer;
+        }
+
+    }
+
+    &--content {
+        position: relative;
+        height: auto;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        cursor: pointer;
+    }
+
+}

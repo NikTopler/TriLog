@@ -2,9 +2,9 @@ import { useState } from "react";
 import { useRouter } from "next/router";
 import TextBox from "@/client/shared/components/inputs/TextBox";
 import SocialLoginButton from "@/client/shared/components/buttons/SocialLoginButton/SocialLoginButton";
-import FormButton from "@/client/shared/components/buttons/FormButton/FormButton";
 import isEmail from "@/shared/helpers/isEmail";
 import styles from "./login.module.scss";
+import RegularButton from "@/client/shared/components/buttons/RegularButton/RegularButton";
 
 export default function Login() {
 
@@ -15,7 +15,7 @@ export default function Login() {
     router.push('/auth/email-verification');
   }
 
-  const handleEmaulInputChange = (value: string) => {
+  const handleEmailInputChange = (value: string) => {
     setEmail(value);
   }
 
@@ -34,7 +34,7 @@ export default function Login() {
               placeholder="Enter your Email"
               type="email"
               isFocused={true}
-              handleInputChange={handleEmaulInputChange}
+              handleInputChange={handleEmailInputChange}
               style={{
                 borderRadius: '4px',
                 height: '50px',
@@ -42,10 +42,22 @@ export default function Login() {
                 margin: '0 0 5px 0'
               }}
             />
-            <FormButton
+            <RegularButton
               text="Continue"
               disabled={!isEmail(email)}
               handleOnClick={onContinueClick}
+              style={{
+                borderRadius: '4px',
+                height: '50px',
+                width: '100%',
+                margin: '0 0 5px 0',
+                fontWeight: 600,
+                color: '#ffffff',
+                backgroundColor: '#4DABF7',
+                ":hover": {
+                  backgroundColor: '#4DABF7'
+                }
+              }}
             />
           </div>
           <div className="p-top-1 p-bottom-1">
@@ -66,7 +78,7 @@ export default function Login() {
 
         <footer>
           <a href="#" className="link">
-            <span>Can't log in?</span>
+            <span>Can&apos;t log in?</span>
           </a>
         </footer>
       </div>

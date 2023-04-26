@@ -10,7 +10,7 @@
     .social_login__button {
         height: 50px;
         width: inherit;
-        border-radius: 4px;
+        border-radius: $button-border-radius;
         transition: ease-in .1s;
         display: flex;
         align-items: center;
