@@ -1,6 +1,6 @@
 import GoogleIcon from "@mui/icons-material/Google";
 import FacebookIcon from "@mui/icons-material/Facebook";
-import GithubIcon from "@mui/icons-material/Github";
+import GithubIcon from "@mui/icons-material/GitHub";
 import styles from "./SocialLoginButton.module.scss"
 
 interface SocialLoginButtonProps {
