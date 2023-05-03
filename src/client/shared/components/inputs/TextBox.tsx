@@ -1,29 +1,22 @@
 import { useEffect, useRef } from 'react';
 import Input from '@mui/joy/Input';
 import SpecialKey from '../../types/SpecialKey';
+import { SxProps } from '@mui/material';
 
 interface TextBoxProps {
     value: string;
     placeholder?: string;
     type?: 'text' | 'password' | 'email' | 'number' | 'tel' | 'url';
     isFocused?: boolean;
-    style?: {
-        width?: string;
-        height?: string;
-        backgroundColor?: string;
-        color?: string;
-        fontSize?: string;
-        border?: string;
-        borderRadius?: string;
-        padding?: string;
-        margin?: string;
-    };
+    style?: SxProps;
+    startDecorator?: JSX.Element;
+    endDecorator?: JSX.Element;
     handleInputChange?: (value: string) => void;
     handleSpecialKeyClick?: (type: SpecialKey) => void;
     handleInputFocusChange?: (isFocused: boolean) => void;
 }
 
-function TextBox({ value, placeholder, type, isFocused, style, handleInputChange, handleSpecialKeyClick, handleInputFocusChange }: TextBoxProps) {
+function TextBox({ value, placeholder, type, isFocused, style, startDecorator, endDecorator, handleInputChange, handleSpecialKeyClick, handleInputFocusChange }: TextBoxProps) {
 
     const inputRef = useRef<HTMLInputElement | null>(null);
 
@@ -70,6 +63,8 @@ function TextBox({ value, placeholder, type, isFocused, style, handleInputChange
                     handleSpecialKeyClick(key as SpecialKey);
                 }
             }}
+            startDecorator={startDecorator ?? null}
+            endDecorator={endDecorator ?? null}
         />
     );
 

@@ -1,10 +1,4 @@
-.link {
-  color: #61bbff;
-  text-decoration: none;
-  font-size: 1rem;
-  font-weight: 500;
-  transition: color 0.15s ease;
-}
+/* MARGIN */
 
 .m-1 {
   margin: 1rem;
@@ -42,6 +36,9 @@
   margin-top: 3rem;
 }
 
+
+/* PADDING */
+
 .p-1 {
   padding: 1rem;
 }
@@ -68,4 +65,51 @@
 
 .p-bottom-1 {
   padding-bottom: 1rem;
+}
+
+
+/* DISPLAY */
+
+.d-flex {
+  display: flex;
+}
+
+
+/* ALIGN */
+
+.a-items-center {
+  align-items: center;
+}
+
+.j-content-center {
+  justify-content: center;
+}
+
+
+/* FONT */
+
+.font-size-0-9 {
+  font-size: 0.9rem;
+}
+
+
+/* POSITION */
+
+.position-absolute {
+  position: absolute;
+}
+
+.position-relative {
+  position: relative;
+}
+
+
+/* OTHER */
+
+.link {
+  color: #61bbff;
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: color 0.15s ease;
 }
