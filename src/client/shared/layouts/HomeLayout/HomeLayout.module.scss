@@ -1,0 +1,123 @@
+$navbar-height: 58px;
+$sidebar-full-width: 240px;
+$sidebar-collapse-width: 36px;
+
+.home {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+
+    &__navbar {
+        position: relative;
+        z-index: 99;
+
+        &-main {
+            height: $navbar-height;
+            background-color: white;
+            border-bottom: 2px solid rgb(235, 235, 235);
+        }
+
+    }
+
+    &__sidebar {
+        position: absolute;
+        top: $navbar-height;
+        right: 0;
+        left: 0;
+        bottom: 0;
+        height: calc(100% - $navbar-height);
+        transition: all ease-in-out .3s;
+        background-color: rgb(255, 255, 255);
+        width: calc($sidebar-full-width - 1rem);
+
+        &-slider {
+            position: absolute;
+            height: 100%;
+            width: auto;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            padding-right: 1rem;
+            background-color: rgb(255, 255, 255);
+
+            &-content {
+                position: relative;
+                height: inherit;
+                width: 1rem;
+                background-color: rgb(251, 251, 251);
+                border-right: 4px solid rgb(235, 235, 235);
+                cursor: pointer;
+
+                &-icon {
+                    height: 24px;
+                    width: 24px;
+                    position: absolute;
+                    top: 40px;
+                    left: calc(50% - 2px);
+                    right: calc(50% - 2px);
+                    margin: auto;
+                    border: 1px solid rgb(235, 235, 235);
+                    background-color: white;
+                    box-shadow: 0 2px 8px rgba(0, 0, 0, .1);
+                    border-radius: 50%;
+                    cursor: pointer;
+                    transition: background-color ease-in .15s;
+
+                    &:hover {
+                        background-color: #1a73e8;
+                        border-radius: 50%;
+
+                        svg {
+                            color: white
+                        }
+
+                    }
+                }
+            }
+
+        }
+
+        &-main {
+            height: calc(100% - 1.5rem);
+            width: calc(100% - 3rem);
+            padding: 1.5rem 1.5rem 0 1.5rem;
+            background-color: rgb(251, 251, 251);
+        }
+
+    }
+
+    &__main {
+        position: relative;
+        height: calc(100% - $navbar-height);
+        overflow: hidden;
+        transition: all ease-in-out .3s;
+        background-color: white;
+    }
+
+}
+
+.home[data-sidebar-open="true"] {
+
+    .home__sidebar {
+        width: $sidebar-full-width;
+    }
+
+    .home__main {
+        width: calc(100% - $sidebar-full-width);
+        margin-left: $sidebar-full-width;
+    }
+
+}
+
+.home[data-sidebar-open="false"] {
+
+    .home__sidebar {
+        width: $sidebar-collapse-width;
+    }
+
+    .home__main {
+        width: calc(100% - $sidebar-collapse-width);
+        margin-left: $sidebar-collapse-width;
+    }
+
+}
