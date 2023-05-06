@@ -1,5 +1,7 @@
+import createQueryString from "./createQueryString";
 import isEmail from "./isEmail";
 
 export {
-    isEmail
+    isEmail,
+    createQueryString
 }
