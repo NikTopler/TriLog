@@ -1,4 +1,3 @@
-import React from "react";
 import { LayoutProps } from "@/interfaces";
 import "./auth.scss";
 

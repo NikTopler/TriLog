@@ -2,6 +2,7 @@ import "@/styles/reset.scss";
 import "@/styles/variables.scss";
 import "@/styles/globals.scss";
 import { LayoutProps } from "@/interfaces";
+import ConditionalLayout from "./ConditionalLayout";
 
 export const metadata = {
   title: 'TriLog',
@@ -9,10 +10,16 @@ export const metadata = {
   keywords: 'next.js, react'
 }
 
-export default function RootLayout({ children }: LayoutProps) {
+function RootLayout({ children }: LayoutProps) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <ConditionalLayout>
+          {children}
+        </ConditionalLayout>
+      </body>
     </html>
   )
 }
+
+export default RootLayout;
