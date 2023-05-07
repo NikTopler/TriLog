@@ -1,5 +1,5 @@
-import * as dbConnection from"@/utils/dbConnection";
+import DatabaseConn from "@/utils/DatabaseConn";
 
 export {
-    dbConnection
+    DatabaseConn
 }
