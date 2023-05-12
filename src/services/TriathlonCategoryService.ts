@@ -1,9 +1,9 @@
 import { GenericRecord } from "@/interfaces";
 import { PaginationOptions } from "@/schemas";
 import { DatabaseConn } from "@/utils";
-import { Athletes } from "@prisma/client";
+import { TriathlonCategories } from "@prisma/client";
 
-class AthleteService extends DatabaseConn {
+class TriathlonCategoryService extends DatabaseConn {
 
     static getAll(
         where: GenericRecord,
@@ -13,14 +13,14 @@ class AthleteService extends DatabaseConn {
 
         if (count) {
             return this.handle(
-                this.client.athletes.count({
+                this.client.triathlonCategories.count({
                     where
                 })
             );
         }
 
         return this.handle(
-            this.client.athletes.findMany({
+            this.client.triathlonCategories.findMany({
                 where,
                 orderBy: {
                     [orderBy]: order
@@ -35,24 +35,21 @@ class AthleteService extends DatabaseConn {
     static getById(ID: number) {
 
         return this.handle(
-            this.client.athletes.findUnique({
+            this.client.triathlonCategories.findUnique({
                 where: { ID }
             })
         );
 
     }
 
-    static create({ firstName, lastName, age, countryID, stateID, cityID }: Athletes) {
+    static create({ name, acronym, gender }: TriathlonCategories) {
 
         return this.handle(
-            this.client.athletes.create({
+            this.client.triathlonCategories.create({
                 data: {
-                    firstName,
-                    lastName,
-                    age,
-                    countryID,
-                    stateID,
-                    cityID
+                    name,
+                    acronym,
+                    gender
                 }
             })
         );
@@ -62,7 +59,7 @@ class AthleteService extends DatabaseConn {
     static update(ID: number, values: GenericRecord) {
 
         return this.handle(
-            this.client.athletes.update({
+            this.client.triathlonCategories.update({
                 where: { ID },
                 data: values
             })
@@ -73,7 +70,7 @@ class AthleteService extends DatabaseConn {
     static delete(ID: number) {
 
         return this.handle(
-            this.client.athletes.delete({
+            this.client.triathlonCategories.delete({
                 where: { ID }
             })
         );
@@ -82,4 +79,4 @@ class AthleteService extends DatabaseConn {
 
 }
 
-export default AthleteService;
+export default TriathlonCategoryService;

@@ -1,6 +1,6 @@
 import z from "zod";
-import { PositiveIntSchema } from "@/schemas/PositiveIntSchema";
-import { NullableIntSchema, NullableStringSchema } from "./FilterOptionSchema";
+import { PositiveIntSchema } from "@/schemas/shared/PositiveIntSchema";
+import { NullableIntSchema, NullableStringSchema } from "../shared/FilterOptionSchema";
 
 const AthleteFilterOptionSchema = z.object({
     ID: PositiveIntSchema.optional(),
