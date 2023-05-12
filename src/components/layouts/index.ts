@@ -1,5 +1,5 @@
-import GroupDropdownLayout from "./GroupDropdownLayout/GroupDropdownLayout";
+import CollapsibleLayout from "./CollapsibleLayout/CollapsibleLayout";
 
 export {
-    GroupDropdownLayout
+    CollapsibleLayout
 }

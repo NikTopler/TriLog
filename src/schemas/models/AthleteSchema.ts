@@ -1,11 +1,11 @@
 import z from "zod";
 import { PositiveIntSchema } from "@/schemas/shared/PositiveIntSchema";
-import { NullableIntSchema, NullableStringSchema } from "../shared/FilterOptionSchema";
+import { NullableIntSchema, NullableNonEmptyStringSchema } from "../shared/FilterOptionSchema";
 
 const AthleteFilterOptionSchema = z.object({
     ID: PositiveIntSchema.optional(),
-    firstName: NullableStringSchema.optional(),
-    lastName: NullableStringSchema.optional(),
+    firstName: NullableNonEmptyStringSchema.optional(),
+    lastName: NullableNonEmptyStringSchema.optional(),
     age: NullableIntSchema.optional(),
     countryID: NullableIntSchema.optional(),
     stateID: NullableIntSchema.optional(),
@@ -17,8 +17,8 @@ function createAthleteSchema(required: boolean) {
 
     return z.object({
         ID: PositiveIntSchema.optional(),
-        firstName: required ? z.string().nullable() : NullableStringSchema.optional(),
-        lastName: required ? z.string().nullable() : NullableStringSchema.optional(),
+        firstName: required ? NullableNonEmptyStringSchema : NullableNonEmptyStringSchema.optional(),
+        lastName: required ? NullableNonEmptyStringSchema : NullableNonEmptyStringSchema.optional(),
         age: required ? PositiveIntSchema.nullable() : NullableIntSchema.optional(),
         countryID: required ? PositiveIntSchema.nullable() : NullableIntSchema.optional(),
         stateID: required ? PositiveIntSchema.nullable() : NullableIntSchema.optional(),

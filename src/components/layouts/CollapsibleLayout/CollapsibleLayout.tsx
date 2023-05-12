@@ -2,26 +2,26 @@ import { useState } from "react";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import { LayoutProps } from "@/interfaces";
-import styles from "./group-dropdown-layout.module.scss";
+import styles from "./collapsible-layout.module.scss";
 
-interface GroupDropdownLayoutProp extends LayoutProps {
+interface CollapsibleLayoutProp extends LayoutProps {
     title: string;
 }
 
-function GroupDropdownLayout({ children, title }: GroupDropdownLayoutProp) {
+function CollapsibleLayout({ children, title }: CollapsibleLayoutProp) {
 
     const [isOpen, setIsOpen] = useState(true);
 
     return (
-        <section className={styles['group-dropdown-layout']}>
-            <header className={styles['group-dropdown-layout--container']} onClick={() => setIsOpen(!isOpen)}>
+        <section className={styles['collapsible-layout']}>
+            <header className={styles['collapsible-layout--container']} onClick={() => setIsOpen(!isOpen)}>
                 {isOpen
                     ? <KeyboardArrowDownIcon />
                     : <KeyboardArrowRightIcon />
                 }
                 <h1>{title}</h1>
             </header>
-            <div className={styles['group-dropdown-layout--content']}>
+            <div className={styles['collapsible-layout--content']}>
                 {isOpen && children}
             </div>
         </section>
@@ -29,4 +29,4 @@ function GroupDropdownLayout({ children, title }: GroupDropdownLayoutProp) {
 
 }
 
-export default GroupDropdownLayout;
+export default CollapsibleLayout;

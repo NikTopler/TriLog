@@ -1,9 +1,14 @@
-import { useState } from "react";
+'use client';
+
+import { useEffect, useRef, useState } from "react";
 import { Tooltip } from "@mui/joy";
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import { LayoutProps } from "@/interfaces";
 import { Navbar, Sidebar } from "@/components/navigation";
+import { fetchData } from "@/helpers";
+import { TriathlonCategories } from "@prisma/client";
+import { TriathlonCategoriesRef } from "@/components/navigation/Navbar/Navbar";
 import styles from "./home-layout.module.scss";
 
 interface SidebarState {
@@ -12,7 +17,43 @@ interface SidebarState {
     hovering: boolean;
 }
 
+// TODO: Implement better interface
+export interface StateObject<T> {
+    data: T;
+    loading: boolean;
+    errors: any;
+}
+
 function HomeLayout({ children }: LayoutProps) {
+
+    const navbarRef = useRef<TriathlonCategoriesRef>(null);
+
+    useEffect(() => {
+
+        fetchData<TriathlonCategories[]>('/api/triathlons/categories', {})
+            .then((res) => {
+
+                if (res === undefined) {
+                    throw new Error('Error fetching data');
+                }
+
+                navbarRef.current?.setCategories({
+                    data: res,
+                    loading: false,
+                    errors: null
+                });
+
+            })
+            .catch((err) => {
+                console.log(err);
+                navbarRef.current?.setCategories({
+                    data: [],
+                    loading: false,
+                    errors: 'Error fetching data'
+                });
+            });
+
+    }, []);
 
     const [sidebar, setSidebar] = useState<SidebarState>({
         open: true,
@@ -55,7 +96,7 @@ function HomeLayout({ children }: LayoutProps) {
 
             <nav className={styles['home__navbar']}>
                 <div className={styles['home__navbar-main']}>
-                    <Navbar />
+                    <Navbar ref={navbarRef} />
                 </div>
             </nav>
 
