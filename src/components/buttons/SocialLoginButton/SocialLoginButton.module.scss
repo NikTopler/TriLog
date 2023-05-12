@@ -23,7 +23,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background-color: white;
+            background-color: $background-color;
             margin-left: 3px;
             border-radius: 2px;
             height: 42px;
@@ -39,7 +39,7 @@
             span {
                 font-size: 1rem;
                 font-weight: 600;
-                color: #ffffff;
+                color: #fff;
             }
 
         }
@@ -85,7 +85,7 @@
             .social_login__button-image_container__icon {
                 width: 35px;
                 height: 35px;
-                color: #ffffff;
+                color: #fff;
             }
         }
     }
@@ -95,7 +95,7 @@
 .social_login__button-container[data-provider="Github"] {
 
     .social_login__button {
-        background-color: #24292E;
+        background-color: $color-secondary-90;
 
         .social_login__button-image_container__icon {
             width: 30px;

@@ -1,3 +1,5 @@
+@import "../../../styles/variables.scss";
+
 .navbar__container {
     height: inherit;
     width: inherit;
@@ -50,7 +52,7 @@
             width: 90%;
             border-top-right-radius: 3px;
             border-top-left-radius: 3px;
-            background-color: #1a73e8;
+            background-color: $color-primary-90;
         }
 
     }
@@ -95,15 +97,14 @@
 
                 svg {
                     font-size: x-large;
-                    ;
                 }
 
                 &:hover {
-                    background-color: #f5f5f5;
+                    background-color: $color-secondary-10;
                 }
 
                 &:active {
-                    background-color: #e6e6e6;
+                    background-color:  $color-secondary-20;
                 }
 
                 &[data-icon] {

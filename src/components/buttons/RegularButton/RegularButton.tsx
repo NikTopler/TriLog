@@ -10,13 +10,15 @@ interface RegularButtonProps {
     size?: 'sm' | 'md' | 'lg';
     variant?: 'plain' | 'outlined' | 'soft' | 'solid';
     loading?: boolean;
+    className?: string;
     handleOnClick?: () => void;
 }
 
-function RegularButton({ text, style, startDecorator, endDecorator, disabled, size, variant, loading, handleOnClick }: RegularButtonProps) {
+function RegularButton({ text, style, startDecorator, endDecorator, disabled, size, variant, loading, className, handleOnClick }: RegularButtonProps) {
 
     return (
         <Button
+            className={className || ""}
             sx={style}
             startDecorator={startDecorator || null}
             endDecorator={endDecorator || null}

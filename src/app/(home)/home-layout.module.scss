@@ -11,8 +11,8 @@
 
         &-main {
             height: $navbar-height;
-            background-color: white;
-            border-bottom: 2px solid rgb(235, 235, 235);
+            background-color: $background-color;
+            border-bottom: 2px solid $color-secondary-20;
         }
 
     }
@@ -22,7 +22,7 @@
         top: $navbar-height;
         left: 0;
         bottom: 0;
-        background-color: white;
+        background-color: $background-color;
         transition: width 0.3s ease-in-out;
         z-index: 100;
 
@@ -42,7 +42,7 @@
                 right: 0;
                 bottom: 0;
                 width: $sidebar-collapsed-width;
-                background-color: white;
+                background-color: $background-color;
                 transition: width 0.3s ease-in-out;
                 z-index: 1000;
                 cursor: pointer;
@@ -53,7 +53,7 @@
                     height: 100%;
                     overflow: auto;
                     margin-right: 50%;
-                    border-right: 3px solid rgb(235, 235, 235);
+                    border-right: 3px solid $color-secondary-20;
                 }
 
                 &-button-container {
@@ -72,7 +72,7 @@
                         width: 24px;
                         height: 24px;
                         border-radius: 50%;
-                        background-color: rgb(255, 255, 255);
+                        background-color: $background-color;
                         box-shadow: 0 0 5px rgba(0, 0, 0, 0.25);
                         display: flex;
                         align-items: center;
@@ -88,14 +88,14 @@
                         }
 
                         svg {
-                            stroke: black;
+                            stroke: $color-secondary-90;
                             stroke-width: 1;
                             font-size: medium;
-                            fill: rgb(100, 100, 100);
+                            fill: $color-secondary-80;
                         }
 
                         &:hover {
-                            background-color: rgb(247, 247, 247);
+                            background-color: $color-secondary-0;
                         }
                     }
 

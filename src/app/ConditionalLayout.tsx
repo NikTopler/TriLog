@@ -5,7 +5,13 @@ import { usePathname } from "next/navigation";
 import HomeLayout from "./(home)/HomeLayout";
 
 const HOME_PATHS = [
-    '/'
+    '/',
+    '/athletes',
+    '/countries',
+    '/states',
+    '/cities',
+    '/triathlons',
+    '/triathlons/leaderboards'
 ];
 
 function ConditionalLayout({ children }: LayoutProps) {

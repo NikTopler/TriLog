@@ -20,6 +20,7 @@ function Navbar() {
     // TODO: Implement theme change
     // TODO: Remove this temporary state
     const [theme, setTheme] = useState<'light' | 'dark'>('light');
+    const [user, setUser] = useState<any>(null);
 
     const handleInputChange = (value: string) => {
         setSearch(value);
@@ -29,18 +30,27 @@ function Navbar() {
         router.push('/');
     }
 
-    const buttonStyle = {
-        color: '#000',
-        fontSize: '1rem',
-        padding: '0.6rem',
-        fontWeight: 500,
-        borderRadius: '4px',
-        ":hover": {
-            backgroundColor: '#f5f5f5'
-        },
-        ":active": {
-            backgroundColor: '#e6e6e6'
+    const AccountView = () => {
+
+        if (user) {
+            return (
+                <Tooltip title="Profile">
+                    <div className={styles['navbar__container__menu-container__image-container']} data-image>
+                        <img src="https://via.placeholder.com/150" alt="profile" />
+                    </div>
+                </Tooltip>
+            );
         }
+
+        return (
+            <RegularButton
+                text="Login"
+                variant="solid"
+                className="btn tertiary solid"
+                handleOnClick={() => router.push('/auth/login')}
+            />
+        );
+
     }
 
     return (
@@ -54,7 +64,7 @@ function Navbar() {
                         text="Categories"
                         variant="plain"
                         endDecorator={<KeyboardArrowDownIcon sx={{ fontSize: 'medium' }} />}
-                        style={buttonStyle}
+                        className="btn secondary plain"
                     />
                     <div className={styles['navbar__container__content-container-container__item-selector']} />
                 </div>
@@ -63,7 +73,7 @@ function Navbar() {
                         text="Types"
                         variant="plain"
                         endDecorator={<KeyboardArrowDownIcon sx={{ fontSize: 'medium' }} />}
-                        style={buttonStyle}
+                        className="btn secondary plain"
                     />
                     <div className={styles['navbar__container__content-container-container__item-selector']} />
                 </div>
@@ -99,11 +109,7 @@ function Navbar() {
                     </Tooltip>
                 </div>
                 <div className={styles['navbar__container__menu-container']}>
-                    <Tooltip title="Profile">
-                        <div className={styles['navbar__container__menu-container__image-container']} data-image>
-                            <img src="https://via.placeholder.com/150" alt="profile" />
-                        </div>
-                    </Tooltip>
+                    {AccountView()}
                 </div>
             </div>
         </div>
