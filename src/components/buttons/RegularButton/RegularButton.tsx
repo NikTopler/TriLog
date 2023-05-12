@@ -2,6 +2,7 @@ import { Button } from "@mui/joy";
 import { SxProps } from "@mui/material";
 
 interface RegularButtonProps {
+    id?: string;
     text?: string;
     style?: SxProps;
     startDecorator?: JSX.Element;
@@ -14,10 +15,13 @@ interface RegularButtonProps {
     handleOnClick?: () => void;
 }
 
-function RegularButton({ text, style, startDecorator, endDecorator, disabled, size, variant, loading, className, handleOnClick }: RegularButtonProps) {
+
+// TODO: Remove mui and implement own button
+function RegularButton({ id, text, style, startDecorator, endDecorator, disabled, size, variant, loading, className, handleOnClick }: RegularButtonProps) {
 
     return (
         <Button
+            id={id || ""}
             className={className || ""}
             sx={style}
             startDecorator={startDecorator || null}

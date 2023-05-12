@@ -1,5 +1,5 @@
 import { usePathname, useRouter } from "next/navigation";
-import GroupDropdownLayout from "../../layouts/GroupDropdownLayout/GroupDropdownLayout";
+import CollapsibleLayout from "../../layouts/CollapsibleLayout/CollapsibleLayout";
 import WorkspacesIcon from '@mui/icons-material/Workspaces';
 import PublicTwoToneIcon from '@mui/icons-material/PublicTwoTone';
 import BalconyTwoToneIcon from '@mui/icons-material/BalconyTwoTone';
@@ -13,10 +13,6 @@ function Sidebar() {
     const router = useRouter();
     const pathname = usePathname();
 
-    const isActive = (path: string) => {
-        return pathname === path;
-    }
-
     const open = (path: string) => {
         return () => {
             router.push(path);
@@ -26,42 +22,42 @@ function Sidebar() {
     return (
         <div className={styles['sidebar']}>
 
-            <GroupDropdownLayout title="EVENTS">
-                <div className={styles['sidebar--group-item']} data-active={isActive('/triathlons')} onClick={open('/triathlons')}>
+            <CollapsibleLayout title="EVENTS">
+                <div className={styles['sidebar--group-item']} data-active={pathname === '/triathlons'} onClick={open('/triathlons')}>
                     <div className={styles['sidebar--item-icon']}>
                         <WorkspacesIcon />
                     </div>
                     <span className={styles['sidebar--item-text']}>Triathlons</span>
                 </div>
-            </GroupDropdownLayout>
-            <GroupDropdownLayout title="LOCATIONS">
-                <div className={styles['sidebar--group-item']} data-active={isActive('/countries')} onClick={open('/countries')}>
+            </CollapsibleLayout>
+            <CollapsibleLayout title="LOCATIONS">
+                <div className={styles['sidebar--group-item']} data-active={pathname === '/countries'} onClick={open('/countries')}>
                     <div className={styles['sidebar--item-icon']}>
                         <PublicTwoToneIcon />
                     </div>
                     <span className={styles['sidebar--item-text']}>Countries</span>
                 </div>
-                <div className={styles['sidebar--group-item']} data-active={isActive('/states')} onClick={open('/states')}>
+                <div className={styles['sidebar--group-item']} data-active={pathname === '/states'} onClick={open('/states')}>
                     <div className={styles['sidebar--item-icon']}>
                         <BalconyTwoToneIcon />
                     </div>
                     <span className={styles['sidebar--item-text']}>States</span>
                 </div>
-                <div className={styles['sidebar--group-item']} data-active={isActive('/cities')} onClick={open('/cities')}>
+                <div className={styles['sidebar--group-item']} data-active={pathname === '/cities'} onClick={open('/cities')}>
                     <div className={styles['sidebar--item-icon']}>
                         <ApartmentTwoToneIcon />
                     </div>
                     <span className={styles['sidebar--item-text']}>Cities</span>
                 </div>
-            </GroupDropdownLayout>
+            </CollapsibleLayout>
             <hr />
-            <div className={styles['sidebar--item']} data-active={isActive('/triathlons/leaderboards')} onClick={open('/triathlons/leaderboards')}>
+            <div className={styles['sidebar--item']} data-active={pathname === '/triathlons/leaderboards'} onClick={open('/triathlons/leaderboards')}>
                 <div className={styles['sidebar--item-icon']}>
                     <LeaderboardRoundedIcon />
                 </div>
                 <span className={styles['sidebar--item-text']}>Leaderboards</span>
             </div>
-            <div className={styles['sidebar--item']} data-active={isActive('/athletes')} onClick={open('/athletes')}>
+            <div className={styles['sidebar--item']} data-active={pathname === '/athletes'} onClick={open('/athletes')}>
                 <div className={styles['sidebar--item-icon']}>
                     <GroupsRoundedIcon />
                 </div>

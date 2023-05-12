@@ -1,18 +1,41 @@
 'use client';
 
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { forwardRef, useImperativeHandle, useState } from "react";
 import { Tooltip } from "@mui/joy";
 import LightModeIcon from '@mui/icons-material/LightMode';
 import NightlightRoundIcon from '@mui/icons-material/NightlightRound';
 import SearchIcon from '@mui/icons-material/Search';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { CustomTextBox, RegularButton } from "@/components/inputs";
+import DropdownLayout, { TabsConfig } from "@/components/layouts/DropdownLayout/DropdownLayout";
+import { TriathlonCategories } from "@prisma/client";
 import styles from "./navbar.module.scss";
+import { StateObject } from "@/app/(home)/HomeLayout";
 
-function Navbar() {
+const triathlonCategoriesStyle = {
+    width: '300px',
+    height: 'auto',
+    top: 'calc(100% - 10px)',
+    left: '0'
+}
+
+export interface TriathlonCategoriesRef {
+    setCategories: (category: any) => void;
+}
+
+interface NavbarProps {
+    triathlonCategories: {
+        data: TriathlonCategories[];
+        loading: boolean;
+        errors: any;
+    };
+}
+
+const Navbar = forwardRef(({ }, ref) => {
 
     const router = useRouter();
+    const pathname = usePathname();
 
     const [search, setSearch] = useState<string>('');
     const [searchFocused, setSearchFocused] = useState<boolean>(false);
@@ -22,12 +45,40 @@ function Navbar() {
     const [theme, setTheme] = useState<'light' | 'dark'>('light');
     const [user, setUser] = useState<any>(null);
 
+    const [categories, setCategories] = useState<StateObject<TabsConfig>>({
+        data: { tabs: {} },
+        loading: true,
+        errors: null
+    });
+
+    useImperativeHandle(ref, () => ({
+        setCategories: ({ data, loading, errors }: StateObject<TriathlonCategories[]>) => {
+            setCategories({
+                data: parseTriathlonCategories(data),
+                loading,
+                errors
+            });
+        }
+    }));
+
     const handleInputChange = (value: string) => {
         setSearch(value);
     }
 
-    const onHomeClick = () => {
-        router.push('/');
+    const handleCategoriesTabChange = (tab: string) => {
+
+        const tempObj = { ...categories.data };
+
+        Object.keys(tempObj.tabs).forEach((key: string) => {
+            tempObj.tabs[key].active = false;
+        });
+
+        tempObj.tabs[tab].active = true;
+
+        setCategories(prev => ({
+            ...prev,
+            data: tempObj
+        }));
     }
 
     const AccountView = () => {
@@ -36,6 +87,7 @@ function Navbar() {
             return (
                 <Tooltip title="Profile">
                     <div className={styles['navbar__container__menu-container__image-container']} data-image>
+                        {/* TODO: Replace img with Next Image */}
                         <img src="https://via.placeholder.com/150" alt="profile" />
                     </div>
                 </Tooltip>
@@ -56,19 +108,27 @@ function Navbar() {
     return (
         <div className={styles['navbar__container']}>
             <div className={styles['navbar__container__logo-container']}>
-                <span onClick={onHomeClick}>TriLog</span>
+                <span onClick={() => router.push('/')}>TriLog</span>
             </div>
             <div className={styles['navbar__container__content-container']}>
-                <div className={styles['navbar__container__content-container-container__item']} data-active>
-                    <RegularButton
-                        text="Categories"
-                        variant="plain"
-                        endDecorator={<KeyboardArrowDownIcon sx={{ fontSize: 'medium' }} />}
-                        className="btn secondary plain"
-                    />
-                    <div className={styles['navbar__container__content-container-container__item-selector']} />
-                </div>
-                <div className={styles['navbar__container__content-container-container__item']}>
+                <DropdownLayout
+                    template="tab"
+                    loading={categories.loading}
+                    error={categories.errors}
+                    config={categories.data}
+                    onTabChange={handleCategoriesTabChange}
+                    style={triathlonCategoriesStyle}>
+                    <div className={styles['navbar__container__content-container-container__item']} data-active={new RegExp('/triathlons/categories/*').test(pathname)}>
+                        <RegularButton
+                            text="Categories"
+                            variant="plain"
+                            endDecorator={<KeyboardArrowDownIcon sx={{ fontSize: 'medium' }} />}
+                            className="btn secondary plain"
+                        />
+                        <div className={styles['navbar__container__content-container-container__item-selector']} />
+                    </div>
+                </DropdownLayout>
+                <div className={styles['navbar__container__content-container-container__item']} data-active={new RegExp('/triathlons/types/*').test(pathname)}>
                     <RegularButton
                         text="Types"
                         variant="plain"
@@ -80,6 +140,7 @@ function Navbar() {
             </div>
             <div className={styles['navbar__container__menu']}>
                 <div className={styles['navbar__container__menu-search']}>
+                    {/* TODO: Move into styles */}
                     <CustomTextBox
                         value={search}
                         placeholder="Search"
@@ -115,6 +176,46 @@ function Navbar() {
         </div>
     );
 
+});
+
+function parseTriathlonCategories(triathlonCategories: TriathlonCategories[]): TabsConfig {
+
+    const obj: TabsConfig = {
+        groupTitle: 'Age group',
+        tabs: {
+            male: {
+                name: 'Male',
+                active: true,
+                items: []
+            },
+            female: {
+                name: 'Female',
+                active: false,
+                items: []
+            }
+        }
+    }
+
+    triathlonCategories.forEach(({ ID, name, acronym, gender }) => {
+
+        if (!gender) {
+            return;
+        }
+
+        obj.tabs[gender].items.push(
+            {
+                name: name + ' (' + acronym + ')',
+                path: '/triathlons/categories/' + ID,
+                pathAs: '/triathlons/categories/' + acronym
+            }
+        );
+
+    });
+
+    return obj;
+
 }
+
+Navbar.displayName = 'Navbar';
 
 export default Navbar;
