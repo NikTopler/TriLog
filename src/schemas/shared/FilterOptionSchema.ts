@@ -1,5 +1,5 @@
 import z from "zod";
-import { PositiveIntSchema } from "@/schemas/PositiveIntSchema";
+import { PositiveIntSchema } from "@/schemas/shared/PositiveIntSchema";
 
 const checkIfStringIsNull = (value: unknown) => (value === 'null') ? null : value;
 

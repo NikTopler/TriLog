@@ -1,53 +1,53 @@
 import { parsePositiveInt, parseQueryStringToObject } from "@/helpers";
-import { AthleteSchemaOptional } from "@/schemas";
-import { AthleteService } from "@/services";
+import { TriathlonCategorySchemaOptional } from "@/schemas";
+import TriathlonCategoryService from "@/services/TriathlonCategoryService";
 import { NextRequest, NextResponse } from "next/server";
 
-const INVALID_ID_ERROR_MESSAGE = "Invalid athlete ID";
+const INVALID_ID_ERROR_MESSAGE = "Invalid triathlon category ID";
 
 export async function GET(req: NextRequest) {
 
     try {
 
-        const [, , , athleteId] = req.nextUrl.pathname.split('/');
-        const ID = await parsePositiveInt(athleteId, INVALID_ID_ERROR_MESSAGE);
+        const [, , , , categoryId] = req.nextUrl.pathname.split('/');
+        const ID = await parsePositiveInt(categoryId, INVALID_ID_ERROR_MESSAGE);
 
         return NextResponse.json({
             success: true,
-            data: await AthleteService.getById(ID)
+            data: await TriathlonCategoryService.getById(ID)
         }, { status: 200 });
 
     } catch (error: any) {
 
+
         return NextResponse.json({
-            success: false,
-            error: (error instanceof Error) ? error.message : error
-        }, { status: 400 });
+            status: 400,
+            message: INVALID_ID_ERROR_MESSAGE
+        });
 
     }
 
 }
 
+
 export async function PUT(req: NextRequest) {
 
     try {
 
-        const [, , , athleteId] = req.nextUrl.pathname.split('/');
-        const ID = await parsePositiveInt(athleteId, INVALID_ID_ERROR_MESSAGE);
+        const [, , , , categoryId] = req.nextUrl.pathname.split('/');
+        const ID = await parsePositiveInt(categoryId, INVALID_ID_ERROR_MESSAGE);
 
         const body = parseQueryStringToObject(await req.text());
 
-        const athlete = AthleteSchemaOptional.parse({ ...body, ID });
+        const category = TriathlonCategorySchemaOptional.parse(body);
 
-        if (Object.keys(athlete).length === 1) {
+        if (Object.keys(category).length === 1) {
             throw new Error("No valid fields to update");
         }
 
-        //TODO: validate place ids
-
         return NextResponse.json({
             success: true,
-            data: await AthleteService.update(ID, athlete)
+            data: await TriathlonCategoryService.update(ID, category)
         }, { status: 200 });
 
     } catch (error: any) {
@@ -65,12 +65,12 @@ export async function DELETE(req: NextRequest) {
 
     try {
 
-        const [, , , athleteId] = req.nextUrl.pathname.split('/');
-        const ID = await parsePositiveInt(athleteId, INVALID_ID_ERROR_MESSAGE);
+        const [, , , , categoryId] = req.nextUrl.pathname.split('/');
+        const ID = await parsePositiveInt(categoryId, INVALID_ID_ERROR_MESSAGE);
 
-        // TODO: delete athlete's children (participations, results, etc.)
+        // TODO: delete triathlon category's children
 
-        await AthleteService.delete(ID);
+        await TriathlonCategoryService.delete(ID);
 
         return NextResponse.json({
             success: true,

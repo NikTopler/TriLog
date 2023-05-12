@@ -1,7 +1,8 @@
-import { AthleteFilterOptionSchema, AthleteSchema, AthleteSchemaOptional } from "./AthleteSchema";
-import { NullableIntSchema, NullableStringSchema } from "./FilterOptionSchema";
-import { createPaginationOptionSchema, PaginationOptions } from "./PaginationOptionSchema";
-import { PositiveIntSchema } from "./PositiveIntSchema";
+import { AthleteFilterOptionSchema, AthleteSchema, AthleteSchemaOptional } from "./models/AthleteSchema";
+import { NullableIntSchema, NullableStringSchema } from "./shared/FilterOptionSchema";
+import { createPaginationOptionSchema, PaginationOptions } from "./shared/PaginationOptionSchema";
+import { PositiveIntSchema } from "./shared/PositiveIntSchema";
+import { TriathlonCategoryFilterOptionSchema, TriathlonCategorySchema, TriathlonCategorySchemaOptional } from "./models/TriathlonCategorySchema";
 
 export type {
     PaginationOptions
@@ -14,5 +15,8 @@ export {
     NullableIntSchema,
     AthleteFilterOptionSchema,
     AthleteSchema,
-    AthleteSchemaOptional
+    AthleteSchemaOptional,
+    TriathlonCategoryFilterOptionSchema,
+    TriathlonCategorySchema,
+    TriathlonCategorySchemaOptional
 }
