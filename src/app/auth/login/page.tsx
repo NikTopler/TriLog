@@ -40,7 +40,13 @@ export default function Login() {
                             borderRadius: '4px',
                             height: '50px',
                             width: '100%',
-                            margin: '0 0 5px 0'
+                            margin: '0 0 5px 0',
+                            ":focus": {
+                                borderColor: '#65c418',
+                            },
+                            ":hover": {
+                                borderColor: 'red',
+                            }
                         }}
                     />
                     <RegularButton

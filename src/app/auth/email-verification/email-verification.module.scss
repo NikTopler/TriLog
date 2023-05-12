@@ -1,7 +1,9 @@
+@import "../../../styles/variables.scss";
+
 .description {
     font-size: 0.9rem;
     font-weight: 500;
-    color: #626365;
+    color: $color-secondary-70;
     text-align: center;
     padding: 0.5rem;
 }
