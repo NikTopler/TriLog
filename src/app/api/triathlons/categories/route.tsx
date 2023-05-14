@@ -1,9 +1,9 @@
+import { NextRequest, NextResponse } from "next/server";
 import { parseQueryStringToObject } from "@/helpers";
 import { TriathlonCategoryFilterOptionSchema, TriathlonCategorySchema, createPaginationOptionSchema } from "@/schemas";
-import TriathlonCategoryService from "@/services/TriathlonCategoryService";
+import { TriathlonCategoryService } from "@/services";
 import { DatabaseConn } from "@/utils";
 import { TriathlonCategories } from "@prisma/client";
-import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
 

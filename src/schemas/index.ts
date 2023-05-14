@@ -3,6 +3,7 @@ import { NullableIntSchema, NullableNonEmptyStringSchema, NullableStringSchema }
 import { createPaginationOptionSchema, PaginationOptions } from "./shared/PaginationOptionSchema";
 import { PositiveIntSchema } from "./shared/PositiveIntSchema";
 import { TriathlonCategoryFilterOptionSchema, TriathlonCategorySchema, TriathlonCategorySchemaOptional } from "./models/TriathlonCategorySchema";
+import { TriathlonTypeSchema, TriathlonTypeSchemaOptional, TriathlonTypesFilterOptionSchema } from "./models/TriathlonTypesSchema";
 
 export type {
     PaginationOptions
@@ -19,5 +20,8 @@ export {
     AthleteSchemaOptional,
     TriathlonCategoryFilterOptionSchema,
     TriathlonCategorySchema,
-    TriathlonCategorySchemaOptional
+    TriathlonCategorySchemaOptional,
+    TriathlonTypesFilterOptionSchema,
+    TriathlonTypeSchema,
+    TriathlonTypeSchemaOptional
 }
