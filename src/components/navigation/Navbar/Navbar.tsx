@@ -8,8 +8,8 @@ import NightlightRoundIcon from '@mui/icons-material/NightlightRound';
 import SearchIcon from '@mui/icons-material/Search';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { CustomTextBox, RegularButton } from "@/components/inputs";
-import DropdownLayout, { TabsConfig } from "@/components/layouts/DropdownLayout/DropdownLayout";
-import { TriathlonCategories } from "@prisma/client";
+import DropdownLayout, { ListConfig, TabsConfig } from "@/components/layouts/DropdownLayout/DropdownLayout";
+import { TriathlonCategories, TriathlonTypes } from "@prisma/client";
 import styles from "./navbar.module.scss";
 import { StateObject } from "@/app/(home)/HomeLayout";
 
@@ -20,16 +20,16 @@ const triathlonCategoriesStyle = {
     left: '0'
 }
 
-export interface TriathlonCategoriesRef {
-    setCategories: (category: any) => void;
+const triathlonTypesStyle = {
+    width: '200px',
+    height: 'auto',
+    top: 'calc(100% - 10px)',
+    left: '0'
 }
 
-interface NavbarProps {
-    triathlonCategories: {
-        data: TriathlonCategories[];
-        loading: boolean;
-        errors: any;
-    };
+export interface TriathlonCategoriesRef {
+    setCategories: (category: any) => void;
+    setTypes: (types: any) => void;
 }
 
 const Navbar = forwardRef(({ }, ref) => {
@@ -51,10 +51,23 @@ const Navbar = forwardRef(({ }, ref) => {
         errors: null
     });
 
+    const [types, setTypes] = useState<StateObject<ListConfig>>({
+        data: { list: [] },
+        loading: true,
+        errors: null
+    });
+
     useImperativeHandle(ref, () => ({
         setCategories: ({ data, loading, errors }: StateObject<TriathlonCategories[]>) => {
             setCategories({
                 data: parseTriathlonCategories(data),
+                loading,
+                errors
+            });
+        },
+        setTypes: ({ data, loading, errors }: StateObject<TriathlonTypes[]>) => {
+            setTypes({
+                data: parseTriathlonTypes(data),
                 loading,
                 errors
             });
@@ -128,15 +141,22 @@ const Navbar = forwardRef(({ }, ref) => {
                         <div className={styles['navbar__container__content-container-container__item-selector']} />
                     </div>
                 </DropdownLayout>
-                <div className={styles['navbar__container__content-container-container__item']} data-active={new RegExp('/triathlons/types/*').test(pathname)}>
-                    <RegularButton
-                        text="Types"
-                        variant="plain"
-                        endDecorator={<KeyboardArrowDownIcon sx={{ fontSize: 'medium' }} />}
-                        className="btn secondary plain"
-                    />
-                    <div className={styles['navbar__container__content-container-container__item-selector']} />
-                </div>
+                <DropdownLayout
+                    template="list"
+                    loading={types.loading}
+                    error={types.errors}
+                    config={types.data}
+                    style={triathlonTypesStyle}>
+                    <div className={styles['navbar__container__content-container-container__item']} data-active={new RegExp('/triathlons/types/*').test(pathname)}>
+                        <RegularButton
+                            text="Types"
+                            variant="plain"
+                            endDecorator={<KeyboardArrowDownIcon sx={{ fontSize: 'medium' }} />}
+                            className="btn secondary plain"
+                        />
+                        <div className={styles['navbar__container__content-container-container__item-selector']} />
+                    </div>
+                </DropdownLayout>
             </div>
             <div className={styles['navbar__container__menu']}>
                 <div className={styles['navbar__container__menu-search']}>
@@ -213,6 +233,19 @@ function parseTriathlonCategories(triathlonCategories: TriathlonCategories[]): T
     });
 
     return obj;
+
+}
+
+function parseTriathlonTypes(triathlonTypes: TriathlonTypes[]): ListConfig {
+
+    return {
+        groupTitle: 'Competitions',
+        list: triathlonTypes.map(({ ID, name }) => ({
+            name,
+            path: '/triathlons/types/' + ID,
+            pathAs: '/triathlons/types/' + name.replace(' ', '-').toLowerCase()
+        }))
+    }
 
 }
 

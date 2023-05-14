@@ -53,6 +53,29 @@ function HomeLayout({ children }: LayoutProps) {
                 });
             });
 
+        fetchData<TriathlonCategories[]>('/api/triathlons/types', {})
+            .then((res) => {
+
+                if (res === undefined) {
+                    throw new Error('Error fetching data');
+                }
+
+                navbarRef.current?.setTypes({
+                    data: res,
+                    loading: false,
+                    errors: null
+                });
+
+            })
+            .catch((err) => {
+                console.log(err);
+                navbarRef.current?.setTypes({
+                    data: [],
+                    loading: false,
+                    errors: 'Error fetching data'
+                });
+            });
+
     }, []);
 
     const [sidebar, setSidebar] = useState<SidebarState>({

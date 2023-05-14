@@ -37,9 +37,9 @@ export async function PUT(req: NextRequest) {
 
         const body = parseQueryStringToObject(await req.text());
 
-        const athlete = AthleteSchemaOptional.parse({ ...body, ID });
+        const athlete = AthleteSchemaOptional.parse(body);
 
-        if (Object.keys(athlete).length === 1) {
+        if (Object.keys(athlete).length === 0) {
             throw new Error("No valid fields to update");
         }
 

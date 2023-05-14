@@ -1,6 +1,6 @@
 'use client';
 
-import { Dispatch, SetStateAction, useState } from "react";
+import { CSSProperties, Dispatch, SetStateAction, useState } from "react";
 import { LayoutProps } from "@/interfaces";
 import { ClickAwayListener, Skeleton } from "@mui/material";
 import Link from "next/link";
@@ -23,9 +23,14 @@ export interface TabsConfig {
     }
 }
 
+export interface ListConfig {
+    groupTitle?: string;
+    list: TabsConfigItem[];
+}
+
 type DropdownTemplate = 'tab' | 'list';
 
-type ConfigType<T extends DropdownTemplate> = T extends 'tab' ? TabsConfig : T extends 'list' ? string : never;
+type ConfigType<T extends DropdownTemplate> = T extends 'tab' ? TabsConfig : T extends 'list' ? ListConfig : never;
 
 type DropdownLayoutProps<T extends DropdownTemplate> = Omit<LayoutProps, 'style'> & {
     style?: {
@@ -47,6 +52,35 @@ function DropdownLayout<T extends DropdownTemplate>({ children, template, config
 
     const [open, setOpen] = useState<boolean>(false);
 
+    const MainView = () => {
+
+        if (loading || error) {
+            return;
+        }
+
+        if (template === 'tab') {
+
+            return (
+                <TabsTemplate
+                    setDropdownOpen={setOpen}
+                    setTabsConfig={onTabChange}
+                    tabs={(config as TabsConfig).tabs}
+                    groupTitle={(config as TabsConfig).groupTitle}
+                />
+            );
+
+        }
+
+        return (
+            <ListTemplate
+                setDropdownOpen={setOpen}
+                list={(config as ListConfig).list}
+                groupTitle={(config as ListConfig).groupTitle}
+            />
+        );
+
+    }
+
     return (
         <ClickAwayListener onClickAway={() => setOpen(false)}>
             <div className={styles['dropdown']}>
@@ -57,14 +91,9 @@ function DropdownLayout<T extends DropdownTemplate>({ children, template, config
                     <div className={styles['dropdown-container']} style={style}>
                         {loading && LoadingSkeleton(template)}
                         {error && <div>Error</div>}
-                        {(!loading && !error && template === 'tab') &&
-                            <TabsTemplate
-                                setDropdownOpen={setOpen}
-                                setTabsConfig={onTabChange}
-                                tabs={(config as TabsConfig).tabs}
-                                groupTitle={(config as TabsConfig).groupTitle}
-                            />
-                        }
+                        <div className={styles['dropdown-container__content']}>
+                            {MainView()}
+                        </div>
                     </div>
                 )}
             </div>
@@ -73,84 +102,78 @@ function DropdownLayout<T extends DropdownTemplate>({ children, template, config
 
 }
 
-
 // TODO: Implement better loading skeleton
 function LoadingSkeleton(template: DropdownTemplate) {
 
-    if (template === 'tab') {
+    const tabContainerStyle: CSSProperties = {
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        margin: 'auto',
+        marginBottom: '0.5rem'
+    }
 
-        return (
-            <div style={{ padding: '1rem' }}>
-                <header>
+    const tabStyle: CSSProperties = {
+        width: 'calc(33% - 0.25rem)',
+        height: '2rem',
+    }
+
+    const groupTitleStyle: CSSProperties = {
+        width: '100%',
+        height: '1.5rem',
+        margin: 'auto',
+        marginBottom: '0.5rem'
+    }
+
+    const buttonStyle: CSSProperties = {
+        width: '100%',
+        height: '3rem',
+        margin: 'auto',
+        marginBottom: '0.5rem',
+    }
+
+    return (
+        <div style={{ padding: '1rem' }}>
+            {template === 'tab' && (
+                <header style={tabContainerStyle}>
                     <Skeleton
                         variant="rounded"
-                        width={"calc(100% - 2.5rem)"}
-                        style={{
-                            margin: 'auto',
-                            marginBottom: '0.5rem',
-                            padding: '0.75rem'
-                        }}
+                        style={tabStyle}
+                    />
+                    <Skeleton
+                        variant="rounded"
+                        style={tabStyle}
+                    />
+                    <Skeleton
+                        variant="rounded"
+                        style={tabStyle}
                     />
                 </header>
+            )}
+            <div>
                 <Skeleton
                     variant="rounded"
-                    width={"calc(100% - 1rem)"}
-                    style={{
-                        margin: 'auto',
-                        marginBottom: '0.5rem',
-                    }}
+                    style={groupTitleStyle}
                 />
                 <Skeleton
                     variant="rounded"
-                    width={"calc(100% - 1rem)"}
-                    style={{
-                        margin: 'auto',
-                        marginBottom: '0.5rem',
-                    }}
+                    style={buttonStyle}
                 />
                 <Skeleton
                     variant="rounded"
-                    width={"calc(100% - 1rem)"}
-                    style={{
-                        margin: 'auto',
-                        marginBottom: '0.5rem',
-                    }}
+                    style={buttonStyle}
                 />
                 <Skeleton
                     variant="rounded"
-                    width={"calc(100% - 1rem)"}
                     style={{
-                        margin: 'auto',
-                        marginBottom: '0.5rem',
-                    }}
-                />
-                <Skeleton
-                    variant="rounded"
-                    width={"calc(100% - 1rem)"}
-                    style={{
-                        margin: 'auto',
-                        marginBottom: '0.5rem',
-                    }}
-                />
-                <Skeleton
-                    variant="rounded"
-                    width={"calc(100% - 1rem)"}
-                    style={{
-                        margin: 'auto',
-                        marginBottom: '0.5rem',
-                    }}
-                />
-                <Skeleton
-                    variant="rounded"
-                    width={"calc(100% - 1rem)"}
-                    style={{
-                        margin: 'auto',
+                        ...buttonStyle,
+                        marginBottom: '0'
                     }}
                 />
             </div>
-        );
-
-    }
+        </div>
+    );
 
 }
 
@@ -165,9 +188,9 @@ function TabsTemplate({ tabs, groupTitle, setTabsConfig, setDropdownOpen }: Tabs
     const activeTab = Object.keys(tabs).find((key: string) => tabs[key].active);
 
     return (
-        <div className={styles['tab-template']}>
-            <header className={styles['tab-template__header']}>
-                <div className={styles['tab-template__header__tabs-container']}>
+        <>
+            <header className={styles['dropdown-container__content__header']}>
+                <div className={styles['dropdown-container__content__header__tabs-container']}>
                     {tabNames.map((key: any, idx: number) => (
                         <div
                             key={idx}
@@ -176,26 +199,26 @@ function TabsTemplate({ tabs, groupTitle, setTabsConfig, setDropdownOpen }: Tabs
                                     setTabsConfig(key);
                                 }
                             }}
-                            className={styles['tab-template__header__tabs-container--tab-container']}
+                            className={styles['dropdown-container__content__header__tabs-container--tab-container']}
                             data-active={tabs[key].active}>
                             <span>{tabs[key].name}</span>
                         </div>
                     ))}
                 </div>
             </header>
-            <div className={styles['tab-template--main']}>
+            <div className={styles['dropdown-container__content--main']}>
                 {groupTitle && (
-                    <section className={styles['tab-template--main__group-title']}>
+                    <section className={styles['dropdown-container__content--main__group-title']}>
                         <span>
                             {groupTitle}
                         </span>
                     </section>
                 )}
-                <div className={styles['tab-template--main__buttons-container']}>
+                <div className={styles['dropdown-container__content--main__buttons-container']}>
                     {tabs[activeTab as string].items.map((item: any, idx: number) => (
                         <Link
                             key={idx}
-                            className={styles['tab-template--main__buttons-container--button-container']}
+                            className={styles['dropdown-container__content--main__buttons-container--button-container']}
                             href={item.path}
                             as={item.pathAs || item.path}
                             onClick={() => setDropdownOpen(false)}>
@@ -204,10 +227,41 @@ function TabsTemplate({ tabs, groupTitle, setTabsConfig, setDropdownOpen }: Tabs
                     ))}
                 </div>
             </div>
-        </div>
+        </>
     );
 
 }
 
+interface ListTemplateProps extends ListConfig {
+    setDropdownOpen: Dispatch<SetStateAction<boolean>>;
+}
+
+function ListTemplate({ groupTitle, list, setDropdownOpen }: ListTemplateProps) {
+
+    return (
+        <div className={styles['dropdown-container__content--main']}>
+            {groupTitle && (
+                <section className={styles['dropdown-container__content--main__group-title']}>
+                    <span>
+                        {groupTitle}
+                    </span>
+                </section>
+            )}
+            <div className={styles['dropdown-container__content--main__buttons-container']}>
+                {list.map((item: any, idx: number) => (
+                    <Link
+                        key={idx}
+                        className={styles['dropdown-container__content--main__buttons-container--button-container']}
+                        href={item.path}
+                        as={item.pathAs || item.path}
+                        onClick={() => setDropdownOpen(false)}>
+                        <span>{item.name}</span>
+                    </Link>
+                ))}
+            </div>
+        </div>
+    );
+
+}
 
 export default DropdownLayout;

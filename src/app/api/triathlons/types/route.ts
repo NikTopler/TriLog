@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import { TriathlonTypesFilterOptionSchema, createPaginationOptionSchema } from "@/schemas";
+import { TriathlonTypeSchema, TriathlonTypesFilterOptionSchema, createPaginationOptionSchema } from "@/schemas";
 import { DatabaseConn } from "@/utils";
 import { TriathlonTypeService } from "@/services";
+import { parseQueryStringToObject } from "@/helpers";
+import { TriathlonTypes } from "@prisma/client";
 
 export async function GET(req: NextRequest) {
 
@@ -17,6 +19,30 @@ export async function GET(req: NextRequest) {
             count: await TriathlonTypeService.getAll(validatedFilter, validatedPagination, true),
             data: await TriathlonTypeService.getAll(validatedFilter, validatedPagination)
         }, { status: 200 });
+
+    } catch (error: any) {
+
+        return NextResponse.json({
+            success: false,
+            error: error.message
+        }, { status: 400 });
+
+    }
+
+}
+
+export async function POST(req: NextRequest) {
+
+    const body = parseQueryStringToObject(await req.text());
+
+    try {
+
+        const type = TriathlonTypeSchema.parse(body) as TriathlonTypes;
+
+        return NextResponse.json({
+            success: true,
+            data: await TriathlonTypeService.create(type)
+        }, { status: 201 });
 
     } catch (error: any) {
 
