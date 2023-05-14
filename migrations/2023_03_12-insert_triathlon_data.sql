@@ -29,7 +29,7 @@ VALUE
 
 INSERT INTO TriathlonTypes(name, swimKm, bikeKm, runKm, organizationID)
 VALUE
-('IRONMAN', 3.9, 180.2, 42.2, 1),
-('IRONMAN 70.3', 1.9, 90, 21, 1),
+('Ironman', 3.9, 180.2, 42.2, 1),
+('Ironman 70.3', 1.9, 90, 21, 1),
 ('Double-Ultra', 7.6, 360, 84.4, 2),
 ('Triple-Ultra', 11.4, 540, 126.6, 2);
