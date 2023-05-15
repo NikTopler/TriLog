@@ -1,0 +1,24 @@
+@import "../../../styles/variables.scss";
+
+.breadcrumbs-container {
+    padding: 1rem;
+
+    &__breadcrumb {
+        display: inline-block;
+        text-decoration: none;
+        color: $color-secondary-80;
+        text-decoration: none;
+        text-decoration-color: $color-secondary-80;
+        font-size: 0.85rem;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+
+    &__separator {
+        padding: 0 0.5rem;
+        color: $color-secondary-80;
+    }
+
+}
