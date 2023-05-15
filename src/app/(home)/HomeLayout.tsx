@@ -5,7 +5,7 @@ import { Tooltip } from "@mui/joy";
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import { LayoutProps } from "@/interfaces";
-import { Navbar, Sidebar } from "@/components/navigation";
+import { BreadCrumb, Navbar, Sidebar } from "@/components/navigation";
 import { fetchData } from "@/helpers";
 import { TriathlonCategories } from "@prisma/client";
 import { TriathlonCategoriesRef } from "@/components/navigation/Navbar/Navbar";
@@ -27,6 +27,12 @@ export interface StateObject<T> {
 function HomeLayout({ children }: LayoutProps) {
 
     const navbarRef = useRef<TriathlonCategoriesRef>(null);
+
+    const [sidebar, setSidebar] = useState<SidebarState>({
+        open: true,
+        closing: false,
+        hovering: false
+    });
 
     useEffect(() => {
 
@@ -77,12 +83,6 @@ function HomeLayout({ children }: LayoutProps) {
             });
 
     }, []);
-
-    const [sidebar, setSidebar] = useState<SidebarState>({
-        open: true,
-        closing: false,
-        hovering: false
-    });
 
     const onSidebarToggle = () => {
 
@@ -147,6 +147,7 @@ function HomeLayout({ children }: LayoutProps) {
             </section>
 
             <section className={styles['home__content']}>
+                <BreadCrumb />
                 {children}
             </section>
         </div>
