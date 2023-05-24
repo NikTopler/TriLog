@@ -11,7 +11,10 @@ const nextConfig = {
     DB_USERNAME: process.env.DB_USERNAME,
     DB_PASSWORD: process.env.DB_PASSWORD,
     DB_NAME: process.env.DB_NAME,
-    DB_PROVIDER: process.env.DB_PROVIDER
+    DB_PROVIDER: process.env.DB_PROVIDER,
+    MAIL_HOST: process.env.MAIL_HOST,
+    MAIL_ADMIN_EMAIL: process.env.MAIL_ADMIN_EMAIL,
+    MAIL_ADMIN_PASSWORD: process.env.MAIL_ADMIN_PASSWORD
   }
 }
 

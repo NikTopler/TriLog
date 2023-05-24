@@ -1,6 +1,7 @@
-function isEmail(input: string): boolean {
-    const regex = /\S+@\S+\.\S+/;
-    return regex.test(input);
+import { Email, EmailSchema } from "@/schemas";
+
+function isEmail(value: string): value is Email {
+    return EmailSchema.safeParse(value).success;
 }
 
 export default isEmail;

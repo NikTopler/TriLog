@@ -4,12 +4,15 @@ import { createPaginationOptionSchema, PaginationOptions } from "./shared/Pagina
 import { PositiveIntSchema } from "./shared/PositiveIntSchema";
 import { TriathlonCategoryFilterOptionSchema, TriathlonCategorySchema, TriathlonCategorySchemaOptional } from "./models/TriathlonCategorySchema";
 import { TriathlonTypeSchema, TriathlonTypeSchemaOptional, TriathlonTypesFilterOptionSchema } from "./models/TriathlonTypesSchema";
+import EmailSchema, { Email } from "./shared/EmailSchema";
 
 export type {
+    Email,
     PaginationOptions
 }
 
 export {
+    EmailSchema,
     createPaginationOptionSchema,
     PositiveIntSchema,
     NullableStringSchema,
