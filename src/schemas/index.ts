@@ -5,6 +5,8 @@ import { PositiveIntSchema } from "./shared/PositiveIntSchema";
 import { TriathlonCategoryFilterOptionSchema, TriathlonCategorySchema, TriathlonCategorySchemaOptional } from "./models/TriathlonCategorySchema";
 import { TriathlonTypeSchema, TriathlonTypeSchemaOptional, TriathlonTypesFilterOptionSchema } from "./models/TriathlonTypesSchema";
 import EmailSchema, { Email } from "./shared/EmailSchema";
+import UserCookieSchema, { isUserCookie } from "./shared/UserCookieSchema";
+import AuthTokenSchema from "./shared/AuthTokenSchema";
 
 export type {
     Email,
@@ -14,6 +16,8 @@ export type {
 export {
     EmailSchema,
     createPaginationOptionSchema,
+    UserCookieSchema,
+    isUserCookie,
     PositiveIntSchema,
     NullableStringSchema,
     NullableNonEmptyStringSchema,
@@ -27,5 +31,6 @@ export {
     TriathlonCategorySchemaOptional,
     TriathlonTypesFilterOptionSchema,
     TriathlonTypeSchema,
-    TriathlonTypeSchemaOptional
+    TriathlonTypeSchemaOptional,
+    AuthTokenSchema
 }

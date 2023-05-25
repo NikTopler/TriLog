@@ -141,7 +141,25 @@ model Triathlons {
   @@index([triathlonTypeID], map: "triathlon_triathlonType_FK")
 }
 
+model Users {
+  id                         Int        @id @default(autoincrement())
+  email                      String     @unique(map: "email") @db.VarChar(255)
+  verificationToken          String?    @db.VarChar(255)
+  verificationTokenExpiresAt DateTime?  @db.DateTime(0)
+  verificationCode           String?    @db.VarChar(5)
+  verificationCodeExpiresAt  DateTime?  @db.DateTime(0)
+  isVerified                 Boolean    @default(false)
+  role                       Users_role @default(user)
+  createdAt                  DateTime   @default(now()) @db.Timestamp(0)
+  updatedAt                  DateTime   @default(now()) @db.Timestamp(0)
+}
+
 enum TriathlonCategories_gender {
   male
   female
+}
+
+enum Users_role {
+  user
+  admin
 }

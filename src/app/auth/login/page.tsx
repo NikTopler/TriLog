@@ -1,22 +1,46 @@
 'use client';
 
-import { useState } from "react";
-import { useRouter } from 'next/navigation';
+import { useContext, useState } from "react";
+import { useRouter } from "next/navigation";
 import { CustomTextBox, RegularButton } from "@/components/inputs";
 import { SocialLoginButton } from "@/components/buttons";
-import { isEmail } from "@/helpers";
+import { apiPost, isEmail } from "@/helpers";
+import { EmailAuthContext } from "../layout";
+import { LoginSuccessResponse } from "@/app/api/auth/login/route";
 
 export default function Login() {
 
     const router = useRouter();
-    const [email, setEmail] = useState('');
+
+    const { email, setEmail } = useContext(EmailAuthContext);
+    const [isProcessing, setIsProcessing] = useState(false);
 
     const onContinueClick = () => {
-        router.push('/auth/email-verification');
-    }
 
-    const handleEmailInputChange = (value: string) => {
-        setEmail(value);
+        setIsProcessing(true);
+
+        apiPost<LoginSuccessResponse>('/api/auth/login', { recipient: email })
+            .then((res) => {
+
+                if (!res) {
+                    throw new Error('There has been an error. Please try again later.');
+                }
+
+                if (res.isVerified) {
+                    router.push('/auth/verification-link-sent');
+                } else {
+                    router.push('/auth/email-verification?email=' + email);
+                }
+
+            })
+            .catch((err) => {
+                // TODO: Handle error
+                console.log(err);
+            })
+            .finally(() => {
+                setIsProcessing(false);
+            });
+
     }
 
     return (
@@ -35,7 +59,7 @@ export default function Login() {
                         placeholder="Enter your Email"
                         type="email"
                         isFocused={true}
-                        handleInputChange={handleEmailInputChange}
+                        handleInputChange={setEmail}
                         style={{
                             borderRadius: '4px',
                             height: '50px',
@@ -53,6 +77,7 @@ export default function Login() {
                         text="Continue"
                         disabled={!isEmail(email)}
                         handleOnClick={onContinueClick}
+                        loading={isProcessing}
                         style={{
                             borderRadius: '4px',
                             height: '50px',

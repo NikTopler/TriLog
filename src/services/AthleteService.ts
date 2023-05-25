@@ -1,9 +1,9 @@
 import { GenericRecord } from "@/interfaces";
 import { PaginationOptions } from "@/schemas";
-import { DatabaseConn } from "@/utils";
 import { Athletes } from "@prisma/client";
+import BaseService from "./BaseService";
 
-class AthleteService extends DatabaseConn {
+class AthleteService extends BaseService {
 
     static getAll(
         where: GenericRecord,

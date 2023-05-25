@@ -1,6 +1,6 @@
 import { Email, EmailSchema } from "@/schemas";
 
-function isEmail(value: string): value is Email {
+function isEmail(value: unknown): value is Email {
     return EmailSchema.safeParse(value).success;
 }
 

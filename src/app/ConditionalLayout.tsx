@@ -4,6 +4,7 @@ import { LayoutProps } from "@/interfaces";
 import { usePathname } from "next/navigation";
 import HomeLayout from "./(home)/HomeLayout";
 import { validatePaths } from "@/helpers";
+import { CookiesProvider } from "react-cookie";
 
 const HOME_PATHS = [
     '/',
@@ -25,16 +26,18 @@ function ConditionalLayout({ children }: LayoutProps) {
 
     if (validatePaths(HOME_PATHS, pathname)) {
         return (
-            <HomeLayout>
-                {children}
-            </HomeLayout>
+            <CookiesProvider>
+                <HomeLayout>
+                    {children}
+                </HomeLayout>
+            </CookiesProvider>
         );
     }
 
     return (
-        <>
+        <CookiesProvider>
             {children}
-        </>
+        </CookiesProvider>
     );
 
 }

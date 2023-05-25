@@ -2,7 +2,8 @@
 
 interface ApiResponse<T> {
     success: boolean;
-    data?: T,
+    message: string;
+    data?: T;
     errors?: any[];
 }
 
