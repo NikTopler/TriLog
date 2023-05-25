@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Athletes } from "@prisma/client";
-import { DatabaseConn } from "@/utils";
-import { AthleteService } from "@/services";
+import { AthleteService, BaseService } from "@/services";
 import { AthleteFilterOptionSchema, AthleteSchema, createPaginationOptionSchema } from "@/schemas";
 import { parseQueryStringToObject } from "@/helpers";
 
@@ -12,7 +11,7 @@ export async function GET(req: NextRequest) {
     try {
 
         const validatedFilter = AthleteFilterOptionSchema.parse(searchParams);
-        const validatedPagination = createPaginationOptionSchema(DatabaseConn.getColumnNames('Athletes') || []).parse(searchParams);
+        const validatedPagination = createPaginationOptionSchema(BaseService.getColumnNames('Athletes') || []).parse(searchParams);
 
         return NextResponse.json({
             success: true,

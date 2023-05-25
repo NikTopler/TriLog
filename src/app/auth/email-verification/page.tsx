@@ -1,22 +1,32 @@
 'use client';
 
-import { useCallback, useState } from "react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useContext, useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { SpecialKey } from "@/types";
 import { CustomTextBox } from "@/components/inputs";
+import { apiPost, createQueryString, isEmail } from "@/helpers";
+import { Email } from "@/schemas";
+import { EmailAuthContext } from "../layout";
 import styles from "./email-verification.module.scss";
-import { createQueryString } from "@/helpers";
 
 interface VerificationFieldConfig {
     value: string;
     isFocused: boolean;
 }
 
+const NUM_OF_VERIFICATION_FIELDS = 5;
+const EMAIL_VERIFICATION_TIMEOUT_MS = 30000;
+
 function EmailVerification() {
 
+    const { email } = useContext(EmailAuthContext);
+
     const router = useRouter();
-    const pathName = usePathname();
     const searchParams = useSearchParams();
+
+    const [emailResendTimeout, setEmailResendTimeout] = useState<number | null>(null);
+    const [recipient, setRecipient] = useState<Email | null>(null);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const [verificationFields, setVerificationFields] = useState<VerificationFieldConfig[]>([
         { value: '', isFocused: true },
@@ -26,17 +36,52 @@ function EmailVerification() {
         { value: '', isFocused: false }
     ]);
 
-    const createQuery = useCallback((name: string, value: string) =>
-        createQueryString(searchParams, name, value),
-        [searchParams]
-    );
+    const code = verificationFields.map((field) => field.value).join('');
+
+    useEffect(() => {
+
+        if (isEmail(email)) {
+            setRecipient(email);
+        } else {
+            throw new Error('There has been an error. Please try again later.');
+        }
+
+    }, []);
+
+    useEffect(() => {
+
+        if (NUM_OF_VERIFICATION_FIELDS === code.length) {
+
+            setIsLoading(true);
+
+            apiPost('/api/auth/email-verification', { email, verificationCode: code })
+                .then(() => router.push('/'))
+                .catch((err) => {
+                    setIsLoading(false);
+                    // TODO: Handle error
+                    console.log(err);
+                });
+        }
+
+    }, [code])
+
+    useEffect(() => {
+
+        if (emailResendTimeout) {
+            // TODO: clear timeout
+            setTimeout(() => setEmailResendTimeout(null), emailResendTimeout);
+        }
+
+    }, [emailResendTimeout]);
 
     const isTextboxValueValid = (value: string) => {
+
         return (
             value.length <= 1
             && value.length >= 0
             && !isNaN(Number(value))
         );
+
     }
 
     const handleInputChange = (value: string, idx: number) => {
@@ -111,18 +156,28 @@ function EmailVerification() {
         }
 
         setVerificationFields((prev) => {
-
             const newVerificationFields = [...prev];
             newVerificationFields[idx].isFocused = isFocused;
 
             return newVerificationFields;
         });
+
     }
 
     const onEmailResendClick = (e: any) => {
+
         e.preventDefault();
-        // TODO: send email verification code to user's email.
-        router.push(pathName + '?' + createQuery('resent', '1'));
+
+        if (emailResendTimeout) {
+            return;
+        }
+
+        setEmailResendTimeout(EMAIL_VERIFICATION_TIMEOUT_MS);
+
+        apiPost('/api/auth/login', { recipient })
+            .then(() => router.push('/auth/email-verification?' + createQueryString(searchParams, { email: recipient as string })))
+            .catch((err) => console.log(err));
+
     }
 
     const onUpdateEmailClick = (e: any) => {
@@ -139,7 +194,9 @@ function EmailVerification() {
             <div className="auth-container__popup-main">
                 <p className={styles['description'] + " m-bottom-1"}>
                     You're almost done! We sent a code to
-                    <span className={styles['auth-container__popup-main-user-email']}>test@gmail.com</span>
+                    <span className={styles['auth-container__popup-main-user-email']}>
+                        {recipient}
+                    </span>
                 </p>
                 <div className="auth-container__popup-main__form">
                     <div className={styles['auth-container__popup-main__form-input__container'] + " m-bottom-1"}>
@@ -149,6 +206,7 @@ function EmailVerification() {
                                     value={value}
                                     type="text"
                                     isFocused={isFocused}
+                                    isDisabled={isLoading}
                                     style={{
                                         borderRadius: '4px',
                                         margin: '0 0 5px 0',

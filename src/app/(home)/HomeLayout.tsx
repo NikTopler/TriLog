@@ -6,9 +6,9 @@ import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import { LayoutProps } from "@/interfaces";
 import { BreadCrumb, Navbar, Sidebar } from "@/components/navigation";
-import { fetchData } from "@/helpers";
 import { TriathlonCategories } from "@prisma/client";
 import { TriathlonCategoriesRef } from "@/components/navigation/Navbar/Navbar";
+import { apiGet } from "@/helpers";
 import styles from "./home-layout.module.scss";
 
 interface SidebarState {
@@ -36,7 +36,7 @@ function HomeLayout({ children }: LayoutProps) {
 
     useEffect(() => {
 
-        fetchData<TriathlonCategories[]>('/api/triathlons/categories', {})
+        apiGet<TriathlonCategories[]>('/api/triathlons/categories', {})
             .then((res) => {
 
                 if (res === undefined) {
@@ -59,7 +59,7 @@ function HomeLayout({ children }: LayoutProps) {
                 });
             });
 
-        fetchData<TriathlonCategories[]>('/api/triathlons/types', {})
+        apiGet<TriathlonCategories[]>('/api/triathlons/types', {})
             .then((res) => {
 
                 if (res === undefined) {

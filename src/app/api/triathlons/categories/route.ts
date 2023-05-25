@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { parseQueryStringToObject } from "@/helpers";
 import { TriathlonCategoryFilterOptionSchema, TriathlonCategorySchema, createPaginationOptionSchema } from "@/schemas";
-import { TriathlonCategoryService } from "@/services";
-import { DatabaseConn } from "@/utils";
+import { BaseService, TriathlonCategoryService } from "@/services";
 import { TriathlonCategories } from "@prisma/client";
 
 export async function GET(req: NextRequest) {
@@ -12,7 +11,7 @@ export async function GET(req: NextRequest) {
     try {
 
         const validatedFilter = TriathlonCategoryFilterOptionSchema.parse(searchParams);
-        const validatedPagination = createPaginationOptionSchema(DatabaseConn.getColumnNames('TriathlonCategories') || []).parse(searchParams);
+        const validatedPagination = createPaginationOptionSchema(BaseService.getColumnNames('TriathlonCategories') || []).parse(searchParams);
 
         return NextResponse.json({
             success: true,

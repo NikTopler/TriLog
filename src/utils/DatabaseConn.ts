@@ -1,25 +1,11 @@
-import { Prisma, PrismaClient, PrismaPromise } from "@prisma/client";
+import { Prisma, PrismaClient } from "@prisma/client";
 
 class DatabaseConn {
 
-    protected static client = new PrismaClient({
-        errorFormat: 'pretty'
-    });
+    static get client() { return new PrismaClient({ errorFormat: 'pretty' }) }
 
     static getColumnNames(tableName: string) {
         return Prisma.dmmf.datamodel.models.find(m => m.name === tableName)?.fields.map(f => f.name);
-    }
-
-    static async handle<T>(promise: PrismaPromise<T>) {
-
-        try {
-            return await promise;
-        } catch (error: any) {
-            // TODO: Write into a log file
-            console.log(error);
-            throw new Error(error.message);
-        }
-
     }
 
 }

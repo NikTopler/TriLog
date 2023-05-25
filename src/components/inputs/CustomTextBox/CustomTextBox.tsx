@@ -8,6 +8,7 @@ interface TextBoxProps {
     placeholder?: string;
     type?: 'text' | 'password' | 'email' | 'number' | 'tel' | 'url';
     isFocused?: boolean;
+    isDisabled?: boolean;
     style?: SxProps;
     startDecorator?: JSX.Element;
     endDecorator?: JSX.Element;
@@ -16,7 +17,7 @@ interface TextBoxProps {
     handleInputFocusChange?: (isFocused: boolean) => void;
 }
 
-function CustomTextBox({ value, placeholder, type, isFocused, style, startDecorator, endDecorator, handleInputChange, handleSpecialKeyClick, handleInputFocusChange }: TextBoxProps) {
+function CustomTextBox({ value, placeholder, type, isFocused, isDisabled, style, startDecorator, endDecorator, handleInputChange, handleSpecialKeyClick, handleInputFocusChange }: TextBoxProps) {
 
     const inputRef = useRef<HTMLInputElement | null>(null);
 
@@ -46,6 +47,7 @@ function CustomTextBox({ value, placeholder, type, isFocused, style, startDecora
             sx={style}
             placeholder={placeholder ?? ""}
             value={value}
+            disabled={isDisabled ?? false}
             type={type ?? "text"}
             onChange={({ target: { value } }) => onInputChange(value)}
             onFocus={() => {
