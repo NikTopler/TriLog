@@ -1,7 +1,10 @@
+'use client';
+
 import GoogleIcon from "@mui/icons-material/Google";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import GithubIcon from "@mui/icons-material/GitHub";
 import styles from "./SocialLoginButton.module.scss"
+import { useRouter } from "next/navigation";
 
 interface SocialLoginButtonProps {
     provider: 'Google' | 'Facebook' | 'Github';
@@ -15,9 +18,15 @@ const providerIcons = {
 
 function SocialLoginButton({ provider }: SocialLoginButtonProps) {
 
+    const router = useRouter();
+
+    const onButtonClick = () => {
+        router.push('/api/auth/social/' + provider.toLowerCase());
+    }
+
     return (
         <div className={styles['social_login__button-container']} data-provider={provider}>
-            <button className={styles['social_login__button']}>
+            <button onClick={onButtonClick} className={styles['social_login__button']}>
                 <div className={styles['social_login__button-image_container']}>
                     {providerIcons[provider]}
                 </div>

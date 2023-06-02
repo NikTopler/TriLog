@@ -1,5 +1,5 @@
 import { AuthTokenSchema, Email } from "@/schemas";
-import { ApiMessages } from "@/services";
+import { ApiMessages, AuthService } from "@/services";
 import UserService from "@/services/UserService";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -13,7 +13,7 @@ export async function GET(req: NextRequest) {
             throw new Error(ApiMessages.INVALID_PARAMS);
         }
 
-        const { email } = await UserService.verifiyVerificationToken(token);
+        const { email } = await AuthService.verifiyVerificationToken(token);
         await UserService.updateUserVerificationToken(email as Email);
 
         // TODO: Create JWT token and save it in the cookie

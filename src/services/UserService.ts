@@ -1,5 +1,8 @@
 import { Email } from "@/schemas";
 import BaseService from "./BaseService";
+import { Users } from "@prisma/client";
+
+type UserColumnsOptional = Partial<Omit<Users, 'ID'>>;
 
 const VERIFICATION_EMAIL_EXPIRATION_TIME_MS = 2 * 60 * 1000;
 
@@ -25,119 +28,78 @@ class UserService extends BaseService {
 
     }
 
-    static create(email: Email, verificationCode: string) {
+    static create(email: Email, data: UserColumnsOptional) {
 
         return this.client.users.create({
             data: {
                 email,
-                verificationCode,
-                verificationCodeExpiresAt: new Date(Date.now() + VERIFICATION_EMAIL_EXPIRATION_TIME_MS)
+                ...data
             }
+        });
+    }
+
+    static createThroughEmail(email: Email, verificationCode: string) {
+
+        return this.create(email, {
+            verificationCode,
+            verificationCodeExpiresAt: new Date(Date.now() + VERIFICATION_EMAIL_EXPIRATION_TIME_MS)
+        });
+
+    }
+
+    static createThroughSocial(email: Email, data: UserColumnsOptional) {
+
+        return this.create(email, {
+            ...data,
+            isVerified: true,
+        });
+
+    }
+
+    static update(email: Email, data: UserColumnsOptional) {
+
+        return this.client.users.update({
+            where: {
+                email
+            },
+            data
         });
 
     }
 
     static updateVerificationCode(email: Email, verificationCode: string) {
 
-        return this.client.users.update({
-            where: {
-                email
-            },
-            data: {
-                verificationCode,
-                verificationCodeExpiresAt: new Date(Date.now() + VERIFICATION_EMAIL_EXPIRATION_TIME_MS)
-            }
+        return this.update(email, {
+            verificationCode,
+            verificationCodeExpiresAt: new Date(Date.now() + VERIFICATION_EMAIL_EXPIRATION_TIME_MS)
         });
 
     }
 
     static updateVerificationToken(email: Email, verificationToken: string) {
 
-        return this.client.users.update({
-            where: {
-                email
-            },
-            data: {
-                verificationToken,
-                verificationTokenExpiresAt: new Date(Date.now() + VERIFICATION_EMAIL_EXPIRATION_TIME_MS)
-            }
+        return this.update(email, {
+            verificationToken,
+            verificationTokenExpiresAt: new Date(Date.now() + VERIFICATION_EMAIL_EXPIRATION_TIME_MS)
         });
-
-    }
-
-    static async verifyVerificationCode(email: Email, userCode: string) {
-
-        const user = await this.getByEmail(email);
-
-        if (!user) {
-            throw new Error("User not found");
-        }
-
-        if (!user.verificationCode || !user.verificationCodeExpiresAt) {
-            throw new Error("Something went wrong");
-        }
-
-        if (user.verificationCode !== userCode) {
-            throw new Error("Invalid verification code");
-        }
-
-        if (user.verificationCodeExpiresAt < new Date()) {
-            throw new Error("Verification code expired");
-        }
-
-        return user;
-
-    }
-
-    static async verifiyVerificationToken(userToken: string) {
-
-        const user = await this.getByVerificationToken(userToken);
-
-        if (!user) {
-            throw new Error("User not found");
-        }
-
-        if (!user.verificationToken || !user.verificationTokenExpiresAt) {
-            throw new Error("Something went wrong");
-        }
-
-        if (user.verificationToken !== userToken) {
-            throw new Error("Invalid verification token");
-        }
-
-        if (user.verificationTokenExpiresAt < new Date()) {
-            throw new Error("Verification token expired");
-        }
-
-        return user;
 
     }
 
     static updateUserVerificationStatus(email: Email) {
 
-        return this.client.users.update({
-            where: {
-                email
-            },
-            data: {
-                isVerified: true,
-                verificationCode: null,
-                verificationCodeExpiresAt: null
-            }
+        return this.update(email, {
+            isVerified: true,
+            verificationCode: null,
+            verificationCodeExpiresAt: null
         });
 
     }
 
     static updateUserVerificationToken(email: Email) {
 
-        return this.client.users.update({
-            where: {
-                email
-            },
-            data: {
-                verificationToken: null,
-                verificationTokenExpiresAt: null
-            }
+        return this.update(email, {
+            verificationToken: null,
+            verificationTokenExpiresAt: null
         });
 
     }

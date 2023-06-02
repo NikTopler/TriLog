@@ -1,5 +1,5 @@
 import { ApiResponse } from "@/interfaces";
-import { ApiMessages } from "@/services";
+import { ApiMessages, AuthService } from "@/services";
 import UserService from "@/services/UserService";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
             throw new Error(ApiMessages.INVALID_PARAMS);
         }
 
-        await UserService.verifyVerificationCode(email, verificationCode)
+        await AuthService.verifyVerificationCode(email, verificationCode)
         await UserService.updateUserVerificationStatus(email);
 
         // TODO: Create JWT token and send it back to the client
