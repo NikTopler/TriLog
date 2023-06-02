@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
         if (!user || !user.isVerified) {
             const verificationCode = generateVerificationCode();
             if (!user) {
-                user = await UserService.create(recipient, verificationCode);
+                user = await UserService.createThroughEmail(recipient, verificationCode);
             } else {
                 await UserService.updateVerificationCode(recipient, verificationCode);
             }
