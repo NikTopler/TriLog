@@ -1,7 +1,9 @@
+import { Email } from "@/schemas";
+
 interface FacebookAuthUserInfo {
     id: string;
     name: string;
-    email: string;
+    email: Email;
     picture: {
         data: {
             height: number;

@@ -1,6 +1,9 @@
 import ApiResponse from "./ApiResponse";
 import FacebookAccessTokenResponse from "./FacebookAccessTokenResponse";
+import FacebookAuthUserInfo from "./FacebookAuthUserInfo";
 import GenericRecord from "./GenericRecord";
+import GithubAccessTokenResponse from "./GithubAccessTokenResponse";
+import { GithubAuthUserEmail, GithubAuthUserEmailsResponse, GithubAuthUserInfo, GithubAuthUserInfoResponse } from "./GithubAuthUserInfo";
 import GoogleAuthUserInfo from "./GoogleAuthUserInfo";
 import LayoutProps from "./LayoutProps";
 import UserCookie from "./UserCookie";
@@ -11,5 +14,11 @@ export type {
     ApiResponse,
     UserCookie,
     GoogleAuthUserInfo,
-    FacebookAccessTokenResponse
+    FacebookAccessTokenResponse,
+    FacebookAuthUserInfo,
+    GithubAccessTokenResponse,
+    GithubAuthUserInfoResponse,
+    GithubAuthUserInfo,
+    GithubAuthUserEmail,
+    GithubAuthUserEmailsResponse
 }
