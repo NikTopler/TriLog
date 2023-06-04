@@ -1,4 +1,4 @@
-import { generateVerificationCode, generateVerificationToken, isEmail } from "@/helpers";
+import { generateCode, generateToken, isEmail } from "@/helpers";
 import { ApiResponse } from "@/interfaces";
 import { ApiMessages } from "@/services";
 import AuthService from "@/services/AuthService";
@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
         let user: Users | null = await UserService.getByEmail(recipient);
 
         if (!user || !user.isVerified) {
-            const verificationCode = generateVerificationCode();
+            const verificationCode = generateCode();
             if (!user) {
                 user = await UserService.createThroughEmail(recipient, verificationCode);
             } else {
@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
             }
             await AuthService.sendVerificationMail(recipient, verificationCode, false, origin);
         } else {
-            const verificationToken = generateVerificationToken();
+            const verificationToken = generateToken();
             await UserService.updateVerificationToken(recipient, verificationToken);
             await AuthService.sendVerificationMail(recipient, verificationToken, true, origin);
         }

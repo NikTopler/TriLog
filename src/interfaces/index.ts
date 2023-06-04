@@ -1,4 +1,5 @@
 import ApiResponse from "./ApiResponse";
+import FacebookAccessTokenResponse from "./FacebookAccessTokenResponse";
 import GenericRecord from "./GenericRecord";
 import GoogleAuthUserInfo from "./GoogleAuthUserInfo";
 import LayoutProps from "./LayoutProps";
@@ -9,5 +10,6 @@ export type {
     GenericRecord,
     ApiResponse,
     UserCookie,
-    GoogleAuthUserInfo
+    GoogleAuthUserInfo,
+    FacebookAccessTokenResponse
 }

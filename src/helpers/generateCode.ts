@@ -1,4 +1,4 @@
-function generateVerificationCode(numberOfDigits: number = 5): string {
+function generateCode(numberOfDigits: number = 5): string {
 
     let code: string = '';
     for (let i = 0; i < numberOfDigits; i++) {
@@ -9,4 +9,4 @@ function generateVerificationCode(numberOfDigits: number = 5): string {
 
 }
 
-export default generateVerificationCode;
+export default generateCode;

@@ -6,6 +6,8 @@ const nextConfig = {
     serverActions: true,
   },
   env: {
+    PRODUCTION: process.env.PRODUCTION === 'true',
+    APP_URL: process.env.APP_URL,
     DB_PORT: process.env.DB_PORT,
     DB_HOST: process.env.DB_HOST,
     DB_USERNAME: process.env.DB_USERNAME,
@@ -17,7 +19,8 @@ const nextConfig = {
     MAIL_ADMIN_PASSWORD: process.env.MAIL_ADMIN_PASSWORD,
     AUTH_GOOGLE_CLIENT_ID: process.env.AUTH_GOOGLE_CLIENT_ID,
     AUTH_GOOGLE_CLIENT_SECRET: process.env.AUTH_GOOGLE_CLIENT_SECRET,
-    AUTH_GOOGLE_REDIRECT_URL: process.env.AUTH_GOOGLE_REDIRECT_URL
+    AUTH_FACEBOOK_APP_ID: process.env.AUTH_FACEBOOK_APP_ID,
+    AUTH_FACEBOOK_APP_SECRET: process.env.AUTH_FACEBOOK_APP_SECRET,
   }
 }
 
