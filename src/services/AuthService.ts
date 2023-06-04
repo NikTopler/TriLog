@@ -3,15 +3,17 @@ import { Mailer } from "@/utils";
 import BaseService from "./BaseService";
 import { google } from "googleapis";
 import axios from "axios";
-import { GoogleAuthUserInfo } from "@/interfaces";
+import { FacebookAccessTokenResponse, GoogleAuthUserInfo } from "@/interfaces";
 import UserService from "./UserService";
+import { PATHS } from "@/constants";
+import FacebookAuthUserInfo from "@/interfaces/FacebookAuthUserInfo";
 
 class AuthService extends BaseService {
 
     static oauth2Client = new google.auth.OAuth2(
         process.env.AUTH_GOOGLE_CLIENT_ID,
         process.env.AUTH_GOOGLE_CLIENT_SECRET,
-        process.env.AUTH_GOOGLE_REDIRECT_URL
+        process.env.APP_URL + PATHS.AUTH.SOCIAL.GOOGLE.CALLBACK
     );
 
     static getGoogleUserData(tokenID: string, accessToken: string) {
@@ -22,12 +24,44 @@ class AuthService extends BaseService {
             }
         }).then(({ data }) => {
 
-            if(data) {
+            if (data) {
                 return data;
             }
 
             throw new Error("Did not receive user data from Google", {
                 cause: "User did not grant access to their Google account"
+            });
+
+        });
+
+    }
+
+    static getFacebookAccessToken(clientId: string, redirectUrl: string, clientSecret: string, code: string) {
+
+        return axios.get<FacebookAccessTokenResponse>(`https://graph.facebook.com/v17.0/oauth/access_token?client_id=${clientId}&redirect_uri=${redirectUrl}&client_secret=${clientSecret}&code=${code}`).then(({ data }) => {
+
+            if (data) {
+                return data;
+            }
+
+            throw new Error("Did not receive user data from Facebook", {
+                cause: "User did not grant access to their Facebook account"
+            });
+
+        });
+
+    }
+
+    static getFacebookUserData(accessToken: string) {
+
+        return axios.get<FacebookAuthUserInfo>(`https://graph.facebook.com/me?fields=id,name,email,picture&access_token=${accessToken}`).then(({ data }) => {
+
+            if (data) {
+                return data;
+            }
+
+            throw new Error("Did not receive user data from Facebook", {
+                cause: "User did not grant access to their Facebook account"
             });
 
         });

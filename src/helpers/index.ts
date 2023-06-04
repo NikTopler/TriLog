@@ -5,8 +5,8 @@ import parseQueryStringToObject from "./parseQueryStringToObject";
 import validatePaths from "./validatePaths";
 import capitalizeFirstLetter from "./capitalizeFirstLetter";
 import { apiDelete, apiGet, apiPost, apiPut } from "./apiRequest";
-import generateVerificationCode from "./generateVerificationCode";
-import generateVerificationToken from "./generateVerificationToken";
+import generateCode from "./generateCode";
+import generateToken from "./generateToken";
 
 export {
     isEmail,
@@ -19,6 +19,6 @@ export {
     apiPost,
     apiPut,
     apiDelete,
-    generateVerificationCode,
-    generateVerificationToken
+    generateCode,
+    generateToken
 }

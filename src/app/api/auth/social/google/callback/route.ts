@@ -34,11 +34,15 @@ export async function GET(req: NextRequest) {
 
         if (user) {
 
+            if(user.googleID && user.googleID !== id) {
+                throw new Error("Google ID mismatch");
+            }
+
             if (!user.googleID) {
 
                 await UserService.update(email, {
                     isVerified: true,
-                    profileImageUrl: picture,
+                    profileImageUrl: null,
                     googleID: id
                 });
 
@@ -47,7 +51,7 @@ export async function GET(req: NextRequest) {
         } else {
 
             user = await UserService.createThroughSocial(email, {
-                profileImageUrl: picture,
+                profileImageUrl: null,
                 googleID: id
             });
 
