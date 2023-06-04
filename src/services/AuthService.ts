@@ -3,10 +3,9 @@ import { Mailer } from "@/utils";
 import BaseService from "./BaseService";
 import { google } from "googleapis";
 import axios from "axios";
-import { FacebookAccessTokenResponse, GoogleAuthUserInfo } from "@/interfaces";
+import { FacebookAccessTokenResponse, FacebookAuthUserInfo, GithubAccessTokenResponse, GithubAuthUserEmail, GithubAuthUserEmailsResponse, GithubAuthUserInfo, GithubAuthUserInfoResponse, GoogleAuthUserInfo } from "@/interfaces";
 import UserService from "./UserService";
 import { PATHS } from "@/constants";
-import FacebookAuthUserInfo from "@/interfaces/FacebookAuthUserInfo";
 
 class AuthService extends BaseService {
 
@@ -65,6 +64,48 @@ class AuthService extends BaseService {
             });
 
         });
+
+    }
+
+    static getGithubAccessToken(clientId: string, clientSecret: string, code: string) {
+
+        return axios.get<GithubAccessTokenResponse>(`https://github.com/login/oauth/access_token?client_id=${clientId}&client_secret=${clientSecret}&code=${code}`, {
+            headers: {
+                Accept: 'application/json'
+            }
+        }).then(({ data }) => {
+
+            if (data) {
+                return data;
+            }
+
+            throw new Error("Did not receive user data from Github", {
+                cause: "User did not grant access to their Github account"
+            });
+
+        });
+
+    }
+
+    static getGithubUserData(accessToken: string) {
+
+        const userInfoPromise = axios.get<GithubAuthUserInfoResponse>(`https://api.github.com/user`, {
+            headers: {
+                Authorization: `token ${accessToken}`
+            }
+        });
+
+        const userEmailsPromise = axios.get<GithubAuthUserEmailsResponse>(`https://api.github.com/user/emails`, {
+            headers: {
+                Authorization: `token ${accessToken}`
+            }
+        });
+
+        return Promise.all([userInfoPromise, userEmailsPromise]).then(([{ data: userInfo }, { data: userEmails }]) => ({
+            ...userInfo,
+            id: userInfo.id.toString(),
+            email: userEmails.find((email: GithubAuthUserEmail) => email.primary)?.email
+        })) as Promise<GithubAuthUserInfo>;
 
     }
 

@@ -23,8 +23,6 @@ export async function GET(req: NextRequest) {
             throw new Error("State mismatch");
         }
 
-        cookies().delete(AUTH_FACEBOOK_STATE_COOKIE_KEY);
-
         const { access_token } = await AuthService.getFacebookAccessToken(
             process.env.AUTH_FACEBOOK_APP_ID || '',
             process.env.APP_URL + PATHS.AUTH.SOCIAL.FACEBOOK.CALLBACK,
@@ -34,7 +32,7 @@ export async function GET(req: NextRequest) {
 
         const { id, email, picture } = await AuthService.getFacebookUserData(access_token);
 
-        let user = await UserService.getByEmail(email as Email);
+        let user = await UserService.getByEmail(email);
 
         // TODO: Upload profile image to server
 
@@ -71,6 +69,9 @@ export async function GET(req: NextRequest) {
 
         // TODO: Redirect to login page with error message
         return NextResponse.redirect(new URL('/auth/login', req.nextUrl.origin));
+
+    } finally {
+        cookies().delete(AUTH_FACEBOOK_STATE_COOKIE_KEY);
     }
 
 }
