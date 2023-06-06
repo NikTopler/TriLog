@@ -18,6 +18,16 @@ class UserService extends BaseService {
 
     }
 
+    static getByRefreshToken(refreshToken: string) {
+
+        return this.client.users.findFirst({
+            where: {
+                refreshToken
+            }
+        });
+
+    }
+
     static getByVerificationToken(verificationToken: string) {
 
         return this.client.users.findFirst({
@@ -51,7 +61,7 @@ class UserService extends BaseService {
 
         return this.create(email, {
             ...data,
-            isVerified: true,
+            isVerified: true
         });
 
     }
@@ -100,6 +110,14 @@ class UserService extends BaseService {
         return this.update(email, {
             verificationToken: null,
             verificationTokenExpiresAt: null
+        });
+
+    }
+
+    static updateRefreshToken(email: Email, refreshToken: string | null) {
+
+        return this.update(email, {
+            refreshToken
         });
 
     }

@@ -1,4 +1,7 @@
-import { AUTH_GITHUB_STATE_COOKIE_KEY } from "@/constants";
+import { AUTH_GITHUB_STATE_COOKIE_KEY, USER_AUTH_COOKIE_KEY, USER_AUTH_COOKIE_OPTIONS } from "@/constants";
+import { getUserCookie } from "@/helpers/api";
+import { getAuthGithubClientIdEnv, getAuthGithubClientSecretEnv } from "@/helpers/env";
+import { UserCookie } from "@/interfaces";
 import { AuthService } from "@/services";
 import UserService from "@/services/UserService";
 import { cookies } from "next/dist/client/components/headers";
@@ -23,12 +26,16 @@ export async function GET(req: NextRequest) {
         }
 
         const { access_token } = await AuthService.getGithubAccessToken(
-            process.env.AUTH_GITHUB_CLIENT_ID || '',
-            process.env.AUTH_GITHUB_CLIENT_SECRET || '',
+            getAuthGithubClientIdEnv(),
+            getAuthGithubClientSecretEnv(),
             code,
         );
 
-        const { id, email, avatar_url } = await AuthService.getGithubUserData(access_token);
+        const { 
+            id, 
+            email, 
+            avatar_url 
+        } = await AuthService.getGithubUserData(access_token);
 
         // TODO: Upload profile image to server
 
@@ -59,7 +66,17 @@ export async function GET(req: NextRequest) {
 
         }
 
-        return NextResponse.json(user);
+        const cookieData = await AuthService.createSession(email, user);
+
+        const userCookie: UserCookie = {
+            ...getUserCookie(),
+            ...cookieData
+        };
+
+        cookies().set(USER_AUTH_COOKIE_KEY, JSON.stringify(userCookie), USER_AUTH_COOKIE_OPTIONS);
+
+        return NextResponse.redirect(new URL('/', req.nextUrl.origin));
+
 
     } catch (error: any) {
 

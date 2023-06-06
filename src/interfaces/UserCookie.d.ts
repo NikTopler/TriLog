@@ -1,17 +1,7 @@
 import { Email } from "@/schemas";
+import { UserCookieSchema } from "@/schemas";
+import z from "zod"
 
-// TODO: Implement token type
-interface UserCookieToken { }
-
-// TODO: Implement preferences type
-interface UserCookiePreferences { 
-    theme: 'light' | 'dark';
-}
-
-interface UserCookie {
-    authenticated: boolean;
-    token: UserCookieToken | null;
-    preferences: UserCookiePreferences;
-}
+type UserCookie = z.infer<typeof UserCookieSchema>;
 
 export default UserCookie;

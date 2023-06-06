@@ -8,6 +8,7 @@ import { apiPost, createQueryString, isEmail } from "@/helpers";
 import { Email } from "@/schemas";
 import { EmailAuthContext } from "../layout";
 import styles from "./email-verification.module.scss";
+import { useAuthContext } from "@/providers";
 
 interface VerificationFieldConfig {
     value: string;
@@ -19,6 +20,7 @@ const EMAIL_VERIFICATION_TIMEOUT_MS = 30000;
 
 function EmailVerification() {
 
+    const auth = useAuthContext();
     const { email } = useContext(EmailAuthContext);
 
     const router = useRouter();
@@ -53,6 +55,13 @@ function EmailVerification() {
         if (NUM_OF_VERIFICATION_FIELDS === code.length) {
 
             setIsLoading(true);
+
+            if(!isEmail(email)) {
+                return;
+            }
+
+            auth.emailVerification(email, code)
+                .finally(() => setIsLoading(false));
 
             apiPost('/api/auth/email-verification', { email, verificationCode: code })
                 .then(() => router.push('/'))

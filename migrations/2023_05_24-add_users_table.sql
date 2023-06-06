@@ -2,6 +2,7 @@ CREATE TABLE Users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     email VARCHAR(255) UNIQUE NOT NULL,
     profileImageUrl VARCHAR(255) DEFAULT NULL,
+    refreshToken VARCHAR(255) DEFAULT NULL,
     verificationToken VARCHAR(255) DEFAULT NULL,
     verificationTokenExpiresAt DATETIME DEFAULT NULL,
     verificationCode VARCHAR(5) DEFAULT NULL,

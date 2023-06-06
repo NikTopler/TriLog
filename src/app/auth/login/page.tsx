@@ -1,47 +1,36 @@
 'use client';
 
 import { useContext, useState } from "react";
-import { useRouter } from "next/navigation";
 import { CustomTextBox, RegularButton } from "@/components/inputs";
 import { SocialLoginButton } from "@/components/buttons";
-import { apiPost, isEmail } from "@/helpers";
+import { isEmail } from "@/helpers";
 import { EmailAuthContext } from "../layout";
-import { LoginSuccessResponse } from "@/app/api/auth/login/route";
+import { useAuthContext } from "@/providers";
 
 export default function Login() {
 
-    const router = useRouter();
-
+    const auth = useAuthContext();
     const { email, setEmail } = useContext(EmailAuthContext);
+
     const [isProcessing, setIsProcessing] = useState(false);
 
     const onContinueClick = () => {
 
         setIsProcessing(true);
 
-        apiPost<LoginSuccessResponse>('/api/auth/login', { recipient: email })
-            .then((res) => {
+        if (!isEmail(email)) {
+            setIsProcessing(false);
+            return;
+        }
 
-                if (!res) {
-                    throw new Error('There has been an error. Please try again later.');
-                }
-
-                if (res.isVerified) {
-                    router.push('/auth/verification-link-sent');
-                } else {
-                    router.push('/auth/email-verification?email=' + email);
-                }
-
-            })
-            .catch((err) => {
-                // TODO: Handle error
-                console.log(err);
-            })
+        auth.login(email)
             .finally(() => {
                 setIsProcessing(false);
             });
 
     }
+
+    const setIsProcessingTrue = () => setIsProcessing(true);
 
     return (
         <>
@@ -96,9 +85,21 @@ export default function Login() {
                     <span className={"auth-container__popup-main__instruction"}>or</span>
                 </div>
                 <div className="m-bottom-2">
-                    <SocialLoginButton provider="Google" />
-                    <SocialLoginButton provider="Facebook" />
-                    <SocialLoginButton provider="Github" />
+                    <SocialLoginButton
+                        provider="google"
+                        disabled={isProcessing}
+                        setIsProcessing={setIsProcessingTrue}
+                    />
+                    <SocialLoginButton
+                        provider="facebook"
+                        disabled={isProcessing}
+                        setIsProcessing={setIsProcessingTrue}
+                    />
+                    <SocialLoginButton
+                        provider="github"
+                        disabled={isProcessing}
+                        setIsProcessing={setIsProcessingTrue}
+                    />
                 </div>
             </div>
 

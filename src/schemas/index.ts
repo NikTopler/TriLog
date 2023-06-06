@@ -7,10 +7,12 @@ import { TriathlonTypeSchema, TriathlonTypeSchemaOptional, TriathlonTypesFilterO
 import EmailSchema, { Email } from "./shared/EmailSchema";
 import UserCookieSchema, { isUserCookie } from "./shared/UserCookieSchema";
 import AuthTokenSchema from "./shared/AuthTokenSchema";
+import UrlSchema, { Url } from "./shared/UrlSchema";
 
 export type {
     Email,
-    PaginationOptions
+    Url,
+    PaginationOptions,
 }
 
 export {
@@ -32,5 +34,6 @@ export {
     TriathlonTypesFilterOptionSchema,
     TriathlonTypeSchema,
     TriathlonTypeSchemaOptional,
-    AuthTokenSchema
+    AuthTokenSchema,
+    UrlSchema
 }

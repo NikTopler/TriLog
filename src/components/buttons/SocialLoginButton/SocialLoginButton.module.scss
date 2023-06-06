@@ -52,7 +52,12 @@
     padding-bottom: 3px;
 }
 
-.social_login__button-container[data-provider="Google"] {
+.social_login__button-container[data-disabled=true] {
+    cursor: none;
+    opacity: 0.5;
+}
+
+.social_login__button-container[data-provider="google"] {
 
     .social_login__button {
         background-color: #4885ed;
@@ -74,7 +79,7 @@
 
 }
 
-.social_login__button-container[data-provider="Facebook"] {
+.social_login__button-container[data-provider="facebook"] {
 
     .social_login__button {
         background-color: #1877F2;
@@ -92,7 +97,7 @@
 
 }
 
-.social_login__button-container[data-provider="Github"] {
+.social_login__button-container[data-provider="github"] {
 
     .social_login__button {
         background-color: $color-secondary-90;

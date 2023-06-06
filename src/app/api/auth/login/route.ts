@@ -1,6 +1,6 @@
+import { ApiMessage } from "@/constants";
 import { generateCode, generateToken, isEmail } from "@/helpers";
 import { ApiResponse } from "@/interfaces";
-import { ApiMessages } from "@/services";
 import AuthService from "@/services/AuthService";
 import UserService from "@/services/UserService";
 import { Users } from "@prisma/client";
@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
     try {
 
         if (!isEmail(recipient)) {
-            throw new Error(ApiMessages.INVALID_EMAIL);
+            throw new Error(ApiMessage.INVALID_EMAIL);
         }
 
         const { origin } = req.nextUrl;
@@ -39,7 +39,7 @@ export async function POST(req: NextRequest) {
 
         const res: ApiResponse<LoginSuccessResponse> = {
             success: true,
-            message: ApiMessages.AUTH_VERIFICATION_LINK_SENT,
+            message: ApiMessage.AUTH_VERIFICATION_LINK_SENT,
             data: {
                 isVerified: user.isVerified
             }
@@ -51,8 +51,8 @@ export async function POST(req: NextRequest) {
 
         const res: ApiResponse<never> = {
             success: false,
-            message: ApiMessages.AUTH_VERIFICATION_LINK_SENT_ERROR,
-            errors: error
+            message: ApiMessage.AUTH_VERIFICATION_LINK_SENT_ERROR,
+            errors: (error instanceof Error) ? error.message : error
         };
 
         return NextResponse.json(res, { status: 400 });

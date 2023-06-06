@@ -1,17 +1,21 @@
 import { Email } from "@/schemas";
-import { Mailer } from "@/utils";
+import { Mailer, Token, TokenDecryptObj } from "@/utils";
 import BaseService from "./BaseService";
 import { google } from "googleapis";
 import axios from "axios";
-import { FacebookAccessTokenResponse, FacebookAuthUserInfo, GithubAccessTokenResponse, GithubAuthUserEmail, GithubAuthUserEmailsResponse, GithubAuthUserInfo, GithubAuthUserInfoResponse, GoogleAuthUserInfo } from "@/interfaces";
+import { AccessTokenData, FacebookAccessTokenResponse, FacebookAuthUserInfo, GithubAccessTokenResponse, GithubAuthUserEmail, GithubAuthUserEmailsResponse, GithubAuthUserInfo, GithubAuthUserInfoResponse, GoogleAuthUserInfo, UserCookie } from "@/interfaces";
 import UserService from "./UserService";
-import { PATHS } from "@/constants";
+import { PATHS, USER_AUTH_COOKIE_KEY, USER_AUTH_COOKIE_OPTIONS } from "@/constants";
+import { getAuthAccessTokenEncryptionSecretEnv, getAuthGoogleClientIdEnv, getAuthGoogleClientSecretEnv, getMailAdminEmail } from "@/helpers/env";
+import { cookies } from "next/dist/client/components/headers";
+import { AuthError } from "@/errors";
+import { Users } from "@prisma/client";
 
 class AuthService extends BaseService {
 
     static oauth2Client = new google.auth.OAuth2(
-        process.env.AUTH_GOOGLE_CLIENT_ID,
-        process.env.AUTH_GOOGLE_CLIENT_SECRET,
+        getAuthGoogleClientIdEnv(),
+        getAuthGoogleClientSecretEnv(),
         process.env.APP_URL + PATHS.AUTH.SOCIAL.GOOGLE.CALLBACK
     );
 
@@ -133,7 +137,7 @@ class AuthService extends BaseService {
 
     }
 
-    static async verifiyVerificationToken(userToken: string) {
+    static async verifyVerificationToken(userToken: string) {
 
         const user = await UserService.getByVerificationToken(userToken);
 
@@ -161,7 +165,7 @@ class AuthService extends BaseService {
         recipient: Email,
         code: string,
         isVerified: boolean,
-        origin: string = 'http://localhost:3000'
+        origin: string = process.env.APP_URL!
     ) {
 
         // TODO: create a templates
@@ -175,11 +179,64 @@ class AuthService extends BaseService {
         }
 
         await Mailer.sendMail(
-            undefined,
+            getMailAdminEmail(),
             recipient,
             title,
             content
         );
+
+    }
+
+    static async createSession(email: Email, userInfo?: Users) {
+
+        if (!userInfo) {
+
+            let userRes = await UserService.getByEmail(email);
+
+            if (!userRes) {
+                throw new Error("User not found");
+            }
+
+            userInfo = userRes;
+        }
+
+        const { refreshToken, encryptedRefreshToken, encryptedAccessToken } = await Token.generateAndEncryptAuthTokens({ email, role: userInfo.role });
+
+        await UserService.updateRefreshToken(email as Email, refreshToken);
+
+        return {
+            authenticated: true,
+            refreshToken: encryptedRefreshToken,
+            accessToken: encryptedAccessToken
+        };
+
+    }
+
+    static async logout(userCookie: UserCookie) {
+
+        const { authenticated, accessToken } = userCookie;
+
+        try {
+
+            if (!authenticated || !accessToken) {
+                throw new AuthError("Failed to logout");
+            }
+
+            const decryptedAccessToken = await Token.decrypt(accessToken, getAuthAccessTokenEncryptionSecretEnv()) as TokenDecryptObj;
+
+            const userData = Token.decode<AccessTokenData>(decryptedAccessToken.payload.token);
+            await UserService.updateRefreshToken(userData.email, null);
+
+            userCookie.authenticated = false;
+            userCookie.accessToken = null;
+            userCookie.refreshToken = null;
+
+            cookies().set(USER_AUTH_COOKIE_KEY, JSON.stringify(userCookie), USER_AUTH_COOKIE_OPTIONS);
+
+        } catch (error: any) {
+            console.log(error.message);
+            throw new AuthError("Failed to logout");
+        }
 
     }
 

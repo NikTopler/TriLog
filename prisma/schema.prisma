@@ -145,6 +145,7 @@ model Users {
   id                         Int        @id @default(autoincrement())
   email                      String     @unique(map: "email") @db.VarChar(255)
   profileImageUrl            String?    @db.VarChar(255)
+  refreshToken               String?    @db.VarChar(255)
   verificationToken          String?    @db.VarChar(255)
   verificationTokenExpiresAt DateTime?  @db.DateTime(0)
   verificationCode           String?    @db.VarChar(5)
