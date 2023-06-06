@@ -1,5 +1,6 @@
+import { ApiMessage } from "@/constants";
 import { ApiResponse } from "@/interfaces";
-import { ApiMessages, AuthService } from "@/services";
+import { AuthService } from "@/services";
 import UserService from "@/services/UserService";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -10,7 +11,7 @@ export async function POST(req: NextRequest) {
     try {
 
         if (!email || !verificationCode) {
-            throw new Error(ApiMessages.INVALID_PARAMS);
+            throw new Error(ApiMessage.INVALID_PARAMS);
         }
 
         await AuthService.verifyVerificationCode(email, verificationCode)
@@ -20,7 +21,7 @@ export async function POST(req: NextRequest) {
 
         const res: ApiResponse<never> = {
             success: true,
-            message: ApiMessages.EMAIL_VERIFIED
+            message: ApiMessage.EMAIL_VERIFIED
         }
 
         return NextResponse.json(res, { status: 200 });
@@ -29,7 +30,7 @@ export async function POST(req: NextRequest) {
 
         const res: ApiResponse<never> = {
             success: false,
-            message: ApiMessages.EMAIL_VERIFIED_ERROR,
+            message: ApiMessage.EMAIL_VERIFIED_ERROR,
             errors: error.message
         };
 

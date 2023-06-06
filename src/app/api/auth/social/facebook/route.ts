@@ -1,10 +1,11 @@
 import { AUTH_FACEBOOK_STATE_COOKIE_KEY, AUTH_STATE_TOKEN_EXPIRATION, AUTH_STATE_TOKEN_LENGTH, PATHS } from "@/constants";
 import { generateToken } from "@/helpers";
+import { getAuthFacebookAppIdEnv } from "@/helpers/env";
 import { NextResponse } from "next/server";
 
 export async function GET() {
 
-    const appId = process.env.AUTH_FACEBOOK_APP_ID;
+    const appId = getAuthFacebookAppIdEnv();
     const redirectUri = process.env.APP_URL + PATHS.AUTH.SOCIAL.FACEBOOK.CALLBACK;
     const state = generateToken(AUTH_STATE_TOKEN_LENGTH);
 

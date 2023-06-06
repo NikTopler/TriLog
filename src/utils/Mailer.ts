@@ -1,15 +1,21 @@
-import nodemailer from 'nodemailer';
+import { getMailAdminEmail, getMailAdminPasswordEnv, getMailHostEnv } from "@/helpers/env";
+import nodemailer from "nodemailer";
 
 class Mailer {
 
-    static async sendMail(from: string = process.env.MAIL_ADMIN_EMAIL!, to: string, subject: string, html: string) {
+    static async sendMail(
+        from: string,
+        to: string,
+        subject: string,
+        html: string
+    ) {
 
         const transporter = nodemailer.createTransport({
-            host: process.env.MAIL_HOST,
+            host: getMailHostEnv(),
             secure: true,
             auth: {
-                user: process.env.MAIL_ADMIN_EMAIL,
-                pass: process.env.MAIL_ADMIN_PASSWORD
+                user: getMailAdminEmail(),
+                pass: getMailAdminPasswordEnv()
             },
         });
 

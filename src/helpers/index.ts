@@ -7,9 +7,12 @@ import capitalizeFirstLetter from "./capitalizeFirstLetter";
 import { apiDelete, apiGet, apiPost, apiPut } from "./apiRequest";
 import generateCode from "./generateCode";
 import generateToken from "./generateToken";
+import isUrl from "./isUrl";
+import getCurrentTimestamp from "./getCurrentTimestamp";
 
 export {
     isEmail,
+    isUrl,
     createQueryString,
     parseQueryStringToObject,
     parsePositiveInt,
@@ -20,5 +23,6 @@ export {
     apiPut,
     apiDelete,
     generateCode,
-    generateToken
+    generateToken,
+    getCurrentTimestamp
 }

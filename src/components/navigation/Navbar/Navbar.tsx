@@ -1,7 +1,7 @@
 'use client';
 
 import { usePathname, useRouter } from "next/navigation";
-import { forwardRef, useImperativeHandle, useState } from "react";
+import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 import { Tooltip } from "@mui/joy";
 import LightModeIcon from '@mui/icons-material/LightMode';
 import NightlightRoundIcon from '@mui/icons-material/NightlightRound';
@@ -12,6 +12,8 @@ import DropdownLayout, { ListConfig, TabsConfig } from "@/components/layouts/Dro
 import { TriathlonCategories, TriathlonTypes } from "@prisma/client";
 import styles from "./navbar.module.scss";
 import { StateObject } from "@/app/(home)/HomeLayout";
+import { useAuthContext } from "@/providers";
+import { Box, Skeleton } from "@mui/material";
 
 const triathlonCategoriesStyle = {
     width: '300px',
@@ -37,6 +39,7 @@ const Navbar = forwardRef(({ }, ref) => {
     const router = useRouter();
     const pathname = usePathname();
 
+    const auth = useAuthContext();
     const [search, setSearch] = useState<string>('');
     const [searchFocused, setSearchFocused] = useState<boolean>(false);
 
@@ -56,6 +59,11 @@ const Navbar = forwardRef(({ }, ref) => {
         loading: true,
         errors: null
     });
+
+    useEffect(() => {
+        console.log('isLoading', auth.loading);
+        console.log('is authenticated: ', auth.authenticated);
+    }, []);
 
     useImperativeHandle(ref, () => ({
         setCategories: ({ data, loading, errors }: StateObject<TriathlonCategories[]>) => {
@@ -96,10 +104,18 @@ const Navbar = forwardRef(({ }, ref) => {
 
     const AccountView = () => {
 
-        if (user) {
+        if(auth.loading) {
+            return (
+                <Box>
+                    <Skeleton />
+                </Box>
+            );
+        }
+
+        if (auth.authenticated) {
             return (
                 <Tooltip title="Profile">
-                    <div className={styles['navbar__container__menu-container__image-container']} data-image>
+                    <div className={styles['navbar__container__menu-container__image-container']} data-image onClick={auth.logout}>
                         {/* TODO: Replace img with Next Image */}
                         <img src="https://via.placeholder.com/150" alt="profile" />
                     </div>

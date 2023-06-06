@@ -1,7 +1,11 @@
-import DatabaseConn from "@/utils/DatabaseConn";
 import Mailer from "./Mailer";
+import Token, { TokenDecryptObj } from "./Token";
+
+export type {
+    TokenDecryptObj
+}
 
 export {
-    DatabaseConn,
-    Mailer
+    Mailer,
+    Token,    
 }

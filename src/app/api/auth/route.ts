@@ -1,6 +1,12 @@
+import { USER_AUTH_COOKIE_KEY, USER_AUTH_COOKIE_OPTIONS } from "@/constants";
+import { ApiMessage } from "@/constants";
+import { getUserCookie } from "@/helpers/api";
+import { UserCookie } from "@/interfaces";
 import { AuthTokenSchema, Email } from "@/schemas";
-import { ApiMessages, AuthService } from "@/services";
+import { AuthService } from "@/services";
 import UserService from "@/services/UserService";
+import { Token } from "@/utils";
+import { cookies } from "next/dist/client/components/headers";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
@@ -10,13 +16,18 @@ export async function GET(req: NextRequest) {
     try {
 
         if (!AuthTokenSchema.safeParse(token).success) {
-            throw new Error(ApiMessages.INVALID_PARAMS);
+            throw new Error(ApiMessage.INVALID_PARAMS);
         }
 
-        const { email } = await AuthService.verifiyVerificationToken(token);
-        await UserService.updateUserVerificationToken(email as Email);
+        const userInfo = await AuthService.verifyVerificationToken(token);
+        const cookieData = await AuthService.createSession(userInfo.email as Email, userInfo);
 
-        // TODO: Create JWT token and save it in the cookie
+        const userCookie: UserCookie = {
+            ...getUserCookie(),
+            ...cookieData
+        };
+
+        cookies().set(USER_AUTH_COOKIE_KEY, JSON.stringify(userCookie), USER_AUTH_COOKIE_OPTIONS);
 
         return NextResponse.redirect(new URL('/', req.nextUrl.origin));
 
@@ -24,7 +35,6 @@ export async function GET(req: NextRequest) {
 
         // TODO: Redirect to login page with error message
         console.log(error.message);
-        
         return NextResponse.redirect(new URL('/auth/login', req.nextUrl.origin));
 
     }
