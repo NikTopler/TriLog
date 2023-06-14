@@ -6,9 +6,11 @@ import GithubAccessTokenResponse from "./GithubAccessTokenResponse";
 import { GithubAuthUserEmail, GithubAuthUserEmailsResponse, GithubAuthUserInfo, GithubAuthUserInfoResponse } from "./GithubAuthUserInfo";
 import GoogleAuthUserInfo from "./GoogleAuthUserInfo";
 import LayoutProps from "./LayoutProps";
+import RequestParams from "./RequestParams";
 import UserCookie from "./UserCookie";
 
 export type {
+    RequestParams,
     LayoutProps,
     GenericRecord,
     ApiResponse,

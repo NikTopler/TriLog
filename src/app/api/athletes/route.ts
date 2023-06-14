@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { Athletes } from "@prisma/client";
 import { AthleteService, BaseService } from "@/services";
 import { AthleteFilterOptionSchema, AthleteSchema, createPaginationOptionSchema } from "@/schemas";
-import { parseQueryStringToObject } from "@/helpers";
 
 export async function GET(req: NextRequest) {
 
@@ -13,10 +12,15 @@ export async function GET(req: NextRequest) {
         const validatedFilter = AthleteFilterOptionSchema.parse(searchParams);
         const validatedPagination = createPaginationOptionSchema(BaseService.getColumnNames('Athletes') || []).parse(searchParams);
 
+        const [count, data] = await Promise.all([
+            AthleteService.getAll(validatedFilter, validatedPagination, true),
+            AthleteService.getAll(validatedFilter, validatedPagination)
+        ]);
+
         return NextResponse.json({
             success: true,
-            count: await AthleteService.getAll(validatedFilter, validatedPagination, true),
-            data: await AthleteService.getAll(validatedFilter, validatedPagination)
+            count,
+            data
         }, { status: 200 });
 
     } catch (error: any) {
@@ -31,10 +35,9 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
 
-    const body = parseQueryStringToObject(await req.text());
-
     try {
 
+        const body = await req.json();
         const athlete = AthleteSchema.parse(body) as Athletes;
 
         //TODO: validate place ids

@@ -1,16 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
 import { TriathlonTypeService } from "@/services";
-import { parsePositiveInt, parseQueryStringToObject } from "@/helpers";
+import { parsePositiveInt } from "@/helpers";
 import { TriathlonTypeSchemaOptional } from "@/schemas";
+import { RequestParams } from "@/interfaces";
 
 const INVALID_ID_ERROR_MESSAGE = "Invalid triathlon type ID";
 
-export async function GET(req: NextRequest) {
+type TriathlonTypeParams = RequestParams<{
+    typeId: string
+}>;
+
+export async function GET(req: NextRequest, { params }: TriathlonTypeParams) {
 
     try {
 
-        const [, , , , typeId] = req.nextUrl.pathname.split('/');
-        const ID = await parsePositiveInt(typeId, INVALID_ID_ERROR_MESSAGE);
+        const ID = await parsePositiveInt(params.typeId, INVALID_ID_ERROR_MESSAGE);
 
         return NextResponse.json({
             success: true,
@@ -28,15 +32,12 @@ export async function GET(req: NextRequest) {
 
 }
 
-export async function PUT(req: NextRequest) {
+export async function PUT(req: NextRequest, { params }: TriathlonTypeParams) {
 
     try {
 
-        const [, , , , typeId] = req.nextUrl.pathname.split('/');
-        const ID = await parsePositiveInt(typeId, INVALID_ID_ERROR_MESSAGE);
-
-        const body = parseQueryStringToObject(await req.text());
-
+        const ID = await parsePositiveInt(params.typeId, INVALID_ID_ERROR_MESSAGE);
+        const body = await req.json();
         const type = TriathlonTypeSchemaOptional.parse(body);
 
         if (Object.keys(type).length === 0) {
@@ -58,12 +59,11 @@ export async function PUT(req: NextRequest) {
 
 }
 
-export async function DELETE(req: NextRequest) {
+export async function DELETE(req: NextRequest, { params }: TriathlonTypeParams) {
 
     try {
 
-        const [, , , , typeId] = req.nextUrl.pathname.split('/');
-        const ID = await parsePositiveInt(typeId, INVALID_ID_ERROR_MESSAGE);
+        const ID = await parsePositiveInt(params.typeId, INVALID_ID_ERROR_MESSAGE);
 
         await TriathlonTypeService.delete(ID);
 
