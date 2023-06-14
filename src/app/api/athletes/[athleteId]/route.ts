@@ -1,16 +1,20 @@
-import { parsePositiveInt, parseQueryStringToObject } from "@/helpers";
+import { parsePositiveInt } from "@/helpers";
+import { RequestParams } from "@/interfaces";
 import { AthleteSchemaOptional } from "@/schemas";
 import { AthleteService } from "@/services";
 import { NextRequest, NextResponse } from "next/server";
 
 const INVALID_ID_ERROR_MESSAGE = "Invalid athlete ID";
 
-export async function GET(req: NextRequest) {
+type AthleteParams = RequestParams<{
+    athleteId: string
+}>;
+
+export async function GET(req: NextRequest, { params }: AthleteParams) {
 
     try {
 
-        const [, , , athleteId] = req.nextUrl.pathname.split('/');
-        const ID = await parsePositiveInt(athleteId, INVALID_ID_ERROR_MESSAGE);
+        const ID = await parsePositiveInt(params.athleteId, INVALID_ID_ERROR_MESSAGE);
 
         return NextResponse.json({
             success: true,
@@ -28,15 +32,12 @@ export async function GET(req: NextRequest) {
 
 }
 
-export async function PUT(req: NextRequest) {
+export async function PUT(req: NextRequest, { params }: AthleteParams) {
 
     try {
 
-        const [, , , athleteId] = req.nextUrl.pathname.split('/');
-        const ID = await parsePositiveInt(athleteId, INVALID_ID_ERROR_MESSAGE);
-
-        const body = parseQueryStringToObject(await req.text());
-
+        const ID = await parsePositiveInt(params.athleteId, INVALID_ID_ERROR_MESSAGE);
+        const body = await req.json();
         const athlete = AthleteSchemaOptional.parse(body);
 
         if (Object.keys(athlete).length === 0) {
@@ -61,12 +62,11 @@ export async function PUT(req: NextRequest) {
 
 }
 
-export async function DELETE(req: NextRequest) {
+export async function DELETE(req: NextRequest, { params }: AthleteParams) {
 
     try {
 
-        const [, , , athleteId] = req.nextUrl.pathname.split('/');
-        const ID = await parsePositiveInt(athleteId, INVALID_ID_ERROR_MESSAGE);
+        const ID = await parsePositiveInt(params.athleteId, INVALID_ID_ERROR_MESSAGE);
 
         // TODO: delete athlete's children (participations, results, etc.)
 

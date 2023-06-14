@@ -1,16 +1,20 @@
-import { parsePositiveInt, parseQueryStringToObject } from "@/helpers";
+import { parsePositiveInt } from "@/helpers";
+import { RequestParams } from "@/interfaces";
 import { TriathlonCategorySchemaOptional } from "@/schemas";
 import TriathlonCategoryService from "@/services/TriathlonCategoryService";
 import { NextRequest, NextResponse } from "next/server";
 
 const INVALID_ID_ERROR_MESSAGE = "Invalid triathlon category ID";
 
-export async function GET(req: NextRequest) {
+type TriathlonCategoryParams = RequestParams<{
+    categoryId: string
+}>;
+
+export async function GET(req: NextRequest, { params }: TriathlonCategoryParams) {
 
     try {
 
-        const [, , , , categoryId] = req.nextUrl.pathname.split('/');
-        const ID = await parsePositiveInt(categoryId, INVALID_ID_ERROR_MESSAGE);
+        const ID = await parsePositiveInt(params.categoryId, INVALID_ID_ERROR_MESSAGE);
 
         return NextResponse.json({
             success: true,
@@ -18,7 +22,6 @@ export async function GET(req: NextRequest) {
         }, { status: 200 });
 
     } catch (error: any) {
-
 
         return NextResponse.json({
             status: 400,
@@ -30,14 +33,12 @@ export async function GET(req: NextRequest) {
 }
 
 
-export async function PUT(req: NextRequest) {
+export async function PUT(req: NextRequest, { params }: TriathlonCategoryParams) {
 
     try {
 
-        const [, , , , categoryId] = req.nextUrl.pathname.split('/');
-        const ID = await parsePositiveInt(categoryId, INVALID_ID_ERROR_MESSAGE);
-
-        const body = parseQueryStringToObject(await req.text());
+        const ID = await parsePositiveInt(params.categoryId, INVALID_ID_ERROR_MESSAGE);
+        const body = await req.json();
 
         const category = TriathlonCategorySchemaOptional.parse(body);
 
@@ -61,12 +62,11 @@ export async function PUT(req: NextRequest) {
 
 }
 
-export async function DELETE(req: NextRequest) {
+export async function DELETE(req: NextRequest, { params }: TriathlonCategoryParams) {
 
     try {
 
-        const [, , , , categoryId] = req.nextUrl.pathname.split('/');
-        const ID = await parsePositiveInt(categoryId, INVALID_ID_ERROR_MESSAGE);
+        const ID = await parsePositiveInt(params.categoryId, INVALID_ID_ERROR_MESSAGE);
 
         // TODO: delete triathlon category's children
 
