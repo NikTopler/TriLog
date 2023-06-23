@@ -3,10 +3,8 @@ import { ApiMessage } from "@/constants";
 import { getUserCookie } from "@/helpers/api";
 import { UserCookie } from "@/interfaces";
 import { AuthTokenSchema, Email } from "@/schemas";
-import { AuthService } from "@/services";
-import UserService from "@/services/UserService";
-import { Token } from "@/utils";
-import { cookies } from "next/dist/client/components/headers";
+import { AuthService, UserService } from "@/services";
+import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
@@ -20,7 +18,11 @@ export async function GET(req: NextRequest) {
         }
 
         const userInfo = await AuthService.verifyVerificationToken(token);
-        const cookieData = await AuthService.createSession(userInfo.email as Email, userInfo);
+        const email = userInfo.email as Email;
+
+        // TODO: optimize this
+        await UserService.updateUserVerificationToken(email);
+        const cookieData = await AuthService.createSession(email, userInfo);
 
         const userCookie: UserCookie = {
             ...getUserCookie(),

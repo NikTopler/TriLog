@@ -4,8 +4,8 @@ import { getAuthFacebookAppIdEnv, getAuthFacebookAppSecretEnv } from "@/helpers/
 import { UserCookie } from "@/interfaces";
 import { Email } from "@/schemas";
 import { AuthService } from "@/services";
-import UserService from "@/services/UserService";
-import { cookies } from "next/dist/client/components/headers";
+import { UserService } from "@/services";
+import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
@@ -33,23 +33,23 @@ export async function GET(req: NextRequest) {
             code
         );
 
-        const { 
-            id, 
-            email, 
-            picture 
+        const {
+            id,
+            email,
+            picture
         } = await AuthService.getFacebookUserData(access_token);
 
-        let user = await UserService.getByEmail(email);
+        let userInfo = await UserService.getByEmail(email);
 
         // TODO: Upload profile image to server
 
-        if (user) {
+        if (userInfo) {
 
-            if (user.facebookID && user.facebookID !== id) {
+            if (userInfo.facebookID && userInfo.facebookID !== id) {
                 throw new Error("Facebook ID mismatch");
             }
 
-            if (!user.facebookID) {
+            if (!userInfo.facebookID) {
 
                 await UserService.update(email as Email, {
                     isVerified: true,
@@ -61,30 +61,34 @@ export async function GET(req: NextRequest) {
 
         } else {
 
-            user = await UserService.createThroughSocial(email as Email, {
+            userInfo = await UserService.createThroughSocial(email as Email, {
                 profileImageUrl: null,
                 facebookID: id
             });
 
         }
 
-        const cookieData = await AuthService.createSession(email, user);
+        const cookieData = await AuthService.createSession(email, userInfo);
 
         const userCookie: UserCookie = {
             ...getUserCookie(),
             ...cookieData
         };
 
-        cookies().set(USER_AUTH_COOKIE_KEY, JSON.stringify(userCookie), USER_AUTH_COOKIE_OPTIONS);
+        cookies().set(
+            USER_AUTH_COOKIE_KEY,
+            JSON.stringify(userCookie),
+            USER_AUTH_COOKIE_OPTIONS
+        );
 
-        return NextResponse.redirect(new URL('/', req.nextUrl.origin));
+        return NextResponse.redirect(req.nextUrl.origin);
 
     } catch (error: any) {
 
         console.log(error.message);
 
         // TODO: Redirect to login page with error message
-        return NextResponse.redirect(new URL('/auth/login', req.nextUrl.origin));
+        return NextResponse.redirect(req.nextUrl.origin + '/auth/login');
 
     } finally {
         cookies().delete(AUTH_FACEBOOK_STATE_COOKIE_KEY);
