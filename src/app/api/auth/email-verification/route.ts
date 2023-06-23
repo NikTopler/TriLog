@@ -1,7 +1,9 @@
-import { ApiMessage } from "@/constants";
-import { ApiResponse } from "@/interfaces";
+import { ApiMessage, USER_AUTH_COOKIE_KEY, USER_AUTH_COOKIE_OPTIONS } from "@/constants";
+import { getUserCookie } from "@/helpers/api";
+import { ApiResponse, UserCookie } from "@/interfaces";
 import { AuthService } from "@/services";
 import { UserService } from "@/services";
+import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
@@ -14,10 +16,22 @@ export async function POST(req: NextRequest) {
             throw new Error(ApiMessage.INVALID_PARAMS);
         }
 
-        await AuthService.verifyVerificationCode(email, verificationCode)
-        await UserService.updateUserVerificationStatus(email);
+        const userInfo = await AuthService.verifyVerificationCode(email, verificationCode)
 
-        // TODO: Create JWT token and send it back to the client
+        // TODO: optimize this
+        await UserService.updateUserVerificationStatus(email);
+        const cookieData = await AuthService.createSession(email, userInfo);
+
+        const userCookie: UserCookie = {
+            ...getUserCookie(),
+            ...cookieData
+        };
+
+        cookies().set(
+            USER_AUTH_COOKIE_KEY,
+            JSON.stringify(userCookie),
+            USER_AUTH_COOKIE_OPTIONS
+        );
 
         const res: ApiResponse<never> = {
             success: true,
