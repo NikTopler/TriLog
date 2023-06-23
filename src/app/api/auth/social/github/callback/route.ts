@@ -3,8 +3,8 @@ import { getUserCookie } from "@/helpers/api";
 import { getAuthGithubClientIdEnv, getAuthGithubClientSecretEnv } from "@/helpers/env";
 import { UserCookie } from "@/interfaces";
 import { AuthService } from "@/services";
-import UserService from "@/services/UserService";
-import { cookies } from "next/dist/client/components/headers";
+import { UserService } from "@/services";
+import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
@@ -31,23 +31,23 @@ export async function GET(req: NextRequest) {
             code,
         );
 
-        const { 
-            id, 
-            email, 
-            avatar_url 
+        const {
+            id,
+            email,
+            avatar_url
         } = await AuthService.getGithubUserData(access_token);
 
         // TODO: Upload profile image to server
 
-        let user = await UserService.getByEmail(email);
+        let userInfo = await UserService.getByEmail(email);
 
-        if (user) {
+        if (userInfo) {
 
-            if (user.githubID && user.githubID !== id) {
+            if (userInfo.githubID && userInfo.githubID !== id) {
                 throw new Error("Github ID mismatch");
             }
 
-            if (!user.githubID) {
+            if (!userInfo.githubID) {
 
                 await UserService.update(email, {
                     isVerified: true,
@@ -59,21 +59,25 @@ export async function GET(req: NextRequest) {
 
         } else {
 
-            user = await UserService.createThroughSocial(email, {
+            userInfo = await UserService.createThroughSocial(email, {
                 profileImageUrl: null,
                 githubID: id
             });
 
         }
 
-        const cookieData = await AuthService.createSession(email, user);
+        const cookieData = await AuthService.createSession(email, userInfo);
 
         const userCookie: UserCookie = {
             ...getUserCookie(),
             ...cookieData
         };
 
-        cookies().set(USER_AUTH_COOKIE_KEY, JSON.stringify(userCookie), USER_AUTH_COOKIE_OPTIONS);
+        cookies().set(
+            USER_AUTH_COOKIE_KEY,
+            JSON.stringify(userCookie),
+            USER_AUTH_COOKIE_OPTIONS
+        );
 
         return NextResponse.redirect(new URL('/', req.nextUrl.origin));
 

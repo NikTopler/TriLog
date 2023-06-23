@@ -1,7 +1,7 @@
 import { USER_AUTH_COOKIE_KEY } from "@/constants";
 import { UserCookie } from "@/interfaces";
 import { isUserCookie } from "@/schemas";
-import { cookies } from "next/dist/client/components/headers";
+import { cookies } from "next/headers";
 import { NextRequest } from "next/server";
 
 function getUserCookie(req?: NextRequest) {

@@ -2,7 +2,7 @@ import { ApiMessage } from "@/constants";
 import { generateCode, generateToken, isEmail } from "@/helpers";
 import { ApiResponse } from "@/interfaces";
 import AuthService from "@/services/AuthService";
-import UserService from "@/services/UserService";
+import { UserService } from "@/services";
 import { Users } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 

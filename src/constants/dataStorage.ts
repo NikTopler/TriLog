@@ -15,7 +15,7 @@ const USER_AUTH_COOKIE_KEY = 'trilog-user_auth';
 const USER_AUTH_COOKIE_OPTIONS = {
     secure: true,
     path: '/',
-    sameSite: 'strict',
+    sameSite: 'none', // TODO: experiment with "lax"
     maxAge: REFRESH_TOKEN_EXPIRATION_SECONDS
 } as Partial<ResponseCookie>;
 

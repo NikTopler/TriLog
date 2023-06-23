@@ -1,7 +1,7 @@
 import { ApiMessage } from "@/constants";
 import { ApiResponse } from "@/interfaces";
 import { AuthService } from "@/services";
-import UserService from "@/services/UserService";
+import { UserService } from "@/services";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
