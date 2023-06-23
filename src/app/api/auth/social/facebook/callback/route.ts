@@ -1,4 +1,5 @@
 import { AUTH_FACEBOOK_STATE_COOKIE_KEY, PATHS, USER_AUTH_COOKIE_KEY, USER_AUTH_COOKIE_OPTIONS } from "@/constants";
+import { isEmail } from "@/helpers";
 import { getUserCookie } from "@/helpers/api";
 import { getAuthFacebookAppIdEnv, getAuthFacebookAppSecretEnv } from "@/helpers/env";
 import { UserCookie } from "@/interfaces";
@@ -38,6 +39,10 @@ export async function GET(req: NextRequest) {
             email,
             picture
         } = await AuthService.getFacebookUserData(access_token);
+        
+        if(!isEmail(email)) {
+            throw new Error("Could not get email from Facebook");
+        }
 
         let userInfo = await UserService.getByEmail(email);
 

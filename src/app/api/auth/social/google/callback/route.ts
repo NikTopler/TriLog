@@ -1,4 +1,5 @@
 import { USER_AUTH_COOKIE_KEY, USER_AUTH_COOKIE_OPTIONS } from "@/constants";
+import { isEmail } from "@/helpers";
 import { getUserCookie } from "@/helpers/api";
 import { UserCookie } from "@/interfaces";
 import { AuthService } from "@/services";
@@ -31,6 +32,10 @@ export async function GET(req: NextRequest) {
             email,
             picture,
         } = await AuthService.getGoogleUserData(id_token, access_token);
+
+        if(!isEmail(email)) {
+            throw new Error("Could not get email from Google");
+        }
 
         let userInfo = await UserService.getByEmail(email);
 

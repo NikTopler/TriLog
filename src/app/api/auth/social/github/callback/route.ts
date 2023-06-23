@@ -1,4 +1,5 @@
 import { AUTH_GITHUB_STATE_COOKIE_KEY, USER_AUTH_COOKIE_KEY, USER_AUTH_COOKIE_OPTIONS } from "@/constants";
+import { isEmail } from "@/helpers";
 import { getUserCookie } from "@/helpers/api";
 import { getAuthGithubClientIdEnv, getAuthGithubClientSecretEnv } from "@/helpers/env";
 import { UserCookie } from "@/interfaces";
@@ -36,6 +37,10 @@ export async function GET(req: NextRequest) {
             email,
             avatar_url
         } = await AuthService.getGithubUserData(access_token);
+
+        if(!isEmail(email)) {
+            throw new Error("Could not get email from Github");
+        }
 
         // TODO: Upload profile image to server
 
