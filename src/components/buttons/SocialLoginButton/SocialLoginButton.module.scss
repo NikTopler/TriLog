@@ -55,6 +55,8 @@
 .social_login__button-container[data-disabled=true] {
     cursor: none;
     opacity: 0.5;
+    padding-top: 3px;
+    padding-bottom: 0;
 }
 
 .social_login__button-container[data-provider="google"] {

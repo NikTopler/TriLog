@@ -90,9 +90,10 @@ export default function Login() {
                         disabled={isProcessing}
                         setIsProcessing={setIsProcessingTrue}
                     />
+                    {/* issue #38 */}
                     <SocialLoginButton
                         provider="facebook"
-                        disabled={isProcessing}
+                        disabled={true}
                         setIsProcessing={setIsProcessingTrue}
                     />
                     <SocialLoginButton
