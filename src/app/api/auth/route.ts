@@ -29,15 +29,19 @@ export async function GET(req: NextRequest) {
             ...cookieData
         };
 
-        cookies().set(USER_AUTH_COOKIE_KEY, JSON.stringify(userCookie), USER_AUTH_COOKIE_OPTIONS);
+        cookies().set(
+            USER_AUTH_COOKIE_KEY,
+            JSON.stringify(userCookie),
+            USER_AUTH_COOKIE_OPTIONS
+        );
 
-        return NextResponse.redirect(new URL('/', req.nextUrl.origin));
+        return NextResponse.redirect(req.nextUrl.origin);
 
     } catch (error: any) {
 
         // TODO: Redirect to login page with error message
         console.log(error.message);
-        return NextResponse.redirect(new URL('/auth/login', req.nextUrl.origin));
+        return NextResponse.redirect(req.nextUrl.origin + '/auth/login');
 
     }
 

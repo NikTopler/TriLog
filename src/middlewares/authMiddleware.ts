@@ -65,7 +65,7 @@ async function authMiddleware(req: NextRequest) {
             userCookie.authenticated = true;
 
             if (req.nextUrl.pathname.startsWith('/auth')) {
-                throw new AuthError("Access denied!", new URL('/', req.nextUrl.origin).toString());
+                throw new AuthError("Access denied!", req.nextUrl.origin);
             }
 
             break;
@@ -78,7 +78,7 @@ async function authMiddleware(req: NextRequest) {
             userCookie.refreshToken = null;
 
             if (!req.nextUrl.pathname.startsWith('/auth')) {
-                throw new AuthError("Access denied!", new URL('/auth/login', req.nextUrl.origin).toString());
+                throw new AuthError("Access denied!", req.nextUrl.origin + '/auth/login');
             }
 
             break;

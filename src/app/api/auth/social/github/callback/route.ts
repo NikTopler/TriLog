@@ -79,7 +79,7 @@ export async function GET(req: NextRequest) {
             USER_AUTH_COOKIE_OPTIONS
         );
 
-        return NextResponse.redirect(new URL('/', req.nextUrl.origin));
+        return NextResponse.redirect(req.nextUrl.origin);
 
 
     } catch (error: any) {
@@ -87,7 +87,7 @@ export async function GET(req: NextRequest) {
         console.log(error.message);
 
         // TODO: Redirect to login page with error message
-        return NextResponse.redirect(new URL('/auth/login', req.nextUrl.origin));
+        return NextResponse.redirect(req.nextUrl.origin + '/auth/login');
 
     } finally {
         cookies().delete(AUTH_GITHUB_STATE_COOKIE_KEY);

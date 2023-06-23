@@ -56,13 +56,13 @@ class Token {
     static async generateAndEncryptAuthTokens({ email, role }: AccessTokenData & RefreshTokenData, refreshTokenExpSeconds?: number) {
 
         const [refreshToken, accessToken] = await Promise.all([
-            Token.generateRefreshToken({ email }, refreshTokenExpSeconds),
-            Token.generateAccessToken({ email, role })
+            this.generateRefreshToken({ email }, refreshTokenExpSeconds),
+            this.generateAccessToken({ email, role })
         ]);
 
         const [encryptedRefreshToken, encryptedAccessToken] = await Promise.all([
-            Token.encrypt(refreshToken, getAuthRefreshTokenEncryptionSecretEnv()),
-            Token.encrypt(accessToken, getAuthAccessTokenEncryptionSecretEnv())
+            this.encrypt(refreshToken, getAuthRefreshTokenEncryptionSecretEnv()),
+            this.encrypt(accessToken, getAuthAccessTokenEncryptionSecretEnv())
         ]);
 
         return {
