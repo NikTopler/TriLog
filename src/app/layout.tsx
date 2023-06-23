@@ -1,8 +1,11 @@
+
+import { LayoutProps } from "@/interfaces";
+import ConditionalLayout from "./ConditionalLayout";
+import { Analytics } from '@vercel/analytics/react';
+
 import "@/styles/reset.scss";
 import "@/styles/variables.scss";
 import "@/styles/globals.scss";
-import { LayoutProps } from "@/interfaces";
-import ConditionalLayout from "./ConditionalLayout";
 
 export const metadata = {
   title: 'TriLog',
@@ -17,6 +20,7 @@ function RootLayout({ children }: LayoutProps) {
         <ConditionalLayout>
           {children}
         </ConditionalLayout>
+        <Analytics />
       </body>
     </html>
   )
