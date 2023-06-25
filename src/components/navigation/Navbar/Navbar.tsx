@@ -1,7 +1,7 @@
 'use client';
 
 import { usePathname, useRouter } from "next/navigation";
-import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
+import { useEffect, useState } from "react";
 import { Tooltip } from "@mui/joy";
 import LightModeIcon from '@mui/icons-material/LightMode';
 import NightlightRoundIcon from '@mui/icons-material/NightlightRound';
@@ -12,8 +12,9 @@ import DropdownLayout, { ListConfig, TabsConfig } from "@/components/layouts/Dro
 import { TriathlonCategories, TriathlonTypes } from "@prisma/client";
 import styles from "./navbar.module.scss";
 import { StateObject } from "@/app/(home)/HomeLayout";
-import { useAuthContext } from "@/providers";
+import { useAuthContext, useDataContext } from "@/providers";
 import { Box, Skeleton } from "@mui/material";
+import { PATHS } from "@/constants";
 
 const triathlonCategoriesStyle = {
     width: '300px',
@@ -29,24 +30,21 @@ const triathlonTypesStyle = {
     left: '0'
 }
 
-export interface TriathlonCategoriesRef {
-    setCategories: (category: any) => void;
-    setTypes: (types: any) => void;
-}
+function Navbar() {
 
-const Navbar = forwardRef(({ }, ref) => {
 
     const router = useRouter();
     const pathname = usePathname();
 
+    const { triathlonCategories, triathlonTypes } = useDataContext();
     const auth = useAuthContext();
+
     const [search, setSearch] = useState<string>('');
     const [searchFocused, setSearchFocused] = useState<boolean>(false);
 
     // TODO: Implement theme change
     // TODO: Remove this temporary state
     const [theme, setTheme] = useState<'light' | 'dark'>('light');
-    const [user, setUser] = useState<any>(null);
 
     const [categories, setCategories] = useState<StateObject<TabsConfig>>({
         data: { tabs: {} },
@@ -61,26 +59,24 @@ const Navbar = forwardRef(({ }, ref) => {
     });
 
     useEffect(() => {
-        console.log('isLoading', auth.loading);
-        console.log('is authenticated: ', auth.authenticated);
-    }, []);
 
-    useImperativeHandle(ref, () => ({
-        setCategories: ({ data, loading, errors }: StateObject<TriathlonCategories[]>) => {
+        if (!triathlonCategories.isLoading && triathlonCategories.data) {
             setCategories({
-                data: parseTriathlonCategories(data),
-                loading,
-                errors
-            });
-        },
-        setTypes: ({ data, loading, errors }: StateObject<TriathlonTypes[]>) => {
-            setTypes({
-                data: parseTriathlonTypes(data),
-                loading,
-                errors
+                data: parseTriathlonCategories(triathlonCategories.data),
+                loading: false,
+                errors: null
             });
         }
-    }));
+
+        if (!triathlonTypes.isLoading && triathlonTypes.data) {
+            setTypes({
+                data: parseTriathlonTypes(triathlonTypes.data),
+                loading: false,
+                errors: null
+            });
+        }
+
+    }, [triathlonCategories, triathlonTypes]);
 
     const handleInputChange = (value: string) => {
         setSearch(value);
@@ -104,7 +100,7 @@ const Navbar = forwardRef(({ }, ref) => {
 
     const AccountView = () => {
 
-        if(auth.loading) {
+        if (auth.loading) {
             return (
                 <Box>
                     <Skeleton />
@@ -128,7 +124,7 @@ const Navbar = forwardRef(({ }, ref) => {
                 text="Login"
                 variant="solid"
                 className="btn tertiary solid"
-                handleOnClick={() => router.push('/auth/login')}
+                handleOnClick={() => router.push(PATHS.auth.login)}
             />
         );
 
@@ -137,7 +133,7 @@ const Navbar = forwardRef(({ }, ref) => {
     return (
         <div className={styles['navbar__container']}>
             <div className={styles['navbar__container__logo-container']}>
-                <span onClick={() => router.push('/')}>TriLog</span>
+                <span onClick={() => router.push(PATHS.home)}>TriLog</span>
             </div>
             <div className={styles['navbar__container__content-container']}>
                 <DropdownLayout
@@ -147,7 +143,7 @@ const Navbar = forwardRef(({ }, ref) => {
                     config={categories.data}
                     onTabChange={handleCategoriesTabChange}
                     style={triathlonCategoriesStyle}>
-                    <div className={styles['navbar__container__content-container-container__item']} data-active={new RegExp('/triathlons/categories/*').test(pathname)}>
+                    <div className={styles['navbar__container__content-container-container__item']} data-active={new RegExp(PATHS.triathlons.categories.all + '/*').test(pathname)}>
                         <RegularButton
                             text="Categories"
                             variant="plain"
@@ -163,7 +159,7 @@ const Navbar = forwardRef(({ }, ref) => {
                     error={types.errors}
                     config={types.data}
                     style={triathlonTypesStyle}>
-                    <div className={styles['navbar__container__content-container-container__item']} data-active={new RegExp('/triathlons/types/*').test(pathname)}>
+                    <div className={styles['navbar__container__content-container-container__item']} data-active={new RegExp(PATHS.triathlons.types.all + '/*').test(pathname)}>
                         <RegularButton
                             text="Types"
                             variant="plain"
@@ -212,7 +208,7 @@ const Navbar = forwardRef(({ }, ref) => {
         </div>
     );
 
-});
+};
 
 function parseTriathlonCategories(triathlonCategories: TriathlonCategories[]): TabsConfig {
 
@@ -241,8 +237,8 @@ function parseTriathlonCategories(triathlonCategories: TriathlonCategories[]): T
         obj.tabs[gender].items.push(
             {
                 name: name + ' (' + acronym + ')',
-                path: '/triathlons/categories/' + ID,
-                pathAs: '/triathlons/categories/' + acronym
+                path: PATHS.triathlons.categories.specific.replace(':id', ID.toString()),
+                pathAs: PATHS.triathlons.categories.specific.replace(':id', acronym)
             }
         );
 
@@ -258,13 +254,11 @@ function parseTriathlonTypes(triathlonTypes: TriathlonTypes[]): ListConfig {
         groupTitle: 'Competitions',
         list: triathlonTypes.map(({ ID, name }) => ({
             name,
-            path: '/triathlons/types/' + ID,
-            pathAs: '/triathlons/types/' + name.replace(' ', '-').toLowerCase()
+            path: PATHS.triathlons.types.specific.replace(':id', ID.toString()),
+            pathAs: PATHS.triathlons.types.specific.replace(':id', name.replace(' ', '-').toLowerCase())
         }))
     }
 
 }
-
-Navbar.displayName = 'Navbar';
 
 export default Navbar;

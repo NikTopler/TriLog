@@ -1,11 +1,10 @@
 'use client';
 
 import { LoginSuccessResponse } from "@/app/api/auth/login/route";
-import { USER_AUTH_COOKIE_KEY, USER_AUTH_LOCAL_STORAGE_KEY } from "@/constants";
+import { AUTH_COOKIE_KEY, PATHS } from "@/constants";
 import { apiPost } from "@/helpers";
-import { useLocalStorage } from "@/hooks";
 import { LayoutProps } from "@/interfaces"
-import { Email, Url } from "@/schemas";
+import { Email, Url, isAuthCookie } from "@/schemas";
 import { useRouter } from "next/navigation";
 import { createContext, useContext, useEffect, useState } from "react"
 import { useCookies } from "react-cookie";
@@ -37,38 +36,30 @@ function AuthProvider({ children }: LayoutProps) {
     const router = useRouter();
 
     const [cookies, setCookie, removeCookie] = useCookies();
-    const [userAuth, setUserAuth] = useLocalStorage(USER_AUTH_LOCAL_STORAGE_KEY, {
-        authenticated: false,
-        accessToken: null,
-        refreshToken: null
-    });
-
     const [loading, setLoading] = useState(true);
-    const [authenticated, setAuthenticated] = useState(userAuth.authenticated);
+    const [authenticated, setAuthenticated] = useState(false);
 
     useEffect(() => {
 
-        if (cookies[USER_AUTH_COOKIE_KEY]) {
-            setUserAuth(cookies[USER_AUTH_COOKIE_KEY]);
-            setAuthenticated(cookies[USER_AUTH_COOKIE_KEY].authenticated);
+        const authCookie = cookies[AUTH_COOKIE_KEY];
+
+        if (isAuthCookie(authCookie)) {
+
+            const isUserAuthenticated = authCookie.authenticated;
+
+            if (isUserAuthenticated !== authenticated) {
+                setAuthenticated(isUserAuthenticated);
+            }
+
+            setAuthenticated(cookies[AUTH_COOKIE_KEY].authenticated);
         }
 
         setLoading(false);
 
     }, []);
 
-    useEffect(() => {
-
-        if (authenticated) {
-            console.log('user logged in');
-        } else {
-            console.log('not authenticated');
-        }
-
-    }, [authenticated]);
-
     const login = (email: Email) => {
-        return apiPost<LoginSuccessResponse>('/api/auth/login', { recipient: email })
+        return apiPost<LoginSuccessResponse>(PATHS.api.auth.login, { recipient: email })
             .then((res) => {
 
                 if (!res) {
@@ -76,9 +67,9 @@ function AuthProvider({ children }: LayoutProps) {
                 }
 
                 if (res.isVerified) {
-                    router.push('/auth/verification-link-sent');
+                    router.push(PATHS.auth.verificationLinkSent);
                 } else {
-                    router.push('/auth/email-verification?email=' + email);
+                    router.push(PATHS.auth.emailVerification + '?email=' + email);
                 }
 
             })
@@ -88,20 +79,20 @@ function AuthProvider({ children }: LayoutProps) {
     }
 
     const emailVerification = (email: Email, code: string) => {
-        return apiPost('/api/auth/email-verification', { email, verificationCode: code })
+        return apiPost(PATHS.api.auth.emailVerification, { email, verificationCode: code })
             .then(() => {
                 setAuthenticated(true);
-                router.push('/');
+                router.push(PATHS.home);
             })
             .catch((err) => console.log(err));
     }
 
     const socialLogin = (provider: SocialLoginProvider) => {
-        router.push('/api/auth/social/' + provider);
+        router.push(PATHS.api.auth.social[provider].login);
     }
 
     const logout = (redirectUri?: Url) => {
-        router.push('/api/auth/logout?redirectUri=' + (redirectUri?.url || window.location.origin + '/auth/login'));
+        router.push(PATHS.api.auth.logout + '?redirectUri=' + (redirectUri?.url || window.location.origin + PATHS.auth.login));
     }
 
     return (
@@ -119,4 +110,7 @@ function AuthProvider({ children }: LayoutProps) {
 
 }
 
-export { useAuthContext, AuthProvider }
+export {
+    useAuthContext,
+    AuthProvider
+}

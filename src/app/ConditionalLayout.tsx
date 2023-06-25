@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import HomeLayout from "./(home)/HomeLayout";
 import { validatePaths } from "@/helpers";
 import { CookiesProvider } from "react-cookie";
-import { AuthProvider } from "@/providers";
+import { AuthProvider, DataProvider } from "@/providers";
 
 const HOME_PATHS = [
     '/',
@@ -37,7 +37,9 @@ function ConditionalLayout({ children }: LayoutProps) {
     return (
         <CookiesProvider>
             <AuthProvider>
-                {childrenToRender}
+                <DataProvider>
+                    {childrenToRender}
+                </DataProvider>
             </AuthProvider>
         </CookiesProvider>
     );

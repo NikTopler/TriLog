@@ -1,6 +1,6 @@
-import { ApiMessage, USER_AUTH_COOKIE_KEY, USER_AUTH_COOKIE_OPTIONS } from "@/constants";
-import { getUserCookie } from "@/helpers/api";
-import { ApiResponse, UserCookie } from "@/interfaces";
+import { ApiMessage, AUTH_COOKIE_KEY, AUTH_COOKIE_OPTIONS } from "@/constants";
+import { getAuthCookie } from "@/helpers/api";
+import { ApiResponse, AuthCookie } from "@/interfaces";
 import { AuthService } from "@/services";
 import { UserService } from "@/services";
 import { cookies } from "next/headers";
@@ -22,15 +22,15 @@ export async function POST(req: NextRequest) {
         await UserService.updateUserVerificationStatus(email);
         const cookieData = await AuthService.createSession(email, userInfo);
 
-        const userCookie: UserCookie = {
-            ...getUserCookie(),
+        const authCookie: AuthCookie = {
+            ...getAuthCookie(),
             ...cookieData
         };
 
         cookies().set(
-            USER_AUTH_COOKIE_KEY,
-            JSON.stringify(userCookie),
-            USER_AUTH_COOKIE_OPTIONS
+            AUTH_COOKIE_KEY,
+            JSON.stringify(authCookie),
+            AUTH_COOKIE_OPTIONS
         );
 
         const res: ApiResponse<never> = {

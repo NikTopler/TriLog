@@ -9,6 +9,7 @@ import { Email } from "@/schemas";
 import { EmailAuthContext } from "../layout";
 import styles from "./email-verification.module.scss";
 import { useAuthContext } from "@/providers";
+import { PATHS } from "@/constants";
 
 interface VerificationFieldConfig {
     value: string;
@@ -63,8 +64,8 @@ function EmailVerification() {
             auth.emailVerification(email, code)
                 .finally(() => setIsLoading(false));
 
-            apiPost('/api/auth/email-verification', { email, verificationCode: code })
-                .then(() => router.push('/'))
+            apiPost(PATHS.api.auth.emailVerification, { email, verificationCode: code })
+                .then(() => router.push(PATHS.home))
                 .catch((err) => {
                     setIsLoading(false);
                     // TODO: Handle error
@@ -183,15 +184,15 @@ function EmailVerification() {
 
         setEmailResendTimeout(EMAIL_VERIFICATION_TIMEOUT_MS);
 
-        apiPost('/api/auth/login', { recipient })
-            .then(() => router.push('/auth/email-verification?' + createQueryString(searchParams, { email: recipient as string })))
+        apiPost(PATHS.api.auth.login, { recipient })
+            .then(() => router.push(PATHS.auth.emailVerification + '?' + createQueryString(searchParams, { email: recipient as string })))
             .catch((err) => console.log(err));
 
     }
 
     const onUpdateEmailClick = (e: any) => {
         e.preventDefault();
-        router.push('/auth/login');
+        router.push(PATHS.auth.login);
     }
 
     return (

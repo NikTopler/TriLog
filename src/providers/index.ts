@@ -1,4 +1,5 @@
 import { AuthProvider, SocialLoginProvider, useAuthContext } from "./AuthProvider";
+import { DataProvider, useDataContext } from "./DataProvider";
 
 export type {
     SocialLoginProvider
@@ -6,5 +7,7 @@ export type {
 
 export {
     useAuthContext, 
-    AuthProvider
+    AuthProvider,
+    useDataContext,
+    DataProvider
 }

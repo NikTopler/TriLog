@@ -7,6 +7,7 @@ import ApartmentTwoToneIcon from '@mui/icons-material/ApartmentTwoTone';
 import LeaderboardRoundedIcon from '@mui/icons-material/LeaderboardRounded';
 import GroupsRoundedIcon from '@mui/icons-material/GroupsRounded';
 import styles from "./sidebar.module.scss";
+import { PATHS } from "@/constants";
 
 function Sidebar() {
 
@@ -23,7 +24,7 @@ function Sidebar() {
         <div className={styles['sidebar']}>
 
             <CollapsibleLayout title="EVENTS">
-                <div className={styles['sidebar--group-item']} data-active={pathname === '/triathlons'} onClick={open('/triathlons')}>
+                <div className={styles['sidebar--group-item']} data-active={pathname === PATHS.triathlons.all} onClick={open(PATHS.triathlons.all)}>
                     <div className={styles['sidebar--item-icon']}>
                         <WorkspacesIcon />
                     </div>
@@ -31,19 +32,19 @@ function Sidebar() {
                 </div>
             </CollapsibleLayout>
             <CollapsibleLayout title="LOCATIONS">
-                <div className={styles['sidebar--group-item']} data-active={pathname === '/countries'} onClick={open('/countries')}>
+                <div className={styles['sidebar--group-item']} data-active={pathname === PATHS.countries.all} onClick={open(PATHS.countries.all)}>
                     <div className={styles['sidebar--item-icon']}>
                         <PublicTwoToneIcon />
                     </div>
                     <span className={styles['sidebar--item-text']}>Countries</span>
                 </div>
-                <div className={styles['sidebar--group-item']} data-active={pathname === '/states'} onClick={open('/states')}>
+                <div className={styles['sidebar--group-item']} data-active={pathname === PATHS.states.all} onClick={open(PATHS.states.all)}>
                     <div className={styles['sidebar--item-icon']}>
                         <BalconyTwoToneIcon />
                     </div>
                     <span className={styles['sidebar--item-text']}>States</span>
                 </div>
-                <div className={styles['sidebar--group-item']} data-active={pathname === '/cities'} onClick={open('/cities')}>
+                <div className={styles['sidebar--group-item']} data-active={pathname === PATHS.cities.all} onClick={open(PATHS.cities.all)}>
                     <div className={styles['sidebar--item-icon']}>
                         <ApartmentTwoToneIcon />
                     </div>
@@ -51,13 +52,13 @@ function Sidebar() {
                 </div>
             </CollapsibleLayout>
             <hr />
-            <div className={styles['sidebar--item']} data-active={pathname === '/triathlons/leaderboards'} onClick={open('/triathlons/leaderboards')}>
+            <div className={styles['sidebar--item']} data-active={pathname === PATHS.triathlons.leaderboards} onClick={open(PATHS.triathlons.leaderboards)}>
                 <div className={styles['sidebar--item-icon']}>
                     <LeaderboardRoundedIcon />
                 </div>
                 <span className={styles['sidebar--item-text']}>Leaderboards</span>
             </div>
-            <div className={styles['sidebar--item']} data-active={pathname === '/athletes'} onClick={open('/athletes')}>
+            <div className={styles['sidebar--item']} data-active={pathname === PATHS.athletes.all} onClick={open(PATHS.athletes.all)}>
                 <div className={styles['sidebar--item-icon']}>
                     <GroupsRoundedIcon />
                 </div>

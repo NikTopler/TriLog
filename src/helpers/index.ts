@@ -1,7 +1,6 @@
 import parsePositiveInt from "./parsePositiveInt";
 import createQueryString from "./createQueryString";
 import isEmail from "./isEmail";
-import parseQueryStringToObject from "./parseQueryStringToObject";
 import validatePaths from "./validatePaths";
 import capitalizeFirstLetter from "./capitalizeFirstLetter";
 import { apiDelete, apiGet, apiPost, apiPut } from "./apiRequest";
@@ -14,7 +13,6 @@ export {
     isEmail,
     isUrl,
     createQueryString,
-    parseQueryStringToObject,
     parsePositiveInt,
     validatePaths,
     capitalizeFirstLetter,

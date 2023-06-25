@@ -1,4 +1,5 @@
 import ApiResponse from "./ApiResponse";
+import AuthCookie from "./AuthCookie";
 import FacebookAccessTokenResponse from "./FacebookAccessTokenResponse";
 import FacebookAuthUserInfo from "./FacebookAuthUserInfo";
 import GenericRecord from "./GenericRecord";
@@ -7,7 +8,6 @@ import { GithubAuthUserEmail, GithubAuthUserEmailsResponse, GithubAuthUserInfo, 
 import GoogleAuthUserInfo from "./GoogleAuthUserInfo";
 import LayoutProps from "./LayoutProps";
 import RequestParams from "./RequestParams";
-import UserCookie from "./UserCookie";
 import { RefreshTokenData, AccessTokenData, UserRole } from "./UserTokenData";
 import VerificationTokenData from "./VerificationTokenData";
 
@@ -16,7 +16,7 @@ export type {
     LayoutProps,
     GenericRecord,
     ApiResponse,
-    UserCookie,
+    AuthCookie,
     GoogleAuthUserInfo,
     FacebookAccessTokenResponse,
     FacebookAuthUserInfo,

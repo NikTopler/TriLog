@@ -6,13 +6,13 @@ import { NextResponse } from "next/server";
 export async function GET() {
 
     const clientId = getAuthGithubClientIdEnv();
-    const redirectUri = process.env.APP_URL + PATHS.AUTH.SOCIAL.GITHUB.CALLBACK;
+    const redirectUri = process.env.APP_URL + PATHS.api.auth.social.github.callback;
     const state = generateToken(AUTH_STATE_TOKEN_LENGTH);
     const scope = 'user';
 
     return NextResponse.redirect(`https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&state=${state}&scope=${scope}`, {
         headers: {
-            'Set-Cookie': `${AUTH_GITHUB_STATE_COOKIE_KEY}=${state}; Path=${PATHS.AUTH.SOCIAL.GITHUB}; HttpOnly;${process.env.PRODUCTION ? ' Secure; ' : ' '} Expires=${new Date(Date.now() + AUTH_STATE_TOKEN_EXPIRATION).toUTCString()}`
+            'Set-Cookie': `${AUTH_GITHUB_STATE_COOKIE_KEY}=${state}; Path=${PATHS.api.auth.social.github}; HttpOnly;${process.env.PRODUCTION ? ' Secure; ' : ' '} Expires=${new Date(Date.now() + AUTH_STATE_TOKEN_EXPIRATION).toUTCString()}`
         }
     });
 

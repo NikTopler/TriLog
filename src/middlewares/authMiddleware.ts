@@ -1,9 +1,9 @@
 import { ApiMessage } from "@/constants";
 import { AuthError } from "@/errors";
 import { getCurrentTimestamp } from "@/helpers";
-import { getUserCookie } from "@/helpers/api";
+import { getAuthCookie } from "@/helpers/api";
 import { getAuthAccessTokenEncryptionSecretEnv, getAuthAccessTokenSecretEnv, getAuthRefreshTokenEncryptionSecretEnv, getAuthRefreshTokenSecretEnv } from "@/helpers/env";
-import { AccessTokenData, RefreshTokenData, UserCookie } from "@/interfaces";
+import { AccessTokenData, AuthCookie, RefreshTokenData } from "@/interfaces";
 import Token, { TokenDecryptObj } from "@/utils/Token";
 import { NextRequest } from "next/server";
 
@@ -40,16 +40,16 @@ function getUserAuthStatus(refreshToken: string, accessToken: string) {
 async function authMiddleware(req: NextRequest) {
 
     let userStatus = UserAuthStatus.UNAUTHENTICATED;
-    let userCookie: UserCookie = getUserCookie(req);
+    let authCookie: AuthCookie = getAuthCookie(req);
 
     let decryptedRefreshToken: string | null = null;
     let decryptedAccessToken: string | null = null;
 
-    if (userCookie.accessToken && userCookie.refreshToken) {
+    if (authCookie.accessToken && authCookie.refreshToken) {
 
         const [decryptedRefreshPayload, decryptedAccessPayload] = await Promise.all([
-            Token.decrypt(userCookie.refreshToken, getAuthRefreshTokenEncryptionSecretEnv()) as Promise<TokenDecryptObj>,
-            Token.decrypt(userCookie.accessToken, getAuthAccessTokenEncryptionSecretEnv()) as Promise<TokenDecryptObj>
+            Token.decrypt(authCookie.refreshToken, getAuthRefreshTokenEncryptionSecretEnv()) as Promise<TokenDecryptObj>,
+            Token.decrypt(authCookie.accessToken, getAuthAccessTokenEncryptionSecretEnv()) as Promise<TokenDecryptObj>
         ]);
 
         userStatus = await getUserAuthStatus(decryptedRefreshPayload.payload.token as string, decryptedAccessPayload.payload.token as string);
@@ -62,7 +62,7 @@ async function authMiddleware(req: NextRequest) {
 
         case UserAuthStatus.AUTHENTICATED: {
 
-            userCookie.authenticated = true;
+            authCookie.authenticated = true;
 
             if (req.nextUrl.pathname.startsWith('/auth')) {
                 throw new AuthError("Access denied!", req.nextUrl.origin);
@@ -73,20 +73,16 @@ async function authMiddleware(req: NextRequest) {
 
         case UserAuthStatus.UNAUTHENTICATED: {
 
-            userCookie.authenticated = false;
-            userCookie.accessToken = null;
-            userCookie.refreshToken = null;
-
-            if (!req.nextUrl.pathname.startsWith('/auth')) {
-                throw new AuthError("Access denied!", req.nextUrl.origin + '/auth/login');
-            }
+            authCookie.authenticated = false;
+            authCookie.accessToken = null;
+            authCookie.refreshToken = null;
 
             break;
         }
 
         case UserAuthStatus.EXPIRED: {
 
-            userCookie.authenticated = true;
+            authCookie.authenticated = true;
 
             try {
 
@@ -104,8 +100,8 @@ async function authMiddleware(req: NextRequest) {
 
                 const { encryptedRefreshToken, encryptedAccessToken } = await Token.generateAndEncryptAuthTokens(tokenData, exp - currentTimeSeconds);
 
-                userCookie.accessToken = encryptedAccessToken;
-                userCookie.refreshToken = encryptedRefreshToken;
+                authCookie.accessToken = encryptedAccessToken;
+                authCookie.refreshToken = encryptedRefreshToken;
 
             } catch (error: any) {
 
@@ -118,7 +114,7 @@ async function authMiddleware(req: NextRequest) {
 
     }
 
-    return userCookie;
+    return authCookie;
 }
 
 export default authMiddleware;

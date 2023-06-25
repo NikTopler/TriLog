@@ -155,8 +155,8 @@ model Users {
   createdAt                  DateTime   @default(now()) @db.Timestamp(0)
   updatedAt                  DateTime   @default(now()) @db.Timestamp(0)
   facebookID                 String?    @unique(map: "facebookID") @db.VarChar(255)
-  googleID                   String?    @unique(map: "googleID") @db.VarChar(255)
   githubID                   String?    @unique(map: "githubID") @db.VarChar(255)
+  googleID                   String?    @unique(map: "googleID") @db.VarChar(255)
 }
 
 enum TriathlonCategories_gender {

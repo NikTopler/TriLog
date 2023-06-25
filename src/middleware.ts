@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { AuthError } from "./errors";
-import { USER_AUTH_COOKIE_KEY, USER_AUTH_COOKIE_OPTIONS } from "./constants";
+import { AUTH_COOKIE_KEY, AUTH_COOKIE_OPTIONS } from "./constants";
 import { authMiddleware } from "./middlewares";
 
 export async function middleware(req: NextRequest) {
@@ -9,8 +9,8 @@ export async function middleware(req: NextRequest) {
 
     try {
 
-        const userCookie = await authMiddleware(req);
-        res.cookies.set(USER_AUTH_COOKIE_KEY, JSON.stringify(userCookie), USER_AUTH_COOKIE_OPTIONS);
+        const authCookie = await authMiddleware(req);
+        res.cookies.set(AUTH_COOKIE_KEY, JSON.stringify(authCookie), AUTH_COOKIE_OPTIONS);
 
     } catch (error: any) {
 
