@@ -103,7 +103,7 @@ model States {
 model TriathlonCategories {
   ID             Int                         @id @default(autoincrement())
   name           String                      @db.VarChar(15)
-  acronym        String?                     @db.VarChar(3)
+  acronym        String                      @db.VarChar(3)
   gender         TriathlonCategories_gender?
   Participations Participations[]
 }
