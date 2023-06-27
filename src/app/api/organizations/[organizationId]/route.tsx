@@ -1,5 +1,5 @@
 import { parsePositiveInt } from "@/helpers";
-import { RequestParams } from "@/interfaces";
+import { RequestParams } from "@/types";
 import { OrganizationSchemaOptional } from "@/schemas";
 import { OrganizationService } from "@/services";
 import { NextRequest, NextResponse } from "next/server";

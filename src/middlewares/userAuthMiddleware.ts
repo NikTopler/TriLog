@@ -3,7 +3,7 @@ import { AuthError } from "@/errors";
 import { getCurrentTimestamp } from "@/helpers";
 import { getUserCookie } from "@/helpers/api";
 import { getAuthAccessTokenEncryptionSecretEnv, getAuthAccessTokenSecretEnv, getAuthRefreshTokenEncryptionSecretEnv, getAuthRefreshTokenSecretEnv } from "@/helpers/env";
-import { AccessTokenData, RefreshTokenData, UserCookie } from "@/interfaces";
+import { AccessTokenData, RefreshTokenData, UserCookie } from "@/types";
 import Token, { TokenDecryptObj } from "@/utils/Token";
 import { NextRequest } from "next/server";
 

@@ -2,7 +2,7 @@ import { AUTH_FACEBOOK_STATE_COOKIE_KEY, PATHS, USER_AUTH_COOKIE_KEY, USER_AUTH_
 import { isEmail } from "@/helpers";
 import { getUserCookie } from "@/helpers/api";
 import { getAuthFacebookAppIdEnv, getAuthFacebookAppSecretEnv } from "@/helpers/env";
-import { UserCookie } from "@/interfaces";
+import { UserCookie } from "@/types";
 import { Email } from "@/schemas";
 import { AuthService } from "@/services";
 import { UserService } from "@/services";

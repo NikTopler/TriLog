@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { PositiveIntSchema } from "../shared/PositiveIntSchema";
-import { NumericStringSchema } from "../shared/FilterOptionSchema";
+import { PositiveIntSchema } from "../PositiveIntSchema";
+import { NumericStringSchema } from "../FilterOptionSchema";
 
 const TriathlonTypesFilterOptionSchema = z.object({
     ID: PositiveIntSchema.optional(),

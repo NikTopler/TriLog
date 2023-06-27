@@ -1,6 +1,6 @@
 'use client';
 
-import { LayoutProps } from "@/interfaces";
+import { LayoutProps } from "@/types";
 import { usePathname } from "next/navigation";
 import HomeLayout from "./(home)/HomeLayout";
 import { validatePaths } from "@/helpers";

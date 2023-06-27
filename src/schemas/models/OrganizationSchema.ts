@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { PositiveIntSchema } from "../shared/PositiveIntSchema";
+import { PositiveIntSchema } from "../PositiveIntSchema";
 
 const OrganizationFilterOptionSchema = z.object({
     ID: PositiveIntSchema.optional(),

@@ -1,6 +1,6 @@
 import { ApiMessage } from "@/constants";
 import { generateCode, generateToken, isEmail } from "@/helpers";
-import { ApiResponse } from "@/interfaces";
+import { ApiResponse } from "@/types";
 import AuthService from "@/services/AuthService";
 import { UserService } from "@/services";
 import { Users } from "@prisma/client";

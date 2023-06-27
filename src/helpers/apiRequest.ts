@@ -1,5 +1,5 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
-import { ApiResponse } from "@/interfaces";
+import { ApiResponse } from "@/types";
 
 const axiosConfig: AxiosRequestConfig = {
     headers: {

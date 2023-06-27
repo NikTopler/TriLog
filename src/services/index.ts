@@ -1,9 +1,9 @@
-import AthleteService from "./AthleteService";
+import AthleteService from "./models/AthleteService";
 import AuthService from "./AuthService";
 import BaseService from "./BaseService";
-import OrganizationService from "./OrganizationService";
-import TriathlonCategoryService from "./TriathlonCategoryService";
-import TriathlonTypeService from "./TriathlonTypesService";
+import OrganizationService from "./models/OrganizationService";
+import TriathlonCategoryService from "./models/TriathlonCategoryService";
+import TriathlonTypeService from "./models/TriathlonTypesService";
 import UserService from "./UserService";
 
 export {

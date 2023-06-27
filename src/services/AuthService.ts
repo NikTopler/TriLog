@@ -3,7 +3,7 @@ import { Mailer, Token, TokenDecryptObj } from "@/utils";
 import BaseService from "./BaseService";
 import { google } from "googleapis";
 import axios from "axios";
-import { AccessTokenData, FacebookAccessTokenResponse, FacebookAuthUserInfo, GithubAccessTokenResponse, GithubAuthUserEmail, GithubAuthUserEmailsResponse, GithubAuthUserInfo, GithubAuthUserInfoResponse, GoogleAuthUserInfo, UserCookie } from "@/interfaces";
+import { AccessTokenData, FacebookAccessTokenResponse, FacebookAuthUserInfo, GithubAccessTokenResponse, GithubAuthUserEmail, GithubAuthUserEmailsResponse, GithubAuthUserInfo, GithubAuthUserInfoResponse, GoogleAuthUserInfo, UserCookie } from "@/types";
 import UserService from "./UserService";
 import { PATHS, USER_AUTH_COOKIE_KEY, USER_AUTH_COOKIE_OPTIONS } from "@/constants";
 import { getAuthAccessTokenEncryptionSecretEnv, getAuthGoogleClientIdEnv, getAuthGoogleClientSecretEnv, getMailAdminEmail } from "@/helpers/env";

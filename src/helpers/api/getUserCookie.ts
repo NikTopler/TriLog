@@ -1,5 +1,5 @@
 import { USER_AUTH_COOKIE_KEY } from "@/constants";
-import { UserCookie } from "@/interfaces";
+import { UserCookie } from "@/types";
 import { isUserCookie } from "@/schemas";
 import { cookies } from "next/headers";
 import { NextRequest } from "next/server";

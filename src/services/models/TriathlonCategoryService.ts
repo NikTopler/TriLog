@@ -1,9 +1,9 @@
-import { GenericRecord } from "@/interfaces";
+import { GenericRecord } from "@/types";
 import { PaginationOptions } from "@/schemas";
-import { Athletes } from "@prisma/client";
-import BaseService from "./BaseService";
+import { TriathlonCategories } from "@prisma/client";
+import BaseService from "../BaseService";
 
-class AthleteService extends BaseService {
+class TriathlonCategoryService extends BaseService {
 
     static getAll(
         where: GenericRecord,
@@ -13,14 +13,14 @@ class AthleteService extends BaseService {
 
         if (count) {
             return this.handle(
-                this.client.athletes.count({
+                this.client.triathlonCategories.count({
                     where
                 })
             );
         }
 
         return this.handle(
-            this.client.athletes.findMany({
+            this.client.triathlonCategories.findMany({
                 where,
                 orderBy: {
                     [orderBy]: order
@@ -35,24 +35,21 @@ class AthleteService extends BaseService {
     static getById(ID: number) {
 
         return this.handle(
-            this.client.athletes.findUnique({
+            this.client.triathlonCategories.findUnique({
                 where: { ID }
             })
         );
 
     }
 
-    static create({ firstName, lastName, age, countryID, stateID, cityID }: Athletes) {
+    static create({ name, acronym, gender }: TriathlonCategories) {
 
         return this.handle(
-            this.client.athletes.create({
+            this.client.triathlonCategories.create({
                 data: {
-                    firstName,
-                    lastName,
-                    age,
-                    countryID,
-                    stateID,
-                    cityID
+                    name,
+                    acronym,
+                    gender
                 }
             })
         );
@@ -62,7 +59,7 @@ class AthleteService extends BaseService {
     static update(ID: number, values: GenericRecord) {
 
         return this.handle(
-            this.client.athletes.update({
+            this.client.triathlonCategories.update({
                 where: { ID },
                 data: values
             })
@@ -73,7 +70,7 @@ class AthleteService extends BaseService {
     static delete(ID: number) {
 
         return this.handle(
-            this.client.athletes.delete({
+            this.client.triathlonCategories.delete({
                 where: { ID }
             })
         );
@@ -82,4 +79,4 @@ class AthleteService extends BaseService {
 
 }
 
-export default AthleteService;
+export default TriathlonCategoryService;

@@ -1,5 +1,5 @@
 import { parsePositiveInt } from "@/helpers";
-import { RequestParams } from "@/interfaces";
+import { RequestParams } from "@/types";
 import { AthleteSchemaOptional } from "@/schemas";
 import { AthleteService } from "@/services";
 import { NextRequest, NextResponse } from "next/server";
