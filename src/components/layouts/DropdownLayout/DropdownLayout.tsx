@@ -1,7 +1,7 @@
 'use client';
 
 import { CSSProperties, Dispatch, SetStateAction, useState } from "react";
-import { LayoutProps } from "@/interfaces";
+import { LayoutProps } from "@/types";
 import { ClickAwayListener, Skeleton } from "@mui/material";
 import Link from "next/link";
 import styles from "./dropdown-layout.module.scss";

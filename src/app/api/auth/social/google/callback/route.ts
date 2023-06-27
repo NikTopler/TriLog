@@ -1,7 +1,7 @@
 import { USER_AUTH_COOKIE_KEY, USER_AUTH_COOKIE_OPTIONS } from "@/constants";
 import { isEmail } from "@/helpers";
 import { getUserCookie } from "@/helpers/api";
-import { UserCookie } from "@/interfaces";
+import { UserCookie } from "@/types";
 import { AuthService } from "@/services";
 import { UserService } from "@/services";
 import { cookies } from "next/headers";

@@ -1,6 +1,6 @@
 import z from "zod";
-import { Order } from "@/types";
 import { PositiveIntSchema } from "./PositiveIntSchema";
+import { Order } from "@/types";
 
 export interface PaginationOptions {
     page: number;
@@ -20,16 +20,8 @@ export function createPaginationOptionSchema(allowedOrderByValues: string[]) {
     return z.object({
         page: PositiveIntSchema.catch(DEFAULT_PAGE),
         perPage: PositiveIntSchema.max(MAX_PER_PAGE).catch(DEFAULT_PER_PAGE),
-        order: z.string().default(DEFAULT_ORDER).transform((value) => {
-
-            if (!value || !(value.toLowerCase() === 'asc' || value.toLowerCase() === 'desc')) {
-                return DEFAULT_ORDER;
-            }
-
-            return value.toLowerCase() as Order;
-
-        }),
-        orderBy: z.string().default(DEFAULT_SORT).transform((value) => {
+        order: z.enum(['asc', 'desc']).transform((value) => value.toLowerCase() as Order).catch(DEFAULT_ORDER),
+        orderBy: z.string().default(DEFAULT_ORDER).transform((value) => {
 
             if (!value || !allowedOrderByValues.includes(value)) {
                 return DEFAULT_SORT;

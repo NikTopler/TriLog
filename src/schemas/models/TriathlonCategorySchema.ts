@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { NullableNonEmptyStringSchema } from "../shared/FilterOptionSchema";
-import { PositiveIntSchema } from "../shared/PositiveIntSchema";
+import { NullableNonEmptyStringSchema } from "../FilterOptionSchema";
+import { PositiveIntSchema } from "../PositiveIntSchema";
 
 const genders = ['male', 'female'] as const;
 

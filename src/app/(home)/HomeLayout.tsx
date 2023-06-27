@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { Tooltip } from "@mui/joy";
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
-import { LayoutProps } from "@/interfaces";
+import { LayoutProps } from "@/types";
 import { BreadCrumb, Navbar, Sidebar } from "@/components/navigation";
 import { TriathlonCategories } from "@prisma/client";
 import { TriathlonCategoriesRef } from "@/components/navigation/Navbar/Navbar";

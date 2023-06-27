@@ -2,7 +2,7 @@ import { AUTH_GITHUB_STATE_COOKIE_KEY, USER_AUTH_COOKIE_KEY, USER_AUTH_COOKIE_OP
 import { isEmail } from "@/helpers";
 import { getUserCookie } from "@/helpers/api";
 import { getAuthGithubClientIdEnv, getAuthGithubClientSecretEnv } from "@/helpers/env";
-import { UserCookie } from "@/interfaces";
+import { UserCookie } from "@/types";
 import { AuthService } from "@/services";
 import { UserService } from "@/services";
 import { cookies } from "next/headers";

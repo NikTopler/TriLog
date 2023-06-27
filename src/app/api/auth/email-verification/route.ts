@@ -1,6 +1,6 @@
 import { ApiMessage, USER_AUTH_COOKIE_KEY, USER_AUTH_COOKIE_OPTIONS } from "@/constants";
 import { getUserCookie } from "@/helpers/api";
-import { ApiResponse, UserCookie } from "@/interfaces";
+import { ApiResponse, UserCookie } from "@/types";
 import { AuthService } from "@/services";
 import { UserService } from "@/services";
 import { cookies } from "next/headers";

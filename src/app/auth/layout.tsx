@@ -1,6 +1,6 @@
 'use client';
 
-import { LayoutProps } from "@/interfaces";
+import { LayoutProps } from "@/types";
 import { createContext, useState } from "react";
 import "./auth.scss";
 

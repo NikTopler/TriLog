@@ -1,4 +1,4 @@
-import { UserCookie } from "@/interfaces";
+import { UserCookie } from "@/types";
 import Token from "@/utils/Token";
 import { getAuthAccessTokenSecretEnv, getAuthRefreshTokenSecretEnv } from "../env";
 

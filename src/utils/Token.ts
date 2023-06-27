@@ -1,7 +1,7 @@
 import { ACCESS_TOKEN_EXPIRATION_SECONDS, REFRESH_TOKEN_EXPIRATION_SECONDS } from "@/constants";
 import { getCurrentTimestamp } from "@/helpers";
 import { getAuthAccessTokenEncryptionSecretEnv, getAuthAccessTokenSecretEnv, getAuthRefreshTokenEncryptionSecretEnv, getAuthRefreshTokenSecretEnv } from "@/helpers/env";
-import { AccessTokenData, RefreshTokenData } from "@/interfaces";
+import { AccessTokenData, RefreshTokenData } from "@/types";
 import { SignJWT, jwtVerify, decodeJwt, EncryptJWT, jwtDecrypt } from "jose";
 
 export interface TokenDecryptObj {

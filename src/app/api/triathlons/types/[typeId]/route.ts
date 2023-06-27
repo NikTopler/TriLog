@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { TriathlonTypeService } from "@/services";
 import { parsePositiveInt } from "@/helpers";
 import { TriathlonTypeSchemaOptional } from "@/schemas";
-import { RequestParams } from "@/interfaces";
+import { RequestParams } from "@/types";
 
 const INVALID_ID_ERROR_MESSAGE = "Invalid triathlon type ID";
 

@@ -1,7 +1,7 @@
 import { parsePositiveInt } from "@/helpers";
-import { RequestParams } from "@/interfaces";
+import { RequestParams } from "@/types";
 import { TriathlonCategorySchemaOptional } from "@/schemas";
-import TriathlonCategoryService from "@/services/TriathlonCategoryService";
+import TriathlonCategoryService from "@/services/models/TriathlonCategoryService";
 import { NextRequest, NextResponse } from "next/server";
 
 const INVALID_ID_ERROR_MESSAGE = "Invalid triathlon category ID";

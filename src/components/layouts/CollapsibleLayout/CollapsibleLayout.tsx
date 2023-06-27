@@ -1,7 +1,7 @@
 import { useState } from "react";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
-import { LayoutProps } from "@/interfaces";
+import { LayoutProps } from "@/types";
 import styles from "./collapsible-layout.module.scss";
 
 interface CollapsibleLayoutProp extends LayoutProps {

@@ -1,5 +1,5 @@
 
-import { LayoutProps } from "@/interfaces";
+import { LayoutProps } from "@/types";
 import ConditionalLayout from "./ConditionalLayout";
 import { Analytics } from '@vercel/analytics/react';
 

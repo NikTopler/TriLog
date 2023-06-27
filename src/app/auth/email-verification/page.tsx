@@ -2,13 +2,13 @@
 
 import { useContext, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { SpecialKey } from "@/types";
 import { CustomTextBox } from "@/components/inputs";
 import { apiPost, createQueryString, isEmail } from "@/helpers";
 import { Email } from "@/schemas";
 import { EmailAuthContext } from "../layout";
 import styles from "./email-verification.module.scss";
 import { useAuthContext } from "@/providers";
+import { SpecialKey } from "@/types";
 
 interface VerificationFieldConfig {
     value: string;

@@ -4,7 +4,7 @@ import { LoginSuccessResponse } from "@/app/api/auth/login/route";
 import { USER_AUTH_COOKIE_KEY, USER_AUTH_LOCAL_STORAGE_KEY } from "@/constants";
 import { apiPost } from "@/helpers";
 import { useLocalStorage } from "@/hooks";
-import { LayoutProps } from "@/interfaces"
+import { LayoutProps } from "@/types"
 import { Email, Url } from "@/schemas";
 import { useRouter } from "next/navigation";
 import { createContext, useContext, useEffect, useState } from "react"
