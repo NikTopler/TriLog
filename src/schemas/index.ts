@@ -4,6 +4,7 @@ import { createPaginationOptionSchema, PaginationOptions } from "./shared/Pagina
 import { PositiveIntSchema } from "./shared/PositiveIntSchema";
 import { TriathlonCategoryFilterOptionSchema, TriathlonCategorySchema, TriathlonCategorySchemaOptional } from "./models/TriathlonCategorySchema";
 import { TriathlonTypeSchema, TriathlonTypeSchemaOptional, TriathlonTypesFilterOptionSchema } from "./models/TriathlonTypesSchema";
+import { OrganizationFilterOptionSchema, OrganizationSchema, OrganizationSchemaOptional } from "./models/OrganizationSchema";
 import EmailSchema, { Email } from "./shared/EmailSchema";
 import UserCookieSchema, { isUserCookie } from "./shared/UserCookieSchema";
 import AuthTokenSchema from "./shared/AuthTokenSchema";
@@ -20,6 +21,8 @@ export {
     createPaginationOptionSchema,
     UserCookieSchema,
     isUserCookie,
+    AuthTokenSchema,
+    UrlSchema,
     PositiveIntSchema,
     NullableStringSchema,
     NullableNonEmptyStringSchema,
@@ -34,6 +37,7 @@ export {
     TriathlonTypesFilterOptionSchema,
     TriathlonTypeSchema,
     TriathlonTypeSchemaOptional,
-    AuthTokenSchema,
-    UrlSchema
+    OrganizationFilterOptionSchema,
+    OrganizationSchema,
+    OrganizationSchemaOptional
 }
