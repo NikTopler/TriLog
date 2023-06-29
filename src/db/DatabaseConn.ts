@@ -1,8 +1,5 @@
-import { Prisma, PrismaClient } from "@prisma/client";
-
+import { Prisma } from "@prisma/client";
 class DatabaseConn {
-
-    static client = new PrismaClient({ errorFormat: 'pretty' });
 
     static getColumnNames(tableName: string) {
         return Prisma.dmmf.datamodel.models.find(m => m.name === tableName)?.fields.map(f => f.name);
