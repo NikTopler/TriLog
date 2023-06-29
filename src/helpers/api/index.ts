@@ -1,7 +1,7 @@
-import getUserCookie from "./getUserCookie";
+import getAuthCookie from "./getAuthCookie";
 import userAuth from "./userAuth";
 
 export {
-    getUserCookie,
+    getAuthCookie,
     userAuth
 }

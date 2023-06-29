@@ -1,6 +1,5 @@
 import createQueryString from "./createQueryString";
 import isEmail from "./isEmail";
-import parseQueryStringToObject from "./parseQueryStringToObject";
 import validatePaths from "./validatePaths";
 import changeFirstLetter from "./changeFirstLetter";
 import { apiDelete, apiGet, apiPost, apiPut } from "./apiRequest";
@@ -15,7 +14,6 @@ export {
     isUrl,
     isIdentifier,
     createQueryString,
-    parseQueryStringToObject,
     validatePaths,
     changeFirstLetter,
     apiGet,

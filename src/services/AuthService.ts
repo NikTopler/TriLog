@@ -3,9 +3,9 @@ import { Mailer, Token, TokenDecryptObj } from "@/utils";
 import BaseService from "./BaseService";
 import { google } from "googleapis";
 import axios from "axios";
-import { AccessTokenData, FacebookAccessTokenResponse, FacebookAuthUserInfo, GithubAccessTokenResponse, GithubAuthUserEmail, GithubAuthUserEmailsResponse, GithubAuthUserInfo, GithubAuthUserInfoResponse, GoogleAuthUserInfo, UserCookie } from "@/types";
+import { AccessTokenData, AuthCookie, FacebookAccessTokenResponse, FacebookAuthUserInfo, GithubAccessTokenResponse, GithubAuthUserEmail, GithubAuthUserEmailsResponse, GithubAuthUserInfo, GithubAuthUserInfoResponse, GoogleAuthUserInfo } from "@/types";
 import UserService from "./UserService";
-import { PATHS, USER_AUTH_COOKIE_KEY, USER_AUTH_COOKIE_OPTIONS } from "@/constants";
+import { PATHS, AUTH_COOKIE_KEY, AUTH_COOKIE_OPTIONS } from "@/constants";
 import { getAuthAccessTokenEncryptionSecretEnv, getAuthGoogleClientIdEnv, getAuthGoogleClientSecretEnv, getMailAdminEmail } from "@/helpers/env";
 import { cookies } from "next/dist/client/components/headers";
 import { AuthError } from "@/errors";
@@ -16,7 +16,7 @@ class AuthService extends BaseService {
     static oauth2Client = new google.auth.OAuth2(
         getAuthGoogleClientIdEnv(),
         getAuthGoogleClientSecretEnv(),
-        process.env.APP_URL + PATHS.AUTH.SOCIAL.GOOGLE.CALLBACK
+        process.env.APP_URL + PATHS.api.auth.social.google.callback
     );
 
     static getGoogleUserData(tokenID: string, accessToken: string) {
@@ -212,9 +212,9 @@ class AuthService extends BaseService {
 
     }
 
-    static async logout(userCookie: UserCookie) {
+    static async logout(authCookie: AuthCookie) {
 
-        const { authenticated, accessToken } = userCookie;
+        const { authenticated, accessToken } = authCookie;
 
         try {
 
@@ -227,11 +227,11 @@ class AuthService extends BaseService {
             const userData = Token.decode<AccessTokenData>(decryptedAccessToken.payload.token);
             await UserService.updateRefreshToken(userData.email, null);
 
-            userCookie.authenticated = false;
-            userCookie.accessToken = null;
-            userCookie.refreshToken = null;
+            authCookie.authenticated = false;
+            authCookie.accessToken = null;
+            authCookie.refreshToken = null;
 
-            cookies().set(USER_AUTH_COOKIE_KEY, JSON.stringify(userCookie), USER_AUTH_COOKIE_OPTIONS);
+            cookies().set(AUTH_COOKIE_KEY, JSON.stringify(authCookie), AUTH_COOKIE_OPTIONS);
 
         } catch (error: any) {
             console.log(error.message);

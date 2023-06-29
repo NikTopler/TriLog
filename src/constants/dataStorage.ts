@@ -1,35 +1,47 @@
 import { ResponseCookie } from "next/dist/compiled/@edge-runtime/cookies";
 
-const USER_AUTH_LOCAL_STORAGE_KEY = 'trilog-user_auth';
+const VERIFICATION_TOKEN_LENGTH = 128;
 
 const AUTH_STATE_TOKEN_LENGTH = 16;
 const AUTH_STATE_TOKEN_EXPIRATION = 1000 * 60 * 5;
 
-const AUTH_FACEBOOK_STATE_COOKIE_KEY = 'fb-social-auth-state';
-const AUTH_GITHUB_STATE_COOKIE_KEY = 'gh-social-auth-state';
-
 const ACCESS_TOKEN_EXPIRATION_SECONDS = 2 * 60;
 const REFRESH_TOKEN_EXPIRATION_SECONDS = (5 * 24 * 60 * 60);
 
-const USER_AUTH_COOKIE_KEY = 'trilog-user_auth';
-const USER_AUTH_COOKIE_OPTIONS = {
+const AUTH_FACEBOOK_STATE_COOKIE_KEY = 'trilog-fb_social_auth_state';
+const AUTH_GITHUB_STATE_COOKIE_KEY = 'trilog-gh_social_auth_state';
+
+const AUTH_COOKIE_KEY = 'trilog-user_auth';
+const AUTH_COOKIE_OPTIONS = {
     secure: true,
     path: '/',
     sameSite: 'none', // TODO: experiment with "lax"
     maxAge: REFRESH_TOKEN_EXPIRATION_SECONDS
 } as Partial<ResponseCookie>;
 
-const VERIFICATION_TOKEN_LENGTH = 128;
+const TRIATHLON_LOCAL_STORAGE_KEY = "trilog-triathlons";
+const TRIATHLON_TYPES_LOCAL_STORAGE_KEY = "trilog-triathlon-types";
+const TRIATHLON_CATEGORIES_LOCAL_STORAGE_KEY = "trilog-triathlon-categories";
+const ORGANIZATIONS_LOCAL_STORAGE_KEY = "trilog-organizations";
+const COUNTRIES_LOCAL_STORAGE_KEY = "trilog-countries";
+const STATES_LOCAL_STORAGE_KEY = "trilog-states";
+const CITIES_LOCAL_STORAGE_KEY = "trilog-cities";
 
 export {
-    USER_AUTH_LOCAL_STORAGE_KEY,
     AUTH_STATE_TOKEN_LENGTH,
     AUTH_STATE_TOKEN_EXPIRATION,
     AUTH_FACEBOOK_STATE_COOKIE_KEY,
     AUTH_GITHUB_STATE_COOKIE_KEY,
     ACCESS_TOKEN_EXPIRATION_SECONDS,
     REFRESH_TOKEN_EXPIRATION_SECONDS,
-    USER_AUTH_COOKIE_KEY,
-    USER_AUTH_COOKIE_OPTIONS,
-    VERIFICATION_TOKEN_LENGTH
+    AUTH_COOKIE_KEY,
+    AUTH_COOKIE_OPTIONS,
+    VERIFICATION_TOKEN_LENGTH,
+    ORGANIZATIONS_LOCAL_STORAGE_KEY,
+    TRIATHLON_LOCAL_STORAGE_KEY,
+    TRIATHLON_TYPES_LOCAL_STORAGE_KEY,
+    TRIATHLON_CATEGORIES_LOCAL_STORAGE_KEY,
+    COUNTRIES_LOCAL_STORAGE_KEY,
+    STATES_LOCAL_STORAGE_KEY,
+    CITIES_LOCAL_STORAGE_KEY
 }

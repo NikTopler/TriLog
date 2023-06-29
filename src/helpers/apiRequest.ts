@@ -20,7 +20,7 @@ async function handleApiRequest<T>(promise: Promise<AxiosResponse<ApiResponse<T>
         const { data: { data, success, errors } }: AxiosResponse<ApiResponse<T>> = await promise;
 
         if (success) {
-            return data;
+            return data as T;
         }
 
         throw errors;

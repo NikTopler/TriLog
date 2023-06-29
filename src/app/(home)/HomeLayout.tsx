@@ -1,14 +1,11 @@
 'use client';
 
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { Tooltip } from "@mui/joy";
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import { LayoutProps } from "@/types";
 import { BreadCrumb, Navbar, Sidebar } from "@/components/navigation";
-import { TriathlonCategories } from "@prisma/client";
-import { TriathlonCategoriesRef } from "@/components/navigation/Navbar/Navbar";
-import { apiGet } from "@/helpers";
 import styles from "./home-layout.module.scss";
 
 interface SidebarState {
@@ -26,63 +23,11 @@ export interface StateObject<T> {
 
 function HomeLayout({ children }: LayoutProps) {
 
-    const navbarRef = useRef<TriathlonCategoriesRef>(null);
-
     const [sidebar, setSidebar] = useState<SidebarState>({
         open: true,
         closing: false,
         hovering: false
     });
-
-    useEffect(() => {
-
-        apiGet<TriathlonCategories[]>('/api/triathlons/categories', {})
-            .then((res) => {
-
-                if (res === undefined) {
-                    throw new Error('Error fetching data');
-                }
-
-                navbarRef.current?.setCategories({
-                    data: res,
-                    loading: false,
-                    errors: null
-                });
-
-            })
-            .catch((err) => {
-                console.log(err);
-                navbarRef.current?.setCategories({
-                    data: [],
-                    loading: false,
-                    errors: 'Error fetching data'
-                });
-            });
-
-        apiGet<TriathlonCategories[]>('/api/triathlons/types', {})
-            .then((res) => {
-
-                if (res === undefined) {
-                    throw new Error('Error fetching data');
-                }
-
-                navbarRef.current?.setTypes({
-                    data: res,
-                    loading: false,
-                    errors: null
-                });
-
-            })
-            .catch((err) => {
-                console.log(err);
-                navbarRef.current?.setTypes({
-                    data: [],
-                    loading: false,
-                    errors: 'Error fetching data'
-                });
-            });
-
-    }, []);
 
     const onSidebarToggle = () => {
 
@@ -119,7 +64,7 @@ function HomeLayout({ children }: LayoutProps) {
 
             <nav className={styles['home__navbar']}>
                 <div className={styles['home__navbar-main']}>
-                    <Navbar ref={navbarRef} />
+                    <Navbar />
                 </div>
             </nav>
 
