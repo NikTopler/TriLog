@@ -8,7 +8,7 @@ import { Cities, Countries, Organizations, States, TriathlonCategories, Triathlo
 import { Dispatch, SetStateAction, createContext, useContext, useEffect, useState } from "react";
 
 interface ResourceStatus<T> {
-    isLoading: boolean;
+    loading: boolean;
     data: T;
     error: any; // TODO: implement error handling
 }
@@ -34,7 +34,7 @@ interface DataContext {
 const STATIC_DATA_TTL = 10 * 24 * 60 * 60 * 1000;
 
 const defaultResourceStatus: ResourceStatus<null> = {
-    isLoading: false,
+    loading: false,
     data: null,
     error: null
 };
@@ -98,7 +98,7 @@ function DataProvider({ children }: LayoutProps) {
 
     useEffect(() => {
 
-        if(!triathlonLS && !triathlons.isLoading) {
+        if(!triathlonLS && !triathlons.loading) {
             fetchAndSetData<Triathlons[]>(
                 apiGet(PATHS.api.triathlons.all, { perPage: 500 }),
                 setTriathlons,
@@ -106,7 +106,7 @@ function DataProvider({ children }: LayoutProps) {
             );
         }
 
-        if (!triathlonTypesLS && !triathlonTypes.isLoading) {
+        if (!triathlonTypesLS && !triathlonTypes.loading) {
             fetchAndSetData<TriathlonTypes[]>(
                 apiGet(PATHS.api.triathlons.types.all, {}),
                 setTriathlonTypes,
@@ -114,7 +114,7 @@ function DataProvider({ children }: LayoutProps) {
             );
         }
 
-        if (!triathlonCategoriesLS && !triathlonCategories.isLoading) {
+        if (!triathlonCategoriesLS && !triathlonCategories.loading) {
             fetchAndSetData<TriathlonCategories[]>(
                 apiGet(PATHS.api.triathlons.categories.all, {}),
                 setTriathlonCategories,
@@ -122,7 +122,7 @@ function DataProvider({ children }: LayoutProps) {
             );
         }
 
-        if (!organizationsLS && !organizations.isLoading) {
+        if (!organizationsLS && !organizations.loading) {
             fetchAndSetData<Organizations[]>(
                 apiGet(PATHS.api.organizations.all, {}),
                 setOrganizations,
@@ -130,7 +130,7 @@ function DataProvider({ children }: LayoutProps) {
             );
         }
 
-        if (!countriesLS && !countries.isLoading) {
+        if (!countriesLS && !countries.loading) {
             fetchAndSetData<any>(
                 apiGet(PATHS.api.countries.all, { perPage: 250 }),
                 setCountries,
@@ -138,7 +138,7 @@ function DataProvider({ children }: LayoutProps) {
             );
         }
 
-        if (!statesLS && !states.isLoading) {
+        if (!statesLS && !states.loading) {
             fetchAndSetData<any>(
                 apiGet(PATHS.api.states.all, { perPage: 100 }),
                 setStates,
@@ -146,7 +146,7 @@ function DataProvider({ children }: LayoutProps) {
             );
         }
 
-        if (!citiesLS && !cities.isLoading) {
+        if (!citiesLS && !cities.loading) {
             fetchAndSetData<any>(
                 apiGet(PATHS.api.cities.all, { perPage: 100 }),
                 setCities,
@@ -173,16 +173,16 @@ function DataProvider({ children }: LayoutProps) {
 
 function fetchAndSetData<T>(promise: Promise<T>, setData: Dispatch<SetStateAction<ResourceStatus<T | null>>>, setLocalStorageData: (newValue: T) => void) {
 
-    setData(prev => ({ ...prev, isLoading: true }));
+    setData(prev => ({ ...prev, loading: true }));
 
     promise
         .then((data) => {
-            setData({ isLoading: false, data, error: null });
+            setData({ loading: false, data, error: null });
             setLocalStorageData(data);
         })
         .catch((error) => {
             console.log(error);
-            setData({ isLoading: false, data: null, error });
+            setData({ loading: false, data: null, error });
         });
 }
 

@@ -108,6 +108,7 @@
     }
 
     &__content {
+        padding-right: 1rem;
         position: relative;
         z-index: 1;
         height: 100%;
@@ -124,7 +125,7 @@
     }
 
     .home__content {
-        padding-left: $sidebar-full-width;
+        padding-left: calc($sidebar-full-width + 1rem);
     }
 
     .home__sidebar-container__slider {
@@ -153,7 +154,7 @@
 
 
     .home__content {
-        padding-left: $sidebar-collapsed-width;
+        padding-left: calc($sidebar-collapsed-width + 1rem);
     }
 
 }

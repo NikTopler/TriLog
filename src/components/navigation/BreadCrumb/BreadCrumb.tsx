@@ -11,10 +11,6 @@ function BreadCrumb() {
     let accumulatedPath = '';
     const pathnames = usePathname().substring(1).split('/');
 
-    if (pathnames.length === 1) {
-        return null;
-    }
-
     return (
 
         <nav className={styles['breadcrumbs-container']}>

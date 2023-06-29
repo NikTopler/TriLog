@@ -8,8 +8,8 @@ import { apiPost, createQueryString, isEmail } from "@/helpers";
 import { Email } from "@/schemas";
 import { EmailAuthContext } from "../layout";
 import { useAuthContext } from "@/providers";
-import styles from "./email-verification.module.scss";
 import { PATHS } from "@/constants";
+import styles from "./email-verification.module.scss";
 
 interface VerificationFieldConfig {
     value: string;
@@ -29,7 +29,7 @@ function EmailVerification() {
 
     const [emailResendTimeout, setEmailResendTimeout] = useState<number | null>(null);
     const [recipient, setRecipient] = useState<Email | null>(null);
-    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(false);
 
     const [verificationFields, setVerificationFields] = useState<VerificationFieldConfig[]>([
         { value: '', isFocused: true },
@@ -55,19 +55,19 @@ function EmailVerification() {
 
         if (NUM_OF_VERIFICATION_FIELDS === code.length) {
 
-            setIsLoading(true);
+            setLoading(true);
 
             if(!isEmail(email)) {
                 return;
             }
 
             auth.emailVerification(email, code)
-                .finally(() => setIsLoading(false));
+                .finally(() => setLoading(false));
 
             apiPost(PATHS.api.auth.emailVerification, { email, verificationCode: code })
                 .then(() => router.push(PATHS.home))
                 .catch((err) => {
-                    setIsLoading(false);
+                    setLoading(false);
                     // TODO: Handle error
                     console.log(err);
                 });
@@ -216,7 +216,7 @@ function EmailVerification() {
                                     value={value}
                                     type="text"
                                     isFocused={isFocused}
-                                    isDisabled={isLoading}
+                                    isDisabled={loading}
                                     style={{
                                         borderRadius: '4px',
                                         margin: '0 0 5px 0',

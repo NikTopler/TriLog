@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Tooltip } from "@mui/joy";
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
@@ -28,6 +28,10 @@ function HomeLayout({ children }: LayoutProps) {
         closing: false,
         hovering: false
     });
+
+    const [loading, setLoading] = useState<boolean>(true);
+
+    useEffect(() => setLoading(false), []);
 
     const onSidebarToggle = () => {
 
@@ -57,6 +61,17 @@ function HomeLayout({ children }: LayoutProps) {
             ...sidebar,
             hovering
         });
+    }
+
+    const SkeletonView = () => {
+
+        // TODO: Implement skeleton view
+        return (
+            <div>
+                <span>Loading ...</span>
+            </div>
+        );
+
     }
 
     return (
@@ -93,7 +108,8 @@ function HomeLayout({ children }: LayoutProps) {
 
             <section className={styles['home__content']}>
                 <BreadCrumb />
-                {children}
+                {loading && SkeletonView()}
+                {!loading && children}
             </section>
         </div>
     );

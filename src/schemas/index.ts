@@ -10,19 +10,22 @@ import { StateFilterOptionSchema, StateSchema, StateSchemaOptional } from "./mod
 import { CityFilterOptionSchema, CitySchema, CitySchemaOptional } from "./models/CitySchema";
 import { TriathlonSchema, TriathlonSchemaOptional, TriathlonSchemaRequired } from "./models/TriathlonSchema";
 import EmailSchema, { Email } from "./EmailSchema";
+import { StringArray, StringArraySchema } from "./DataSchemas";
 import AuthTokenSchema from "./AuthTokenSchema";
 import UrlSchema, { Url } from "./UrlSchema";
 import AuthCookieSchema, { isAuthCookie } from "./AuthCookieSchema";
 
 export type {
     Email,
+    StringArray,
     Url,
     PaginationOptions,
-    Identifier
+    Identifier,
 }
 
 export {
     EmailSchema,
+    StringArraySchema,
     createPaginationOptionSchema,
     AuthCookieSchema,
     isAuthCookie,
