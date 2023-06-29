@@ -37,7 +37,7 @@ function getUserAuthStatus(refreshToken: string, accessToken: string) {
 
 }
 
-async function authMiddleware(req: NextRequest) {
+async function userAuthMiddleware(req: NextRequest) {
 
     let userStatus = UserAuthStatus.UNAUTHENTICATED;
     let userCookie: UserCookie = getUserCookie(req);
@@ -121,4 +121,4 @@ async function authMiddleware(req: NextRequest) {
     return userCookie;
 }
 
-export default authMiddleware;
+export default userAuthMiddleware;

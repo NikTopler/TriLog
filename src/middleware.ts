@@ -1,16 +1,30 @@
 import { NextRequest, NextResponse } from "next/server";
 import { AuthError } from "./errors";
 import { USER_AUTH_COOKIE_KEY, USER_AUTH_COOKIE_OPTIONS } from "./constants";
-import { authMiddleware } from "./middlewares";
+import { apiAuthMiddleware, userAuthMiddleware } from "./middlewares";
+
+const PUBLIC_FILE = /\.(.*)$/;
 
 export async function middleware(req: NextRequest) {
 
     const res = NextResponse.next();
 
+    if (PUBLIC_FILE.test(req.nextUrl.pathname)
+        || req.nextUrl.pathname.startsWith('/_next')
+        || req.nextUrl.pathname.startsWith('/favicon.ico')) {
+        return res;
+    }
+
     try {
 
-        const userCookie = await authMiddleware(req);
-        res.cookies.set(USER_AUTH_COOKIE_KEY, JSON.stringify(userCookie), USER_AUTH_COOKIE_OPTIONS);
+        apiAuthMiddleware(req);
+
+        const userCookie = await userAuthMiddleware(req);
+        res.cookies.set(
+            USER_AUTH_COOKIE_KEY,
+            JSON.stringify(userCookie),
+            USER_AUTH_COOKIE_OPTIONS
+        );
 
     } catch (error: any) {
 
@@ -18,14 +32,13 @@ export async function middleware(req: NextRequest) {
             return NextResponse.redirect(error.redirectUrl);
         }
 
+        return NextResponse.json({
+            success: false,
+            error: error.message
+        })
+
     }
 
     return res;
 
 }
-
-export const config = {
-    matcher: [
-        '/((?!api|_next/static|_next/image|favicon.ico).*)',
-    ],
-};

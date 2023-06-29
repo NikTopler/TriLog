@@ -1,5 +1,7 @@
-import authMiddleware from "./authMiddleware";
+import apiAuthMiddleware from "./apiAuthMiddleware";
+import userAuthMiddleware from "./userAuthMiddleware";
 
 export {
-    authMiddleware
+    userAuthMiddleware,
+    apiAuthMiddleware
 }
