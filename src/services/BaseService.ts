@@ -1,7 +1,9 @@
-import { DatabaseConn } from "@/db";
+import { DatabaseConn, prismaClient } from "@/db";
 import { PrismaPromise } from "@prisma/client";
 
 class BaseService extends DatabaseConn {
+
+    static client = prismaClient;
 
     static async handle<T>(promise: PrismaPromise<T>) {
 
