@@ -1,5 +1,6 @@
 import createQueryString from "./createQueryString";
 import isEmail from "./isEmail";
+import isStringArray from "./isStringArray";
 import validatePaths from "./validatePaths";
 import changeFirstLetter from "./changeFirstLetter";
 import { apiDelete, apiGet, apiPost, apiPut } from "./apiRequest";
@@ -11,6 +12,7 @@ import isIdentifier from "./isIdentifier";
 
 export {
     isEmail,
+    isStringArray,
     isUrl,
     isIdentifier,
     createQueryString,

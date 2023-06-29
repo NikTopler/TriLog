@@ -1,15 +1,17 @@
 'use client';
 
-import { CSSProperties, Dispatch, SetStateAction, useState } from "react";
+import { CSSProperties, useRef, useState } from "react";
 import { LayoutProps } from "@/types";
-import { ClickAwayListener, Skeleton } from "@mui/material";
-import Link from "next/link";
+import { Skeleton } from "@mui/material";
+import { DropdownList, DropdownTabs } from "./templates";
+import { useOutsideClick } from "@/hooks";
 import styles from "./dropdown-layout.module.scss";
 
-interface TabsConfigItem {
+export interface DropdownItem {
+    uid: string | number;
     name: string;
-    path: string;
-    pathAs?: string;
+    active?: boolean;
+    handleOnClick?: (...params: any) => void;
 }
 
 export interface TabsConfig {
@@ -18,19 +20,30 @@ export interface TabsConfig {
         [key: string]: {
             name: string;
             active: boolean;
-            items: TabsConfigItem[]
+            items: DropdownItem[]
         }
     }
 }
 
 export interface ListConfig {
     groupTitle?: string;
-    list: TabsConfigItem[];
+    list: DropdownItem[];
 }
 
-type DropdownTemplate = 'tab' | 'list';
+export interface CheckBoxConfig {
+    items: DropdownItem[];
+    handleChange?: (...params: any) => void;
+}
 
-type ConfigType<T extends DropdownTemplate> = T extends 'tab' ? TabsConfig : T extends 'list' ? ListConfig : never;
+export interface RadioConfig {
+    items: DropdownItem[];
+}
+
+type DropdownTemplate = 'tab' | 'list' | 'radio' | 'checkbox';
+
+type ConfigType<T extends DropdownTemplate> = T extends 'tab'
+    ? TabsConfig
+    : ListConfig;
 
 type DropdownLayoutProps<T extends DropdownTemplate> = Omit<LayoutProps, 'style'> & {
     style?: {
@@ -45,12 +58,14 @@ type DropdownLayoutProps<T extends DropdownTemplate> = Omit<LayoutProps, 'style'
     config: ConfigType<T>;
     loading: boolean;
     error: any; // TODO: Implement error handling
-    onTabChange?: (tab: string) => void;
 };
 
-function DropdownLayout<T extends DropdownTemplate>({ children, template, config, loading, error, onTabChange, style }: DropdownLayoutProps<T>) {
+function DropdownLayout<T extends DropdownTemplate>({ children, template, config, loading, error, style }: DropdownLayoutProps<T>) {
 
     const [open, setOpen] = useState<boolean>(false);
+
+    const dropdownContainerRef = useRef(null);
+    useOutsideClick(dropdownContainerRef, () => setOpen(false));
 
     const MainView = () => {
 
@@ -59,45 +74,49 @@ function DropdownLayout<T extends DropdownTemplate>({ children, template, config
         }
 
         if (template === 'tab') {
-
             return (
-                <TabsTemplate
+                <DropdownTabs
                     setDropdownOpen={setOpen}
-                    setTabsConfig={onTabChange}
-                    tabs={(config as TabsConfig).tabs}
-                    groupTitle={(config as TabsConfig).groupTitle}
+                    {...config as TabsConfig}
                 />
             );
-
         }
 
         return (
-            <ListTemplate
+            <DropdownList
                 setDropdownOpen={setOpen}
-                list={(config as ListConfig).list}
-                groupTitle={(config as ListConfig).groupTitle}
+                {...config as ListConfig}
             />
         );
 
     }
 
     return (
-        <ClickAwayListener onClickAway={() => setOpen(false)}>
-            <div className={styles['dropdown']}>
-                <div onClick={() => setOpen(!open)}>
-                    {children}
-                </div>
-                {open && (
-                    <div className={styles['dropdown-container']} style={style}>
-                        {loading && LoadingSkeleton(template)}
-                        {error && <div>Error</div>}
-                        <div className={styles['dropdown-container__content']}>
-                            {MainView()}
-                        </div>
-                    </div>
-                )}
+        <div className={styles['dropdown']}>
+            <div onClick={() => setOpen(!open)}>
+                {children}
             </div>
-        </ClickAwayListener>
+            <div ref={dropdownContainerRef}
+                className={styles['dropdown-container']}
+                style={style}
+                data-active={open}>
+                {loading && LoadingSkeleton(template)}
+                {error && ErrorView()}
+                <div className={styles['dropdown-container__content']}>
+                    {MainView()}
+                </div>
+            </div>
+        </div>
+    );
+
+}
+
+function ErrorView() {
+
+    return (
+        <div>
+            Error
+        </div>
     );
 
 }
@@ -171,93 +190,6 @@ function LoadingSkeleton(template: DropdownTemplate) {
                         marginBottom: '0'
                     }}
                 />
-            </div>
-        </div>
-    );
-
-}
-
-interface TabsTemplateProps extends TabsConfig {
-    setTabsConfig?: (tab: string) => void;
-    setDropdownOpen: Dispatch<SetStateAction<boolean>>;
-}
-
-function TabsTemplate({ tabs, groupTitle, setTabsConfig, setDropdownOpen }: TabsTemplateProps) {
-
-    const tabNames = Object.keys(tabs);
-    const activeTab = Object.keys(tabs).find((key: string) => tabs[key].active);
-
-    return (
-        <>
-            <header className={styles['dropdown-container__content__header']}>
-                <div className={styles['dropdown-container__content__header__tabs-container']}>
-                    {tabNames.map((key: any, idx: number) => (
-                        <div
-                            key={idx}
-                            onClick={() => {
-                                if (setTabsConfig) {
-                                    setTabsConfig(key);
-                                }
-                            }}
-                            className={styles['dropdown-container__content__header__tabs-container--tab-container']}
-                            data-active={tabs[key].active}>
-                            <span>{tabs[key].name}</span>
-                        </div>
-                    ))}
-                </div>
-            </header>
-            <div className={styles['dropdown-container__content--main']}>
-                {groupTitle && (
-                    <section className={styles['dropdown-container__content--main__group-title']}>
-                        <span>
-                            {groupTitle}
-                        </span>
-                    </section>
-                )}
-                <div className={styles['dropdown-container__content--main__buttons-container']}>
-                    {tabs[activeTab as string].items.map((item: any, idx: number) => (
-                        <Link
-                            key={idx}
-                            className={styles['dropdown-container__content--main__buttons-container--button-container']}
-                            href={item.path}
-                            as={item.pathAs || item.path}
-                            onClick={() => setDropdownOpen(false)}>
-                            <span>{item.name}</span>
-                        </Link>
-                    ))}
-                </div>
-            </div>
-        </>
-    );
-
-}
-
-interface ListTemplateProps extends ListConfig {
-    setDropdownOpen: Dispatch<SetStateAction<boolean>>;
-}
-
-function ListTemplate({ groupTitle, list, setDropdownOpen }: ListTemplateProps) {
-
-    return (
-        <div className={styles['dropdown-container__content--main']}>
-            {groupTitle && (
-                <section className={styles['dropdown-container__content--main__group-title']}>
-                    <span>
-                        {groupTitle}
-                    </span>
-                </section>
-            )}
-            <div className={styles['dropdown-container__content--main__buttons-container']}>
-                {list.map((item: any, idx: number) => (
-                    <Link
-                        key={idx}
-                        className={styles['dropdown-container__content--main__buttons-container--button-container']}
-                        href={item.path}
-                        as={item.pathAs || item.path}
-                        onClick={() => setDropdownOpen(false)}>
-                        <span>{item.name}</span>
-                    </Link>
-                ))}
             </div>
         </div>
     );

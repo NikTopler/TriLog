@@ -14,7 +14,6 @@
         border-radius: 4px;
         box-shadow: 0 4px 8px -2px $color-secondary-40, 0 0 1px $color-secondary-50;
         overflow: hidden;
-        transition: all 0.3s ease-in-out;
 
         &__content {
 
@@ -91,6 +90,16 @@
 
         }
 
+    }
+
+    &-container[data-active=false] {
+        opacity: 0;
+        visibility: hidden;
+    }
+
+    &-container[data-active=true] {
+        opacity: 1;
+        visibility: visible;
     }
 
 }

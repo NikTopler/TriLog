@@ -7,15 +7,16 @@ import LightModeIcon from '@mui/icons-material/LightMode';
 import NightlightRoundIcon from '@mui/icons-material/NightlightRound';
 import SearchIcon from '@mui/icons-material/Search';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { CustomTextBox, RegularButton } from "@/components/inputs";
 import DropdownLayout, { ListConfig, TabsConfig } from "@/components/layouts/DropdownLayout/DropdownLayout";
+import { CustomTextBox, RegularButton } from "@/components/inputs";
 import { TriathlonCategories, TriathlonTypes } from "@prisma/client";
 import { StateObject } from "@/app/(home)/HomeLayout";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import styles from "./navbar.module.scss";
-import { Skeleton } from "@/components/ui/skeleton";
 import { useAuthContext, useDataContext } from "@/providers";
+import { Skeleton } from "@/components/ui/skeleton";
 import { PATHS } from "@/constants";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context";
+import styles from "./navbar.module.scss";
 
 const triathlonCategoriesStyle = {
     width: '300px',
@@ -32,7 +33,6 @@ const triathlonTypesStyle = {
 }
 
 function Navbar() {
-
 
     const router = useRouter();
     const pathname = usePathname();
@@ -61,17 +61,17 @@ function Navbar() {
 
     useEffect(() => {
 
-        if (!triathlonCategories.isLoading && triathlonCategories.data) {
+        if (!triathlonCategories.loading && triathlonCategories.data) {
             setCategories({
-                data: parseTriathlonCategories(triathlonCategories.data),
+                data: parseTriathlonCategories(triathlonCategories.data, router),
                 loading: false,
                 errors: null
             });
         }
 
-        if (!triathlonTypes.isLoading && triathlonTypes.data) {
+        if (!triathlonTypes.loading && triathlonTypes.data) {
             setTypes({
-                data: parseTriathlonTypes(triathlonTypes.data),
+                data: parseTriathlonTypesToDropdownItem(triathlonTypes.data, router),
                 loading: false,
                 errors: null
             });
@@ -81,22 +81,6 @@ function Navbar() {
 
     const handleInputChange = (value: string) => {
         setSearch(value);
-    }
-
-    const handleCategoriesTabChange = (tab: string) => {
-
-        const tempObj = { ...categories.data };
-
-        Object.keys(tempObj.tabs).forEach((key: string) => {
-            tempObj.tabs[key].active = false;
-        });
-
-        tempObj.tabs[tab].active = true;
-
-        setCategories(prev => ({
-            ...prev,
-            data: tempObj
-        }));
     }
 
     const AccountView = () => {
@@ -124,6 +108,9 @@ function Navbar() {
                 variant="default"
                 className="btn tertiary solid"
                 handleOnClick={() => router.push(PATHS.auth.login)}
+                style={{
+                    color: '#fff'
+                }}
             />
         );
 
@@ -140,7 +127,6 @@ function Navbar() {
                     loading={categories.loading}
                     error={categories.errors}
                     config={categories.data}
-                    onTabChange={handleCategoriesTabChange}
                     style={triathlonCategoriesStyle}>
                     <div className={styles['navbar__container__content-container-container__item']} data-active={new RegExp(PATHS.triathlons.categories.all + '/*').test(pathname)}>
                         <RegularButton
@@ -209,7 +195,7 @@ function Navbar() {
 
 };
 
-function parseTriathlonCategories(triathlonCategories: TriathlonCategories[]): TabsConfig {
+function parseTriathlonCategories(triathlonCategories: TriathlonCategories[], router: AppRouterInstance): TabsConfig {
 
     const obj: TabsConfig = {
         groupTitle: 'Age group',
@@ -235,9 +221,11 @@ function parseTriathlonCategories(triathlonCategories: TriathlonCategories[]): T
 
         obj.tabs[gender].items.push(
             {
+                uid: ID,
                 name: name + ' (' + acronym + ')',
-                path: PATHS.triathlons.categories.specific.replace(':id', ID.toString()),
-                pathAs: PATHS.triathlons.categories.specific.replace(':id', acronym)
+                handleOnClick() {
+                    router.push(PATHS.triathlons.categories.specific.replace(':id', acronym))
+                }
             }
         );
 
@@ -247,14 +235,16 @@ function parseTriathlonCategories(triathlonCategories: TriathlonCategories[]): T
 
 }
 
-function parseTriathlonTypes(triathlonTypes: TriathlonTypes[]): ListConfig {
+function parseTriathlonTypesToDropdownItem(triathlonTypes: TriathlonTypes[], router: AppRouterInstance): ListConfig {
 
     return {
         groupTitle: 'Competitions',
         list: triathlonTypes.map(({ ID, name }) => ({
+            uid: ID,
             name,
-            path: PATHS.triathlons.types.specific.replace(':id', ID.toString()),
-            pathAs: PATHS.triathlons.types.specific.replace(':id', name.replace(' ', '-').toLowerCase())
+            handleOnClick() {
+                router.push(PATHS.triathlons.types.specific.replace(':id', name.replace(' ', '-').toLowerCase()))
+            },
         }))
     }
 

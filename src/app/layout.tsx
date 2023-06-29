@@ -3,7 +3,8 @@ import ConditionalLayout from "./ConditionalLayout";
 import { Analytics } from '@vercel/analytics/react';
 
 import "@/styles/reset.scss";
-import "@/styles/globals.scss";
+import "@/styles/global.scss";
+import "@/styles/tailwind.css";
 
 export const metadata = {
   title: 'TriLog',
