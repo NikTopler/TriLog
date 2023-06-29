@@ -10,7 +10,7 @@ export interface PaginationOptions {
 }
 
 const DEFAULT_PER_PAGE = 25;
-const MAX_PER_PAGE = 100;
+const MAX_PER_PAGE = 500;
 const DEFAULT_PAGE = 1;
 const DEFAULT_ORDER: Order = 'desc'
 const DEFAULT_SORT = 'ID';

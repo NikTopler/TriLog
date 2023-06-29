@@ -5,6 +5,7 @@ import { PositiveIntSchema } from "./PositiveIntSchema";
 import { TriathlonCategoryFilterOptionSchema, TriathlonCategorySchema, TriathlonCategorySchemaOptional } from "./models/TriathlonCategorySchema";
 import { TriathlonTypeSchema, TriathlonTypeSchemaOptional, TriathlonTypesFilterOptionSchema } from "./models/TriathlonTypesSchema";
 import { OrganizationFilterOptionSchema, OrganizationSchema, OrganizationSchemaOptional } from "./models/OrganizationSchema";
+import { CountryFilterOptionSchema, CountrySchema, CountrySchemaOptional } from "./models/CountrySchema";
 import EmailSchema, { Email } from "./EmailSchema";
 import UserCookieSchema, { isUserCookie } from "./UserCookieSchema";
 import AuthTokenSchema from "./AuthTokenSchema";
@@ -39,5 +40,8 @@ export {
     TriathlonTypeSchemaOptional,
     OrganizationFilterOptionSchema,
     OrganizationSchema,
-    OrganizationSchemaOptional
+    OrganizationSchemaOptional,
+    CountryFilterOptionSchema,
+    CountrySchema,
+    CountrySchemaOptional
 }
