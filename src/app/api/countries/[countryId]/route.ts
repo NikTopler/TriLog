@@ -1,4 +1,4 @@
-import { parsePositiveInt } from "@/helpers";
+import { isIdentifier } from "@/helpers";
 import { CountrySchemaOptional } from "@/schemas";
 import { CountryService } from "@/services";
 import { RequestParams } from "@/types";
@@ -14,12 +14,18 @@ export async function GET(req: NextRequest, { params }: CountryParams) {
 
     try {
 
-        const ID = await parsePositiveInt(params.countryId, INVALID_ID_ERROR_MESSAGE);
+        const ID = Number(params.countryId);
 
-        return NextResponse.json({
-            success: true,
-            data: await CountryService.getById(ID)
-        }, { status: 200 });
+        if (isIdentifier(ID)) {
+
+            return NextResponse.json({
+                success: true,
+                data: await CountryService.getById(ID)
+            }, { status: 200 });
+
+        }
+
+        throw new Error(INVALID_ID_ERROR_MESSAGE);
 
     } catch (error: any) {
 
@@ -36,18 +42,25 @@ export async function PUT(req: NextRequest, { params }: CountryParams) {
 
     try {
 
-        const ID = await parsePositiveInt(params.countryId, INVALID_ID_ERROR_MESSAGE);
-        const body = await req.json();
-        const country = CountrySchemaOptional.parse(body);
+        const ID = Number(params.countryId);
 
-        if (Object.keys(country).length === 0) {
-            throw new Error("No valid fields to update");
+        if (isIdentifier(ID)) {
+
+            const body = await req.json();
+            const country = CountrySchemaOptional.parse(body);
+
+            if (Object.keys(country).length === 0) {
+                throw new Error("No valid fields to update");
+            }
+
+            return NextResponse.json({
+                success: true,
+                data: await CountryService.update(ID, country)
+            }, { status: 200 });
+
         }
 
-        return NextResponse.json({
-            success: true,
-            data: await CountryService.update(ID, country)
-        }, { status: 200 });
+        throw new Error(INVALID_ID_ERROR_MESSAGE);
 
     } catch (error: any) {
 
@@ -64,14 +77,20 @@ export async function DELETE(req: NextRequest, { params }: CountryParams) {
 
     try {
 
-        const ID = await parsePositiveInt(params.countryId, INVALID_ID_ERROR_MESSAGE);
+        const ID = Number(params.countryId);
 
-        await CountryService.delete(ID);
+        if (isIdentifier(ID)) {
 
-        return NextResponse.json({
-            success: true,
-            data: { ID }
-        }, { status: 200 });
+            await CountryService.delete(ID);
+
+            return NextResponse.json({
+                success: true,
+                data: { ID }
+            }, { status: 200 });
+
+        }
+
+        throw new Error(INVALID_ID_ERROR_MESSAGE);
 
     } catch (error: any) {
 

@@ -1,23 +1,23 @@
-import parsePositiveInt from "./parsePositiveInt";
 import createQueryString from "./createQueryString";
 import isEmail from "./isEmail";
 import parseQueryStringToObject from "./parseQueryStringToObject";
 import validatePaths from "./validatePaths";
-import capitalizeFirstLetter from "./capitalizeFirstLetter";
+import changeFirstLetter from "./changeFirstLetter";
 import { apiDelete, apiGet, apiPost, apiPut } from "./apiRequest";
 import generateCode from "./generateCode";
 import generateToken from "./generateToken";
 import isUrl from "./isUrl";
 import getCurrentTimestamp from "./getCurrentTimestamp";
+import isIdentifier from "./isIdentifier";
 
 export {
     isEmail,
     isUrl,
+    isIdentifier,
     createQueryString,
     parseQueryStringToObject,
-    parsePositiveInt,
     validatePaths,
-    capitalizeFirstLetter,
+    changeFirstLetter,
     apiGet,
     apiPost,
     apiPut,

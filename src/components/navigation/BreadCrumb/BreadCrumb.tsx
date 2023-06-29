@@ -1,7 +1,7 @@
 'use client';
 
 import React from "react";
-import { capitalizeFirstLetter } from "@/helpers";
+import { changeFirstLetter } from "@/helpers";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import styles from "./breadcrumb.module.scss";
@@ -30,7 +30,7 @@ function BreadCrumb() {
                                 href={accumulatedPath}
                                 className={styles['breadcrumbs-container__breadcrumb']}
                             >
-                                {capitalizeFirstLetter(path)}
+                                {changeFirstLetter(path)}
                             </Link>
                         </React.Fragment>
                     );

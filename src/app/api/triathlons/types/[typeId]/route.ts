@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { TriathlonTypeService } from "@/services";
-import { parsePositiveInt } from "@/helpers";
+import { isIdentifier } from "@/helpers";
 import { TriathlonTypeSchemaOptional } from "@/schemas";
 import { RequestParams } from "@/types";
 
@@ -14,12 +14,18 @@ export async function GET(req: NextRequest, { params }: TriathlonTypeParams) {
 
     try {
 
-        const ID = await parsePositiveInt(params.typeId, INVALID_ID_ERROR_MESSAGE);
+        const ID = Number(params.typeId);
 
-        return NextResponse.json({
-            success: true,
-            data: await TriathlonTypeService.getById(ID)
-        }, { status: 200 });
+        if (isIdentifier(ID)) {
+
+            return NextResponse.json({
+                success: true,
+                data: await TriathlonTypeService.getById(ID)
+            }, { status: 200 });
+
+        }
+
+        throw new Error(INVALID_ID_ERROR_MESSAGE);
 
     } catch (error: any) {
 
@@ -36,18 +42,25 @@ export async function PUT(req: NextRequest, { params }: TriathlonTypeParams) {
 
     try {
 
-        const ID = await parsePositiveInt(params.typeId, INVALID_ID_ERROR_MESSAGE);
-        const body = await req.json();
-        const type = TriathlonTypeSchemaOptional.parse(body);
+        const ID = Number(params.typeId);
 
-        if (Object.keys(type).length === 0) {
-            throw new Error("No valid fields to update");
+        if (isIdentifier(ID)) {
+
+            const body = await req.json();
+            const type = TriathlonTypeSchemaOptional.parse(body);
+
+            if (Object.keys(type).length === 0) {
+                throw new Error("No valid fields to update");
+            }
+
+            return NextResponse.json({
+                success: true,
+                data: await TriathlonTypeService.update(ID, type)
+            }, { status: 200 });
+
         }
 
-        return NextResponse.json({
-            success: true,
-            data: await TriathlonTypeService.update(ID, type)
-        }, { status: 200 });
+        throw new Error(INVALID_ID_ERROR_MESSAGE);
 
     } catch (error: any) {
 
@@ -63,14 +76,20 @@ export async function DELETE(req: NextRequest, { params }: TriathlonTypeParams) 
 
     try {
 
-        const ID = await parsePositiveInt(params.typeId, INVALID_ID_ERROR_MESSAGE);
+        const ID = Number(params.typeId);
 
-        await TriathlonTypeService.delete(ID);
+        if (isIdentifier(ID)) {
 
-        return NextResponse.json({
-            success: true,
-            data: { ID }
-        }, { status: 200 });
+            await TriathlonTypeService.delete(ID);
+
+            return NextResponse.json({
+                success: true,
+                data: { ID }
+            }, { status: 200 });
+
+        }
+
+        throw new Error(INVALID_ID_ERROR_MESSAGE);
 
     } catch (error: any) {
 

@@ -1,83 +1,29 @@
 import { GenericRecord } from "@/types";
-import { PaginationOptions } from "@/schemas";
+import { Identifier, PaginationOptions } from "@/schemas";
 import { Athletes } from "@prisma/client";
 import BaseService from "../BaseService";
 
-class AthleteService extends BaseService {
+const base = new BaseService('athletes');
+class AthleteService {
 
-    static getAll(
-        where: GenericRecord,
-        { page, perPage, order, orderBy }: PaginationOptions,
-        count: boolean = false
-    ) {
-
-        if (count) {
-            return this.handle(
-                this.client.athletes.count({
-                    where
-                })
-            );
-        }
-
-        return this.handle(
-            this.client.athletes.findMany({
-                where,
-                orderBy: {
-                    [orderBy]: order
-                },
-                skip: (page - 1) * perPage,
-                take: perPage
-            })
-        );
-
+    static getAll(where: GenericRecord, paginationOptions: PaginationOptions, count?: boolean) {
+        return base.getAll(where, paginationOptions, count);
     }
 
-    static getById(ID: number) {
-
-        return this.handle(
-            this.client.athletes.findUnique({
-                where: { ID }
-            })
-        );
-
+    static getById(ID: Identifier) {
+        return base.getById(ID);
     }
 
-    static create({ firstName, lastName, age, countryID, stateID, cityID }: Athletes) {
-
-        return this.handle(
-            this.client.athletes.create({
-                data: {
-                    firstName,
-                    lastName,
-                    age,
-                    countryID,
-                    stateID,
-                    cityID
-                }
-            })
-        );
-
+    static create(athlete: Athletes) {
+        return base.create<Athletes>(athlete);
     }
 
-    static update(ID: number, values: GenericRecord) {
-
-        return this.handle(
-            this.client.athletes.update({
-                where: { ID },
-                data: values
-            })
-        );
-
+    static update(ID: Identifier, values: GenericRecord) {
+        return base.update(ID, values);
     }
 
-    static delete(ID: number) {
-
-        return this.handle(
-            this.client.athletes.delete({
-                where: { ID }
-            })
-        );
-
+    static delete(ID: Identifier) {
+        return base.delete(ID);
     }
 
 }

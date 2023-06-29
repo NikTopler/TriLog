@@ -1,12 +1,12 @@
 import { GenericRecord } from "@/types";
 import { Identifier, PaginationOptions } from "@/schemas";
-import { TriathlonCategories } from "@prisma/client";
+import { Countries } from "@prisma/client";
 import BaseService from "../BaseService";
 
-const base = new BaseService('triathlonCategories');
-class TriathlonCategoryService {
+const base = new BaseService('countries');
+class CountryService extends BaseService {
 
-    static getAll(where: GenericRecord, paginationOptions: PaginationOptions, count: boolean = false) {
+    static getAll(where: GenericRecord, paginationOptions: PaginationOptions, count?: boolean) {
         return base.getAll(where, paginationOptions, count);
     }
 
@@ -14,8 +14,8 @@ class TriathlonCategoryService {
         return base.getById(ID);
     }
 
-    static create(triathlonCategory: TriathlonCategories) {
-        return base.create<TriathlonCategories>(triathlonCategory);
+    static create(country: Countries) {
+        return base.create<Countries>(country);
     }
 
     static update(ID: Identifier, values: GenericRecord) {
@@ -28,4 +28,4 @@ class TriathlonCategoryService {
 
 }
 
-export default TriathlonCategoryService;
+export default CountryService;

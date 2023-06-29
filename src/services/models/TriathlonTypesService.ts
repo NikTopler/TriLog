@@ -1,82 +1,29 @@
 import { GenericRecord } from "@/types";
-import { PaginationOptions } from "@/schemas";
+import { Identifier, PaginationOptions } from "@/schemas";
 import { TriathlonTypes } from "@prisma/client";
 import BaseService from "../BaseService";
 
+const base = new BaseService('triathlonTypes');
 class TriathlonTypeService extends BaseService {
 
-    static getAll(
-        where: GenericRecord,
-        { page, perPage, order, orderBy }: PaginationOptions,
-        count: boolean = false
-    ) {
-
-        if (count) {
-            return this.handle(
-                this.client.triathlonTypes.count({
-                    where
-                })
-            );
-        }
-
-        return this.handle(
-            this.client.triathlonTypes.findMany({
-                where,
-                orderBy: {
-                    [orderBy]: order
-                },
-                skip: (page - 1) * perPage,
-                take: perPage
-            })
-        );
-
+    static getAll(where: GenericRecord, paginationOptions: PaginationOptions, count: boolean = false) {
+        return base.getAll(where, paginationOptions, count);
     }
 
-    static getById(ID: number) {
-
-        return this.handle(
-            this.client.triathlonTypes.findUnique({
-                where: { ID }
-            })
-        );
-
+    static getById(ID: Identifier) {
+        return base.getById(ID);
     }
 
-    static create({ name, swimKm, bikeKm, runKm, organizationID }: TriathlonTypes) {
-
-        return this.handle(
-            this.client.triathlonTypes.create({
-                data: {
-                    name,
-                    swimKm,
-                    bikeKm,
-                    runKm,
-                    organizationID
-                }
-            })
-        );
-
+    static create(triathlonType: TriathlonTypes) {
+        return base.create<TriathlonTypes>(triathlonType);
     }
 
-    static update(ID: number, values: GenericRecord) {
-
-        return this.handle(
-            this.client.triathlonTypes.update({
-                where: { ID },
-                data: values
-            })
-        );
-
+    static update(ID: Identifier, values: GenericRecord) {
+        return base.update(ID, values);
     }
 
-    static delete(ID: number) {
-
-        return this.handle(
-            this.client.triathlonTypes.delete({
-                where: { ID }
-            })
-        );
-
+    static delete(ID: Identifier) {
+        return base.delete(ID);
     }
 
 }
