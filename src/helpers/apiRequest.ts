@@ -1,10 +1,15 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import { ApiResponse } from "@/types";
+import getApiAuthUsername from "./env/getApiAuthUsername";
+import getApiAuthPassword from "./env/getApiAuthPassword";
 
 const axiosConfig: AxiosRequestConfig = {
     headers: {
-        'Content-Type': 'x-www-form-urlencoded'
-    }
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "Authorization": "Basic " + btoa(getApiAuthUsername() + ':' + getApiAuthPassword()),
+    },
+    withCredentials: true
 }
 
 //TODO: Implement better error handling
