@@ -4,6 +4,7 @@ import BaseService from "./BaseService";
 import OrganizationService from "./models/OrganizationService";
 import TriathlonCategoryService from "./models/TriathlonCategoryService";
 import TriathlonTypeService from "./models/TriathlonTypesService";
+import CountryService from "./CountryService";
 import UserService from "./UserService";
 
 export {
@@ -13,5 +14,6 @@ export {
     AthleteService,
     TriathlonCategoryService,
     TriathlonTypeService,
-    OrganizationService
+    OrganizationService,
+    CountryService
 }
