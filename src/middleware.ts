@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { AuthError } from "./errors";
-import { USER_AUTH_COOKIE_KEY, USER_AUTH_COOKIE_OPTIONS } from "./constants";
 import { apiAuthMiddleware, userAuthMiddleware } from "./middlewares";
+import { AUTH_COOKIE_KEY, AUTH_COOKIE_OPTIONS } from "./constants";
 
 const PUBLIC_FILE = /\.(.*)$/;
 
@@ -19,12 +19,12 @@ export async function middleware(req: NextRequest) {
 
         apiAuthMiddleware(req);
 
-        const userCookie = await userAuthMiddleware(req);
-        if (userCookie) {
+        const authCookie = await userAuthMiddleware(req);
+        if (authCookie) {
             res.cookies.set(
-                USER_AUTH_COOKIE_KEY,
-                JSON.stringify(userCookie),
-                USER_AUTH_COOKIE_OPTIONS
+                AUTH_COOKIE_KEY,
+                JSON.stringify(authCookie),
+                AUTH_COOKIE_OPTIONS
             );
         }
 

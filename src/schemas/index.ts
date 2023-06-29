@@ -10,9 +10,9 @@ import { StateFilterOptionSchema, StateSchema, StateSchemaOptional } from "./mod
 import { CityFilterOptionSchema, CitySchema, CitySchemaOptional } from "./models/CitySchema";
 import { TriathlonSchema, TriathlonSchemaOptional, TriathlonSchemaRequired } from "./models/TriathlonSchema";
 import EmailSchema, { Email } from "./EmailSchema";
-import UserCookieSchema, { isUserCookie } from "./UserCookieSchema";
 import AuthTokenSchema from "./AuthTokenSchema";
 import UrlSchema, { Url } from "./UrlSchema";
+import AuthCookieSchema, { isAuthCookie } from "./AuthCookieSchema";
 
 export type {
     Email,
@@ -24,8 +24,8 @@ export type {
 export {
     EmailSchema,
     createPaginationOptionSchema,
-    UserCookieSchema,
-    isUserCookie,
+    AuthCookieSchema,
+    isAuthCookie,
     AuthTokenSchema,
     UrlSchema,
     PositiveIntSchema,

@@ -1,11 +1,11 @@
-import { AUTH_FACEBOOK_STATE_COOKIE_KEY, PATHS, USER_AUTH_COOKIE_KEY, USER_AUTH_COOKIE_OPTIONS } from "@/constants";
+import { AUTH_COOKIE_KEY, AUTH_COOKIE_OPTIONS, AUTH_FACEBOOK_STATE_COOKIE_KEY, PATHS } from "@/constants";
 import { isEmail } from "@/helpers";
-import { getUserCookie } from "@/helpers/api";
+import { getAuthCookie } from "@/helpers/api";
 import { getAuthFacebookAppIdEnv, getAuthFacebookAppSecretEnv } from "@/helpers/env";
-import { UserCookie } from "@/types";
 import { Email } from "@/schemas";
 import { AuthService } from "@/services";
 import { UserService } from "@/services";
+import { AuthCookie } from "@/types";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -29,7 +29,7 @@ export async function GET(req: NextRequest) {
 
         const { access_token } = await AuthService.getFacebookAccessToken(
             getAuthFacebookAppIdEnv(),
-            process.env.APP_URL + PATHS.AUTH.SOCIAL.FACEBOOK.CALLBACK,
+            process.env.APP_URL + PATHS.api.auth.social.facebook.callback,
             getAuthFacebookAppSecretEnv(),
             code
         );
@@ -75,15 +75,15 @@ export async function GET(req: NextRequest) {
 
         const cookieData = await AuthService.createSession(email, userInfo);
 
-        const userCookie: UserCookie = {
-            ...getUserCookie(),
+        const uthCookie: AuthCookie = {
+            ...getAuthCookie(),
             ...cookieData
         };
 
         cookies().set(
-            USER_AUTH_COOKIE_KEY,
-            JSON.stringify(userCookie),
-            USER_AUTH_COOKIE_OPTIONS
+            AUTH_COOKIE_KEY,
+            JSON.stringify(uthCookie),
+            AUTH_COOKIE_OPTIONS
         );
 
         return NextResponse.redirect(req.nextUrl.origin);
@@ -93,7 +93,7 @@ export async function GET(req: NextRequest) {
         console.log(error.message);
 
         // TODO: Redirect to login page with error message
-        return NextResponse.redirect(req.nextUrl.origin + '/auth/login');
+        return NextResponse.redirect(req.nextUrl.origin + PATHS.auth.login);
 
     } finally {
         cookies().delete(AUTH_FACEBOOK_STATE_COOKIE_KEY);

@@ -1,12 +1,12 @@
 import { isUrl } from "@/helpers";
-import { getUserCookie } from "@/helpers/api";
+import { getAuthCookie } from "@/helpers/api";
 import { AuthService } from "@/services";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
 
     const { redirectUri } = Object.fromEntries(req.nextUrl.searchParams);
-    const userCookie = getUserCookie();
+    const authCookie = getAuthCookie();
 
     try {
 
@@ -14,7 +14,7 @@ export async function GET(req: NextRequest) {
             throw new Error('Invalid redirect URI');
         }
 
-        await AuthService.logout(userCookie);
+        await AuthService.logout(authCookie);
         return NextResponse.redirect(redirectUri);
 
     } catch (error: any) {

@@ -9,7 +9,7 @@ import LayoutProps from "./LayoutProps";
 import Order from "./Order";
 import RequestParams from "./RequestParams";
 import SpecialKey from "./SpecialKey";
-import UserCookie from "./UserCookie";
+import AuthCookie from "./AuthCookie";
 import { RefreshTokenData, AccessTokenData, UserRole } from "./UserTokenData";
 import VerificationTokenData from "./VerificationTokenData";
 
@@ -18,7 +18,7 @@ export type {
     LayoutProps,
     GenericRecord,
     ApiResponse,
-    UserCookie,
+    AuthCookie,
     GoogleAuthUserInfo,
     FacebookAccessTokenResponse,
     FacebookAuthUserInfo,

@@ -1,6 +1,6 @@
-import { UserCookie } from "@/types";
 import Token from "@/utils/Token";
 import { getAuthAccessTokenSecretEnv, getAuthRefreshTokenSecretEnv } from "../env";
+import { AuthCookie } from "@/types";
 
 export enum UserAuthStatus {
     AUTHENTICATED,
@@ -8,9 +8,9 @@ export enum UserAuthStatus {
     EXPIRED
 }
 
-async function userAuth(userCookie: UserCookie) {
+async function userAuth(authCookie: AuthCookie) {
 
-    const { accessToken, refreshToken } = userCookie;
+    const { accessToken, refreshToken } = authCookie;
 
     if (!accessToken || !refreshToken) {
         return UserAuthStatus.UNAUTHENTICATED;
