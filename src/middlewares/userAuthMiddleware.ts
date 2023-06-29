@@ -39,6 +39,10 @@ function getUserAuthStatus(refreshToken: string, accessToken: string) {
 
 async function userAuthMiddleware(req: NextRequest) {
 
+    if (req.nextUrl.pathname.startsWith('/api')) {
+        return false;
+    }
+
     let userStatus = UserAuthStatus.UNAUTHENTICATED;
     let userCookie: UserCookie = getUserCookie(req);
 

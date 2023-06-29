@@ -20,11 +20,13 @@ export async function middleware(req: NextRequest) {
         apiAuthMiddleware(req);
 
         const userCookie = await userAuthMiddleware(req);
-        res.cookies.set(
-            USER_AUTH_COOKIE_KEY,
-            JSON.stringify(userCookie),
-            USER_AUTH_COOKIE_OPTIONS
-        );
+        if (userCookie) {
+            res.cookies.set(
+                USER_AUTH_COOKIE_KEY,
+                JSON.stringify(userCookie),
+                USER_AUTH_COOKIE_OPTIONS
+            );
+        }
 
     } catch (error: any) {
 
@@ -35,7 +37,7 @@ export async function middleware(req: NextRequest) {
         return NextResponse.json({
             success: false,
             error: error.message
-        })
+        });
 
     }
 
