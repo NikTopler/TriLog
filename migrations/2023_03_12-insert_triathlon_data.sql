@@ -4,7 +4,7 @@ INSERT INTO Organizations(name, acronym) VALUE('World Triathlon Corporation', 'W
 
 INSERT INTO TriathlonCategories(name, acronym, gender)
 VALUE 
-('pro', null, null),
+('pro', 'pro', null),
 ('19–under', 'm1', 'male'),
 ('20–24', 'm2', 'male'),
 ('25–29', 'm3', 'male'),
