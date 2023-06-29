@@ -1,79 +1,29 @@
 import { GenericRecord } from "@/types";
-import { PaginationOptions } from "@/schemas";
+import { Identifier, PaginationOptions } from "@/schemas";
 import { Organizations } from "@prisma/client";
 import BaseService from "../BaseService";
 
-class OrganizationService extends BaseService {
+const base = new BaseService('organizations');
+class OrganizationService {
 
-    static getAll(
-        where: GenericRecord,
-        { page, perPage, order, orderBy }: PaginationOptions,
-        count: boolean = false
-    ) {
-
-        if (count) {
-            return this.handle(
-                this.client.organizations.count({
-                    where
-                })
-            );
-        }
-
-        return this.handle(
-            this.client.organizations.findMany({
-                where,
-                orderBy: {
-                    [orderBy]: order
-                },
-                skip: (page - 1) * perPage,
-                take: perPage
-            })
-        );
-
+    static getAll(where: GenericRecord, paginationOptions: PaginationOptions, count: boolean = false) {
+        return base.getAll(where, paginationOptions, count);
     }
 
-    static getById(ID: number) {
-
-        return this.handle(
-            this.client.organizations.findUnique({
-                where: { ID }
-            })
-        );
-
+    static getById(ID: Identifier) {
+        return base.getById(ID);
     }
 
-    static create({ name, acronym }: Organizations) {
-
-        return this.handle(
-            this.client.organizations.create({
-                data: {
-                    name,
-                    acronym
-                }
-            })
-        );
-
+    static create(organizations: Organizations) {
+        return base.create<Organizations>(organizations);
     }
 
-    static update(ID: number, values: GenericRecord) {
-
-        return this.handle(
-            this.client.organizations.update({
-                where: { ID },
-                data: values
-            })
-        );
-
+    static update(ID: Identifier, values: GenericRecord) {
+        return base.update(ID, values);
     }
 
-    static delete(ID: number) {
-
-        return this.handle(
-            this.client.organizations.delete({
-                where: { ID }
-            })
-        );
-
+    static delete(ID: Identifier) {
+        return base.delete(ID);
     }
 
 }

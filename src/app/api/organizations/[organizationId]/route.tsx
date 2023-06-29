@@ -1,4 +1,4 @@
-import { parsePositiveInt } from "@/helpers";
+import { isIdentifier } from "@/helpers";
 import { RequestParams } from "@/types";
 import { OrganizationSchemaOptional } from "@/schemas";
 import { OrganizationService } from "@/services";
@@ -14,12 +14,16 @@ export async function GET(req: NextRequest, { params }: OrganizationParams) {
 
     try {
 
-        const ID = await parsePositiveInt(params.organizationId, INVALID_ID_ERROR_MESSAGE);
+        const ID = Number(params.organizationId);
 
-        return NextResponse.json({
-            success: true,
-            data: await OrganizationService.getById(ID)
-        }, { status: 200 });
+        if (isIdentifier(ID)) {
+            return NextResponse.json({
+                success: true,
+                data: await OrganizationService.getById(ID)
+            }, { status: 200 });
+        }
+
+        throw new Error(INVALID_ID_ERROR_MESSAGE);
 
     } catch (error: any) {
 
@@ -36,18 +40,25 @@ export async function PUT(req: NextRequest, { params }: OrganizationParams) {
 
     try {
 
-        const ID = await parsePositiveInt(params.organizationId, INVALID_ID_ERROR_MESSAGE);
-        const body = await req.json();
-        const organization = OrganizationSchemaOptional.parse(body);
+        const ID = Number(params.organizationId);
 
-        if (Object.keys(organization).length === 0) {
-            throw new Error("No valid fields to update");
+        if (isIdentifier(ID)) {
+
+            const body = await req.json();
+            const organization = OrganizationSchemaOptional.parse(body);
+
+            if (Object.keys(organization).length === 0) {
+                throw new Error("No valid fields to update");
+            }
+
+            return NextResponse.json({
+                success: true,
+                data: await OrganizationService.update(ID, organization)
+            }, { status: 200 });
+
         }
 
-        return NextResponse.json({
-            success: true,
-            data: await OrganizationService.update(ID, organization)
-        }, { status: 200 });
+        throw new Error(INVALID_ID_ERROR_MESSAGE);
 
     } catch (error: any) {
 
@@ -64,14 +75,20 @@ export async function DELETE(req: NextRequest, { params }: OrganizationParams) {
 
     try {
 
-        const ID = await parsePositiveInt(params.organizationId, INVALID_ID_ERROR_MESSAGE);
+        const ID = Number(params.organizationId);
 
-        await OrganizationService.delete(ID);
+        if (isIdentifier(ID)) {
 
-        return NextResponse.json({
-            success: true,
-            data: { ID }
-        }, { status: 200 });
+            await OrganizationService.delete(ID);
+
+            return NextResponse.json({
+                success: true,
+                data: { ID }
+            }, { status: 200 });
+
+        }
+
+        throw new Error(INVALID_ID_ERROR_MESSAGE);
 
     } catch (error: any) {
 

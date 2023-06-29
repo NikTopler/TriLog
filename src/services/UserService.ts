@@ -1,51 +1,53 @@
 import { Email } from "@/schemas";
-import BaseService from "./BaseService";
+import BaseService, { handleResult } from "./BaseService";
 import { Users } from "@prisma/client";
 
 type UserColumnsOptional = Partial<Omit<Users, 'ID'>>;
 
 const VERIFICATION_EMAIL_EXPIRATION_TIME_MS = 2 * 60 * 1000;
 
-class UserService extends BaseService {
+const base = new BaseService('users');
+class UserService {
 
     static getByEmail(email: Email) {
 
-        return this.client.users.findUnique({
+        return handleResult<Users | null>(base._tableClient.findUnique({
             where: {
                 email
             }
-        });
+        }));
 
     }
 
     static getByRefreshToken(refreshToken: string) {
 
-        return this.client.users.findFirst({
+        return handleResult<Users | null>(base._tableClient.findFirst({
             where: {
                 refreshToken
             }
-        });
+        }));
 
     }
 
     static getByVerificationToken(verificationToken: string) {
 
-        return this.client.users.findFirst({
+        return handleResult<Users | null>(base._tableClient.findFirst({
             where: {
                 verificationToken
             }
-        });
+        }));
 
     }
 
     static create(email: Email, data: UserColumnsOptional) {
 
-        return this.client.users.create({
+        return handleResult<Users>(base._tableClient.create({
             data: {
                 email,
                 ...data
             }
-        });
+        }));
+
     }
 
     static createThroughEmail(email: Email, verificationCode: string) {
@@ -68,12 +70,12 @@ class UserService extends BaseService {
 
     static update(email: Email, data: UserColumnsOptional) {
 
-        return this.client.users.update({
+        return handleResult(base._tableClient.update({
             where: {
                 email
             },
             data
-        });
+        }));
 
     }
 

@@ -1,4 +1,4 @@
-import { parsePositiveInt } from "@/helpers";
+import { isIdentifier } from "@/helpers";
 import { RequestParams } from "@/types";
 import { TriathlonCategorySchemaOptional } from "@/schemas";
 import TriathlonCategoryService from "@/services/models/TriathlonCategoryService";
@@ -14,12 +14,18 @@ export async function GET(req: NextRequest, { params }: TriathlonCategoryParams)
 
     try {
 
-        const ID = await parsePositiveInt(params.categoryId, INVALID_ID_ERROR_MESSAGE);
+        const ID = Number(params.categoryId);
 
-        return NextResponse.json({
-            success: true,
-            data: await TriathlonCategoryService.getById(ID)
-        }, { status: 200 });
+        if (isIdentifier(ID)) {
+
+            return NextResponse.json({
+                success: true,
+                data: await TriathlonCategoryService.getById(ID)
+            }, { status: 200 });
+
+        }
+
+        throw new Error(INVALID_ID_ERROR_MESSAGE);
 
     } catch (error: any) {
 
@@ -37,19 +43,25 @@ export async function PUT(req: NextRequest, { params }: TriathlonCategoryParams)
 
     try {
 
-        const ID = await parsePositiveInt(params.categoryId, INVALID_ID_ERROR_MESSAGE);
-        const body = await req.json();
+        const ID = Number(params.categoryId);
 
-        const category = TriathlonCategorySchemaOptional.parse(body);
+        if (isIdentifier(ID)) {
 
-        if (Object.keys(category).length === 0) {
-            throw new Error("No valid fields to update");
+            const body = await req.json();
+            const category = TriathlonCategorySchemaOptional.parse(body);
+
+            if (Object.keys(category).length === 0) {
+                throw new Error("No valid fields to update");
+            }
+
+            return NextResponse.json({
+                success: true,
+                data: await TriathlonCategoryService.update(ID, category)
+            }, { status: 200 });
+
         }
 
-        return NextResponse.json({
-            success: true,
-            data: await TriathlonCategoryService.update(ID, category)
-        }, { status: 200 });
+        throw new Error(INVALID_ID_ERROR_MESSAGE);
 
     } catch (error: any) {
 
@@ -66,16 +78,21 @@ export async function DELETE(req: NextRequest, { params }: TriathlonCategoryPara
 
     try {
 
-        const ID = await parsePositiveInt(params.categoryId, INVALID_ID_ERROR_MESSAGE);
+        const ID = Number(params.categoryId);
 
-        // TODO: delete triathlon category's children
+        if (isIdentifier(ID)) {
 
-        await TriathlonCategoryService.delete(ID);
+            // TODO: delete triathlon category's children
+            await TriathlonCategoryService.delete(ID);
 
-        return NextResponse.json({
-            success: true,
-            data: { ID }
-        }, { status: 200 });
+            return NextResponse.json({
+                success: true,
+                data: { ID }
+            }, { status: 200 });
+
+        }
+
+        throw new Error(INVALID_ID_ERROR_MESSAGE);
 
     } catch (error: any) {
 

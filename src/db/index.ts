@@ -1,7 +1,9 @@
-import DatabaseConn from "./DatabaseConn";
-import prismaClient from "./prismaClient";
+import prismaClient, { TableName } from "./prismaClient";
+
+export type {
+    TableName
+}
 
 export {
-    prismaClient,
-    DatabaseConn
+    prismaClient
 }

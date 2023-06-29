@@ -1,4 +1,4 @@
-import { parsePositiveInt } from "@/helpers";
+import { isIdentifier } from "@/helpers";
 import { RequestParams } from "@/types";
 import { AthleteSchemaOptional } from "@/schemas";
 import { AthleteService } from "@/services";
@@ -14,12 +14,18 @@ export async function GET(req: NextRequest, { params }: AthleteParams) {
 
     try {
 
-        const ID = await parsePositiveInt(params.athleteId, INVALID_ID_ERROR_MESSAGE);
+        const ID = Number(params.athleteId);
 
-        return NextResponse.json({
-            success: true,
-            data: await AthleteService.getById(ID)
-        }, { status: 200 });
+        if (isIdentifier(ID)) {
+
+            return NextResponse.json({
+                success: true,
+                data: await AthleteService.getById(ID)
+            }, { status: 200 });
+
+        }
+
+        throw new Error(INVALID_ID_ERROR_MESSAGE);
 
     } catch (error: any) {
 
@@ -36,20 +42,26 @@ export async function PUT(req: NextRequest, { params }: AthleteParams) {
 
     try {
 
-        const ID = await parsePositiveInt(params.athleteId, INVALID_ID_ERROR_MESSAGE);
-        const body = await req.json();
-        const athlete = AthleteSchemaOptional.parse(body);
+        const ID = Number(params.athleteId);
 
-        if (Object.keys(athlete).length === 0) {
-            throw new Error("No valid fields to update");
+        if (isIdentifier(ID)) {
+
+            const body = await req.json();
+            const athlete = AthleteSchemaOptional.parse(body);
+
+            if (Object.keys(athlete).length === 0) {
+                throw new Error("No valid fields to update");
+            }
+
+            //TODO: validate place ids
+            return NextResponse.json({
+                success: true,
+                data: await AthleteService.update(ID, athlete)
+            }, { status: 200 });
+
         }
 
-        //TODO: validate place ids
-
-        return NextResponse.json({
-            success: true,
-            data: await AthleteService.update(ID, athlete)
-        }, { status: 200 });
+        throw new Error(INVALID_ID_ERROR_MESSAGE);
 
     } catch (error: any) {
 
@@ -66,16 +78,21 @@ export async function DELETE(req: NextRequest, { params }: AthleteParams) {
 
     try {
 
-        const ID = await parsePositiveInt(params.athleteId, INVALID_ID_ERROR_MESSAGE);
+        const ID = Number(params.athleteId);
 
-        // TODO: delete athlete's children (participations, results, etc.)
+        if (isIdentifier(ID)) {
 
-        await AthleteService.delete(ID);
+            // TODO: delete athlete's children (participations, results, etc.)
+            await AthleteService.delete(ID);
 
-        return NextResponse.json({
-            success: true,
-            data: { ID }
-        }, { status: 200 });
+            return NextResponse.json({
+                success: true,
+                data: { ID }
+            }, { status: 200 });
+
+        }
+
+        throw new Error(INVALID_ID_ERROR_MESSAGE);
 
     } catch (error: any) {
 

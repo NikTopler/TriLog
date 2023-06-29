@@ -4,7 +4,7 @@ import GoogleIcon from "@mui/icons-material/Google";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import GithubIcon from "@mui/icons-material/GitHub";
 import { SocialLoginProvider, useAuthContext } from "@/providers";
-import { capitalizeFirstLetter } from "@/helpers";
+import { changeFirstLetter } from "@/helpers";
 import styles from "./SocialLoginButton.module.scss"
 
 export interface SocialLoginButtonProps {
@@ -35,7 +35,7 @@ function SocialLoginButton({ provider, disabled, setIsProcessing }: SocialLoginB
                     {providerIcons[provider]}
                 </div>
                 <div className={styles['social_login__button-text_container']}>
-                    <span>{capitalizeFirstLetter(provider)}</span>
+                    <span>{changeFirstLetter(provider)}</span>
                 </div>
             </button>
         </div>
