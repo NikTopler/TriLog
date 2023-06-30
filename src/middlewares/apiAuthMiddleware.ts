@@ -2,10 +2,6 @@ import getApiAuthPassword from "@/helpers/env/getApiAuthPassword";
 import getApiAuthUsername from "@/helpers/env/getApiAuthUsername";
 import { NextRequest } from "next/server";
 
-const EXCLUDED_PATHS = [
-    '/api/auth/*'
-];
-
 function apiAuthMiddleware(req: NextRequest) {
 
     const path = req.nextUrl.pathname;
