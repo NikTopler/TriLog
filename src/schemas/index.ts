@@ -10,6 +10,7 @@ import EmailSchema, { Email } from "./EmailSchema";
 import UserCookieSchema, { isUserCookie } from "./UserCookieSchema";
 import AuthTokenSchema from "./AuthTokenSchema";
 import UrlSchema, { Url } from "./UrlSchema";
+import { StateFilterOptionSchema, StateSchema, StateSchemaOptional } from "./models/StateSchema";
 
 export type {
     Email,
@@ -44,5 +45,8 @@ export {
     OrganizationSchemaOptional,
     CountryFilterOptionSchema,
     CountrySchema,
-    CountrySchemaOptional
+    CountrySchemaOptional,
+    StateFilterOptionSchema,
+    StateSchema,
+    StateSchemaOptional
 }
