@@ -11,7 +11,7 @@ class BaseService {
         this._tableClient = prismaClient[tableName] as any;
     }
 
-    static getColumnNames(tableName: string) {
+    static getColumnNames(tableName: TableName) {
         return Prisma.dmmf.datamodel.models.find(m => m.name === tableName)?.fields.map(f => f.name);
     }
 

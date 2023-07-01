@@ -6,6 +6,7 @@ import TriathlonCategoryService from "./models/TriathlonCategoryService";
 import TriathlonTypeService from "./models/TriathlonTypesService";
 import CountryService from "./models/CountryService";
 import UserService from "./UserService";
+import StateService from "./models/StateService";
 
 export {
     AuthService,
@@ -16,5 +17,6 @@ export {
     TriathlonTypeService,
     OrganizationService,
     CountryService,
+    StateService,
     handleResult
 }
