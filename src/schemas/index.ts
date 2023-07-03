@@ -6,12 +6,13 @@ import { TriathlonCategoryFilterOptionSchema, TriathlonCategorySchema, Triathlon
 import { TriathlonTypeSchema, TriathlonTypeSchemaOptional, TriathlonTypesFilterOptionSchema } from "./models/TriathlonTypesSchema";
 import { OrganizationFilterOptionSchema, OrganizationSchema, OrganizationSchemaOptional } from "./models/OrganizationSchema";
 import { CountryFilterOptionSchema, CountrySchema, CountrySchemaOptional } from "./models/CountrySchema";
+import { StateFilterOptionSchema, StateSchema, StateSchemaOptional } from "./models/StateSchema";
+import { CityFilterOptionSchema, CitySchema, CitySchemaOptional } from "./models/CitySchema";
+import { TriathlonSchema, TriathlonSchemaOptional, TriathlonSchemaRequired } from "./models/TriathlonSchema";
 import EmailSchema, { Email } from "./EmailSchema";
 import UserCookieSchema, { isUserCookie } from "./UserCookieSchema";
 import AuthTokenSchema from "./AuthTokenSchema";
 import UrlSchema, { Url } from "./UrlSchema";
-import { StateFilterOptionSchema, StateSchema, StateSchemaOptional } from "./models/StateSchema";
-import { CityFilterOptionSchema, CitySchema, CitySchemaOptional } from "./models/CitySchema";
 
 export type {
     Email,
@@ -52,5 +53,8 @@ export {
     StateSchemaOptional,
     CityFilterOptionSchema,
     CitySchema,
-    CitySchemaOptional
+    CitySchemaOptional,
+    TriathlonSchema,
+    TriathlonSchemaRequired,
+    TriathlonSchemaOptional
 }
