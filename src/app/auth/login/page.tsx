@@ -67,21 +67,10 @@ export default function Login() {
                         disabled={!isEmail(email)}
                         handleOnClick={onContinueClick}
                         loading={isProcessing}
-                        style={{
-                            borderRadius: '4px',
-                            height: '50px',
-                            width: '100%',
-                            margin: '0 0 5px 0',
-                            fontWeight: 600,
-                            color: '#ffffff',
-                            backgroundColor: '#4DABF7',
-                            ":hover": {
-                                backgroundColor: '#4DABF7'
-                            }
-                        }}
+                        className="auth-login-button"
                     />
                 </div>
-                <div className="p-top-1 p-bottom-1">
+                <div>
                     <span className={"auth-container__popup-main__instruction"}>or</span>
                 </div>
                 <div className="m-bottom-2">
