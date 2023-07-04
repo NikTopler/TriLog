@@ -10,10 +10,11 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { CustomTextBox, RegularButton } from "@/components/inputs";
 import DropdownLayout, { ListConfig, TabsConfig } from "@/components/layouts/DropdownLayout/DropdownLayout";
 import { TriathlonCategories, TriathlonTypes } from "@prisma/client";
-import styles from "./navbar.module.scss";
 import { StateObject } from "@/app/(home)/HomeLayout";
 import { useAuthContext } from "@/providers";
-import { Box, Skeleton } from "@mui/material";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import styles from "./navbar.module.scss";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const triathlonCategoriesStyle = {
     width: '300px',
@@ -104,21 +105,19 @@ const Navbar = forwardRef(({ }, ref) => {
 
     const AccountView = () => {
 
-        if(auth.loading) {
+        if (auth.loading) {
             return (
-                <Box>
-                    <Skeleton />
-                </Box>
+                <Skeleton className="h-[40px] w-[40px] rounded-full" style={{ backgroundColor: '#ced4da' }} />
             );
         }
 
         if (auth.authenticated) {
             return (
                 <Tooltip title="Profile">
-                    <div className={styles['navbar__container__menu-container__image-container']} data-image onClick={auth.logout}>
-                        {/* TODO: Replace img with Next Image */}
-                        <img src="https://via.placeholder.com/150" alt="profile" />
-                    </div>
+                    <Avatar className={styles['navbar__container__menu-container__image-container']} data-image onClick={auth.logout}>
+                        <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+                        <AvatarFallback></AvatarFallback>
+                    </Avatar>
                 </Tooltip>
             );
         }
@@ -126,9 +125,12 @@ const Navbar = forwardRef(({ }, ref) => {
         return (
             <RegularButton
                 text="Login"
-                variant="solid"
+                variant="default"
                 className="btn tertiary solid"
                 handleOnClick={() => router.push('/auth/login')}
+                style={{
+                    color: '#fff'
+                }}
             />
         );
 
@@ -150,7 +152,7 @@ const Navbar = forwardRef(({ }, ref) => {
                     <div className={styles['navbar__container__content-container-container__item']} data-active={new RegExp('/triathlons/categories/*').test(pathname)}>
                         <RegularButton
                             text="Categories"
-                            variant="plain"
+                            variant="ghost"
                             endDecorator={<KeyboardArrowDownIcon sx={{ fontSize: 'medium' }} />}
                             className="btn secondary plain"
                         />
@@ -166,7 +168,7 @@ const Navbar = forwardRef(({ }, ref) => {
                     <div className={styles['navbar__container__content-container-container__item']} data-active={new RegExp('/triathlons/types/*').test(pathname)}>
                         <RegularButton
                             text="Types"
-                            variant="plain"
+                            variant="ghost"
                             endDecorator={<KeyboardArrowDownIcon sx={{ fontSize: 'medium' }} />}
                             className="btn secondary plain"
                         />

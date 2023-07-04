@@ -44,13 +44,13 @@ class BaseService {
 
     }
 
-    getById<T>(ID: Identifier) {
+    getById(ID: Identifier) {
 
         return handleResult(
             this._tableClient.findUnique({
                 where: { ID }
             })
-        ) as Promise<T>;
+        );
 
     }
 

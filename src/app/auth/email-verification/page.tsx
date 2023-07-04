@@ -6,9 +6,9 @@ import { CustomTextBox } from "@/components/inputs";
 import { apiPost, createQueryString, isEmail } from "@/helpers";
 import { Email } from "@/schemas";
 import { EmailAuthContext } from "../layout";
-import styles from "./email-verification.module.scss";
 import { useAuthContext } from "@/providers";
 import { SpecialKey } from "@/types";
+import styles from "./email-verification.module.scss";
 
 interface VerificationFieldConfig {
     value: string;
@@ -201,14 +201,14 @@ function EmailVerification() {
             </header>
 
             <div className="auth-container__popup-main">
-                <p className={styles['description'] + " m-bottom-1"}>
+                <p className={styles['description']}>
                     You're almost done! We sent a code to
                     <span className={styles['auth-container__popup-main-user-email']}>
                         {recipient}
                     </span>
                 </p>
                 <div className="auth-container__popup-main__form">
-                    <div className={styles['auth-container__popup-main__form-input__container'] + " m-bottom-1"}>
+                    <div className={styles['auth-container__popup-main__form-input__container']}>
                         {verificationFields.map(({ value, isFocused }, idx) =>
                             <div key={idx} className={styles['auth-container__popup-main__form-input__container--input']}>
                                 <CustomTextBox
@@ -232,10 +232,10 @@ function EmailVerification() {
                     </div>
 
                     <div className={styles['auth-container__popup-main__form--resend']}>
-                        <div className="d-flex a-items-center">
+                        <div className="flex items-center">
                             <p>Didn't receive the code?</p>
                         </div>
-                        <div className="d-flex">
+                        <div className="flex">
                             <a href="#" onClick={onEmailResendClick} className="link">Resend the code</a>
                             <p>&nbsp; or &nbsp;</p>
                             <a href="#" onClick={onUpdateEmailClick} className="link">update your email</a>

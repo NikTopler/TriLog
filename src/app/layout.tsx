@@ -1,10 +1,8 @@
-
 import { LayoutProps } from "@/types";
 import ConditionalLayout from "./ConditionalLayout";
 import { Analytics } from '@vercel/analytics/react';
 
 import "@/styles/reset.scss";
-import "@/styles/variables.scss";
 import "@/styles/globals.scss";
 
 export const metadata = {
