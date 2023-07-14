@@ -92,7 +92,8 @@ function AuthProvider({ children }: LayoutProps) {
     }
 
     const logout = (redirectUri?: Url) => {
-        router.push(PATHS.api.auth.logout + '?redirectUri=' + (redirectUri?.url || window.location.origin + PATHS.auth.login));
+        router.push(PATHS.api.auth.logout + '?redirectUri=' + (redirectUri?.url || window.location.origin + PATHS.home));
+        setAuthenticated(false);
     }
 
     return (
