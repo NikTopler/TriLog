@@ -81,10 +81,6 @@ async function userAuthMiddleware(req: NextRequest) {
             authCookie.accessToken = null;
             authCookie.refreshToken = null;
 
-            if (!req.nextUrl.pathname.startsWith('/auth')) {
-                throw new AuthError("Access denied!", req.nextUrl.origin + '/auth/login');
-            }
-
             break;
         }
 
