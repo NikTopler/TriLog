@@ -6,6 +6,7 @@ import { useLocalStorage } from "@/hooks";
 import { LayoutProps } from "@/types";
 import { Cities, Countries, Organizations, States, TriathlonCategories, TriathlonTypes, Triathlons } from "@prisma/client";
 import { Dispatch, SetStateAction, createContext, useContext, useEffect, useState } from "react";
+import { useProgressContext } from "./ProgressProvider";
 
 interface ResourceStatus<T> {
     loading: boolean;
@@ -21,7 +22,7 @@ type CountryStatus = ResourceStatus<Countries[] | null>;
 type StateStatus = ResourceStatus<States[] | null>;
 type CityStatus = ResourceStatus<Cities[] | null>;
 
-interface DataContext {
+interface DataContextProps {
     triathlons: TriathlonStatus;
     triathlonTypes: TriathlonTypeStatus;
     triathlonCategories: TriathlonCategoryStatus;
@@ -31,6 +32,16 @@ interface DataContext {
     cities: CityStatus;
 }
 
+const loadingWeights = {
+    triathlons: 10,
+    triathlonTypes: 1,
+    triathlonCategories: 2,
+    organizations: 1,
+    countries: 4,
+    states: 4,
+    cities: 4
+};
+
 const STATIC_DATA_TTL = 10 * 24 * 60 * 60 * 1000;
 
 const defaultResourceStatus: ResourceStatus<null> = {
@@ -39,7 +50,7 @@ const defaultResourceStatus: ResourceStatus<null> = {
     error: null
 };
 
-const DataContext = createContext<DataContext>({
+const DataContext = createContext<DataContextProps>({
     triathlons: defaultResourceStatus,
     triathlonTypes: defaultResourceStatus,
     triathlonCategories: defaultResourceStatus,
@@ -52,6 +63,8 @@ const DataContext = createContext<DataContext>({
 const useDataContext = () => useContext(DataContext);
 
 function DataProvider({ children }: LayoutProps) {
+
+    const progressContext = useProgressContext();
 
     const [triathlonLS, setTriathlonLS] = useLocalStorage<TriathlonStatus['data']>(TRIATHLON_LOCAL_STORAGE_KEY, null, STATIC_DATA_TTL);
     const [triathlonTypesLS, setTriathlonTypesLS] = useLocalStorage<TriathlonTypeStatus['data']>(TRIATHLON_TYPES_LOCAL_STORAGE_KEY, null, STATIC_DATA_TTL);
@@ -98,12 +111,14 @@ function DataProvider({ children }: LayoutProps) {
 
     useEffect(() => {
 
-        if(!triathlonLS && !triathlons.loading) {
+        if (!triathlonLS && !triathlons.loading) {
             fetchAndSetData<Triathlons[]>(
                 apiGet(PATHS.api.triathlons.all, { perPage: 500 }),
                 setTriathlons,
                 setTriathlonLS
-            );
+            ).finally(() => progressContext.removeLoading('triathlons'));
+
+            progressContext.add({ key: 'triathlons', weight: loadingWeights.triathlons, loading: true });
         }
 
         if (!triathlonTypesLS && !triathlonTypes.loading) {
@@ -111,7 +126,9 @@ function DataProvider({ children }: LayoutProps) {
                 apiGet(PATHS.api.triathlons.types.all, {}),
                 setTriathlonTypes,
                 setTriathlonTypesLS
-            );
+            ).finally(() => progressContext.removeLoading('triathlonTypes'));
+
+            progressContext.add({ key: 'triathlonTypes', weight: loadingWeights.triathlonTypes, loading: true });
         }
 
         if (!triathlonCategoriesLS && !triathlonCategories.loading) {
@@ -119,7 +136,9 @@ function DataProvider({ children }: LayoutProps) {
                 apiGet(PATHS.api.triathlons.categories.all, {}),
                 setTriathlonCategories,
                 setTriathlonCategoriesLS
-            );
+            ).finally(() => progressContext.removeLoading('triathlonCategories'));
+
+            progressContext.add({ key: 'triathlonCategories', weight: loadingWeights.triathlonCategories, loading: true });
         }
 
         if (!organizationsLS && !organizations.loading) {
@@ -127,7 +146,9 @@ function DataProvider({ children }: LayoutProps) {
                 apiGet(PATHS.api.organizations.all, {}),
                 setOrganizations,
                 setOrganizationsLS
-            );
+            ).finally(() => progressContext.removeLoading('organizations'));
+
+            progressContext.add({ key: 'organizations', weight: loadingWeights.organizations, loading: true });
         }
 
         if (!countriesLS && !countries.loading) {
@@ -135,7 +156,9 @@ function DataProvider({ children }: LayoutProps) {
                 apiGet(PATHS.api.countries.all, { perPage: 250 }),
                 setCountries,
                 setCountriesLS
-            );
+            ).finally(() => progressContext.removeLoading('countries'));
+
+            progressContext.add({ key: 'countries', weight: loadingWeights.countries, loading: true });
         }
 
         if (!statesLS && !states.loading) {
@@ -143,7 +166,9 @@ function DataProvider({ children }: LayoutProps) {
                 apiGet(PATHS.api.states.all, { perPage: 100 }),
                 setStates,
                 setStatesLS
-            );
+            ).finally(() => progressContext.removeLoading('states'));
+
+            progressContext.add({ key: 'states', weight: loadingWeights.states, loading: true });
         }
 
         if (!citiesLS && !cities.loading) {
@@ -151,7 +176,9 @@ function DataProvider({ children }: LayoutProps) {
                 apiGet(PATHS.api.cities.all, { perPage: 100 }),
                 setCities,
                 setCitiesLS
-            );
+            ).finally(() => progressContext.removeLoading('cities'));
+
+            progressContext.add({ key: 'cities', weight: loadingWeights.cities, loading: true });
         }
 
     }, []);
@@ -175,7 +202,7 @@ function fetchAndSetData<T>(promise: Promise<T>, setData: Dispatch<SetStateActio
 
     setData(prev => ({ ...prev, loading: true }));
 
-    promise
+    return promise
         .then((data) => {
             setData({ loading: false, data, error: null });
             setLocalStorageData(data);
