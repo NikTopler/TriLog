@@ -2,10 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { Tooltip } from "@mui/joy";
+import { Progress } from "@/components/ui/progress"
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import { LayoutProps } from "@/types";
 import { BreadCrumb, Navbar, Sidebar } from "@/components/navigation";
+import { useProgressContext } from "@/providers";
 import styles from "./home-layout.module.scss";
 
 interface SidebarState {
@@ -22,6 +24,8 @@ export interface StateObject<T> {
 }
 
 function HomeLayout({ children }: LayoutProps) {
+
+    const progressContext = useProgressContext();
 
     const [sidebar, setSidebar] = useState<SidebarState>({
         open: true,
@@ -76,7 +80,14 @@ function HomeLayout({ children }: LayoutProps) {
 
     return (
         <div className={styles['home']} data-sidebar-open={sidebar.open} data-hovering={sidebar.hovering}>
-
+            {progressContext.value !== null && (
+                <div className={styles['home__loading-container']}>
+                    <Progress
+                        style={{ height: '0.25rem' }}
+                        value={progressContext.value}
+                    />
+                </div>
+            )}
             <nav className={styles['home__navbar']}>
                 <div className={styles['home__navbar-main']}>
                     <Navbar />
