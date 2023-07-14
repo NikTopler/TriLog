@@ -1,5 +1,11 @@
 @import "./variables.scss";
 
+html, body {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
 .link {
   color: $color-primary-30;
   text-decoration: none;
