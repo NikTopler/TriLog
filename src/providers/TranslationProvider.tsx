@@ -1,8 +1,8 @@
-import { PATHS } from "@/constants";
-import { apiGet, isSupportedLanguage } from "@/helpers";
+import { createQueryString, isSupportedLanguage } from "@/helpers";
 import { useLocalStorage } from "@/hooks";
 import { SupportedLanguage } from "@/schemas";
 import { LayoutProps } from "@/types";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { createContext, useContext, useEffect, useState } from "react";
 
 type TranslationDataConfig = Record<string, string>;
@@ -34,67 +34,49 @@ const TranslationContext = createContext<TranslationContext>([
 
 const useTranslationContext = () => useContext(TranslationContext);
 
-// TODO: add a safeguard for localStorage data
 function TranslationProvider({ children }: LayoutProps) {
 
+    const router = useRouter();
+    const pathname = usePathname();
+    const searchParams = useSearchParams();
+
     const [loading, setLoading] = useState<boolean>(true);
-    const [langLS, setLangLS] = useLocalStorage('lang', DEFAULT_LANGUAGE, false);
     const [t, setT] = useState(TranslationLocalStorage);
+    const [langLS, setLangLS] = useLocalStorage('lang', DEFAULT_LANGUAGE, false);
 
     useEffect(() => {
 
-        if (!isSupportedLanguage(langLS)) {
-            setLangLS(DEFAULT_LANGUAGE);
-            return;
+        const { lang } = Object.fromEntries(searchParams);
+        if (isSupportedLanguage(lang) && lang !== langLS) {
+            setLangLS(lang);
+        } else {
+            router.push(pathname + '?' + createQueryString(searchParams, { lang: langLS }));
         }
 
-        if (Object.keys(t[langLS]).length > 0) {
-
-            if (loading) {
-                setLoading(false);
-            }
-
-            return;
-        }
-
-        setLoading(true);
-        fetchTranslations();
-
-    }, [langLS]);
-
-
-    const fetchTranslations = () => {
-        apiGet<TranslationData>(PATHS.api.translations.specific.replace(':id', langLS), {})
-            .then((translations) => {
-
+        Promise.all([
+            import("../translations/en/index"),
+            import("../translations/si/index"),
+        ])
+            .then(([en, si]) => {
                 setT({
-                    ...t,
-                    [langLS]: translations
+                    en: en.default,
+                    si: si.default
                 });
-
-                loading && setLoading(false);
+                setLoading(false);
             })
-            .catch((error) => console.error(error));
-    }
+            .catch((error) => console.log(error));
 
-    const changeLanguage = (lang: SupportedLanguage) => {
 
-        setLoading(true);
+    }, []);
 
-        if (Object.keys(t[lang]).length > 0) {
-            setLangLS(lang)
-            return;
-        }
-
-        setTimeout(() => setLangLS(lang), 200);
-    }
+    useEffect(() => router.push(pathname + '?' + createQueryString(searchParams, { lang: langLS })), [langLS])
 
     return (
         <TranslationContext.Provider value={[
             loading,
             langLS,
             t[langLS],
-            changeLanguage
+            setLangLS
         ]}>
             {children}
         </TranslationContext.Provider>
