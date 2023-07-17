@@ -7,7 +7,7 @@ import { CustomTextBox } from "@/components/inputs";
 import { apiPost, createQueryString, isEmail } from "@/helpers";
 import { Email } from "@/schemas";
 import { EmailAuthContext } from "../layout";
-import { useAuthContext } from "@/providers";
+import { useAuthContext, useTranslationContext } from "@/providers";
 import { PATHS } from "@/constants";
 import styles from "./email-verification.module.scss";
 
@@ -21,6 +21,7 @@ const EMAIL_VERIFICATION_TIMEOUT_MS = 30000;
 
 function EmailVerification() {
 
+    const [translationsLoading, lang, t, setLang] = useTranslationContext();
     const auth = useAuthContext();
     const { email } = useContext(EmailAuthContext);
 
@@ -198,12 +199,12 @@ function EmailVerification() {
     return (
         <>
             <header className="auth-container__popup-header">
-                <h1>Verify your email</h1>
+                <h1>{t['verify_your_email']}</h1>
             </header>
 
             <div className="auth-container__popup-main">
                 <p className={styles['description']}>
-                    You're almost done! We sent a code to
+                    {t['email_verification_page-description']}
                     <span className={styles['auth-container__popup-main-user-email']}>
                         {recipient}
                     </span>
@@ -234,12 +235,16 @@ function EmailVerification() {
 
                     <div className={styles['auth-container__popup-main__form--resend']}>
                         <div className="flex items-center">
-                            <p>Didn't receive the code?</p>
+                            <p>{t['verification_code-not_received']}</p>
                         </div>
                         <div className="flex">
-                            <a href="#" onClick={onEmailResendClick} className="link">Resend the code</a>
-                            <p>&nbsp; or &nbsp;</p>
-                            <a href="#" onClick={onUpdateEmailClick} className="link">update your email</a>
+                            <a href="#" onClick={onEmailResendClick} className="link">
+                                {t['resend_code']}
+                            </a>
+                            <p>&nbsp; {t['or']} &nbsp;</p>
+                            <a href="#" onClick={onUpdateEmailClick} className="link">
+                                {t['update_your_email']}
+                            </a>
                         </div>
                     </div>
                 </div>

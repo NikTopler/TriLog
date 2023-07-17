@@ -7,6 +7,7 @@ import { LayoutProps } from "@/types";
 import { Cities, Countries, Organizations, States, TriathlonCategories, TriathlonTypes, Triathlons } from "@prisma/client";
 import { Dispatch, SetStateAction, createContext, useContext, useEffect, useState } from "react";
 import { useProgressContext } from "./ProgressProvider";
+import { useTranslationContext } from "./TranslationProvider";
 
 interface ResourceStatus<T> {
     loading: boolean;
@@ -65,6 +66,7 @@ const useDataContext = () => useContext(DataContext);
 function DataProvider({ children }: LayoutProps) {
 
     const progressContext = useProgressContext();
+    const [translationsLoading] = useTranslationContext();
 
     const [triathlonLS, setTriathlonLS] = useLocalStorage<TriathlonStatus['data']>(TRIATHLON_LOCAL_STORAGE_KEY, null, STATIC_DATA_TTL);
     const [triathlonTypesLS, setTriathlonTypesLS] = useLocalStorage<TriathlonTypeStatus['data']>(TRIATHLON_TYPES_LOCAL_STORAGE_KEY, null, STATIC_DATA_TTL);
@@ -110,6 +112,10 @@ function DataProvider({ children }: LayoutProps) {
     });
 
     useEffect(() => {
+
+        if (translationsLoading) {
+            return;
+        }
 
         if (!triathlonLS && !triathlons.loading) {
             fetchAndSetData<Triathlons[]>(
@@ -181,7 +187,7 @@ function DataProvider({ children }: LayoutProps) {
             progressContext.add({ key: 'cities', weight: loadingWeights.cities, loading: true });
         }
 
-    }, []);
+    }, [translationsLoading]);
 
     return (
         <DataContext.Provider value={{

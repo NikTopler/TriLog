@@ -14,13 +14,15 @@ import { StringArray, StringArraySchema } from "./DataSchemas";
 import AuthTokenSchema from "./AuthTokenSchema";
 import UrlSchema, { Url } from "./UrlSchema";
 import AuthCookieSchema, { isAuthCookie } from "./AuthCookieSchema";
+import SupportedLanguageSchema, { SupportedLanguage } from "./SupportedLanguageSchema";
 
 export type {
     Email,
     StringArray,
+    SupportedLanguage,
     Url,
     PaginationOptions,
-    Identifier,
+    Identifier
 }
 
 export {
@@ -31,6 +33,7 @@ export {
     isAuthCookie,
     AuthTokenSchema,
     UrlSchema,
+    SupportedLanguageSchema,
     PositiveIntSchema,
     NullableStringSchema,
     NullableNonEmptyStringSchema,

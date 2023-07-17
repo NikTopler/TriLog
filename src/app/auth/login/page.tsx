@@ -3,11 +3,13 @@
 import { useContext, useState } from "react";
 import { CustomTextBox, RegularButton } from "@/components/inputs";
 import { SocialLoginButton } from "@/components/buttons";
-import { isEmail } from "@/helpers";
+import { changeFirstLetter, isEmail } from "@/helpers";
 import { EmailAuthContext } from "../layout";
-import { useAuthContext } from "@/providers";
+import { useAuthContext, useTranslationContext } from "@/providers";
 
 export default function Login() {
+
+    const [translationsLoading, lang, t, setLang] = useTranslationContext();
 
     const auth = useAuthContext();
     const { email, setEmail } = useContext(EmailAuthContext);
@@ -40,12 +42,12 @@ export default function Login() {
 
             <div className="auth-container__popup-main">
                 <span className={"auth-container__popup-main__instruction  p-bottom-1"}>
-                    Log in to continue
+                    {t['login_to_continue']}
                 </span>
                 <div className="auth-container__popup-main__form">
                     <CustomTextBox
                         value={email}
-                        placeholder="Enter your Email"
+                        placeholder={t['enter_email']}
                         type="email"
                         isFocused={true}
                         handleInputChange={setEmail}
@@ -63,7 +65,7 @@ export default function Login() {
                         }}
                     />
                     <RegularButton
-                        text="Continue"
+                        text={changeFirstLetter(t['continue'])}
                         disabled={!isEmail(email)}
                         handleOnClick={onContinueClick}
                         loading={isProcessing}
@@ -71,7 +73,9 @@ export default function Login() {
                     />
                 </div>
                 <div>
-                    <span className={"auth-container__popup-main__instruction"}>or</span>
+                    <span className={"auth-container__popup-main__instruction"}>
+                        {t['or']}
+                    </span>
                 </div>
                 <div className="m-bottom-2">
                     <SocialLoginButton
@@ -94,7 +98,7 @@ export default function Login() {
 
             <footer>
                 <a href="#" className="link">
-                    <span>Can&apos;t log in?</span>
+                    <span>{t['trouble_logging_in']}</span>
                 </a>
             </footer>
         </>

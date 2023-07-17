@@ -38,7 +38,7 @@ const defaultPendingItems = [
     }
 ];
 
-const ProgressProvider = ({ children }: LayoutProps) => {
+function ProgressProvider({ children }: LayoutProps) {
 
     const [pendingItems, setPendingItems] = useState<ProgressContextProps['pendingItems']>(defaultPendingItems);
 
