@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import HomeLayout from "./(home)/HomeLayout";
 import { validatePaths } from "@/helpers";
 import { CookiesProvider } from "react-cookie";
-import { AuthProvider, DataProvider, ProgressProvider } from "@/providers";
+import { AuthProvider, TranslationProvider, DataProvider, ProgressProvider, useTranslationContext } from "@/providers";
 
 const HOME_PATHS = [
     '/',
@@ -23,6 +23,7 @@ const HOME_PATHS = [
 
 function ConditionalLayout({ children }: LayoutProps) {
 
+    const [] = useTranslationContext();
     const pathname = usePathname();
     let childrenToRender = children;
 
@@ -38,9 +39,11 @@ function ConditionalLayout({ children }: LayoutProps) {
         <CookiesProvider>
             <ProgressProvider>
                 <AuthProvider>
-                    <DataProvider>
-                        {childrenToRender}
-                    </DataProvider>
+                    <TranslationProvider>
+                        <DataProvider>
+                            {childrenToRender}
+                        </DataProvider>
+                    </TranslationProvider>
                 </AuthProvider>
             </ProgressProvider>
         </CookiesProvider>

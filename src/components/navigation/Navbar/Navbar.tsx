@@ -12,10 +12,11 @@ import { CustomTextBox, RegularButton } from "@/components/inputs";
 import { TriathlonCategories, TriathlonTypes } from "@prisma/client";
 import { StateObject } from "@/app/(home)/HomeLayout";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useAuthContext, useDataContext } from "@/providers";
+import { useAuthContext, useDataContext, useTranslationContext } from "@/providers";
 import { Skeleton } from "@/components/ui/skeleton";
 import { PATHS } from "@/constants";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context";
+import { changeFirstLetter } from "@/helpers";
 import styles from "./navbar.module.scss";
 
 const triathlonCategoriesStyle = {
@@ -37,6 +38,7 @@ function Navbar() {
     const router = useRouter();
     const pathname = usePathname();
 
+    const [translationsLoading, lang, t, setLang] = useTranslationContext();
     const { triathlonCategories, triathlonTypes } = useDataContext();
     const auth = useAuthContext();
 
@@ -83,6 +85,61 @@ function Navbar() {
         setSearch(value);
     }
 
+    const parseTriathlonCategories = (triathlonCategories: TriathlonCategories[], router: AppRouterInstance): TabsConfig => {
+
+        const obj: TabsConfig = {
+            groupTitle: changeFirstLetter(t['age_group']),
+            tabs: {
+                male: {
+                    name: 'male',
+                    active: true,
+                    items: []
+                },
+                female: {
+                    name: 'female',
+                    active: false,
+                    items: []
+                }
+            }
+        }
+
+        triathlonCategories.forEach(({ ID, name, acronym, gender }) => {
+
+            if (!gender) {
+                return;
+            }
+
+            obj.tabs[gender].items.push(
+                {
+                    uid: ID,
+                    name: name + ' (' + acronym + ')',
+                    handleOnClick() {
+                        router.push(PATHS.triathlons.categories.specific.replace(':id', acronym))
+                    }
+                }
+            );
+
+        });
+
+        return obj;
+
+    }
+
+    const parseTriathlonTypesToDropdownItem = (triathlonTypes: TriathlonTypes[], router: AppRouterInstance): ListConfig => {
+
+        return {
+            groupTitle: changeFirstLetter(t['type_plural']),
+            list: triathlonTypes.map(({ ID, name }) => ({
+                uid: ID,
+                name,
+                handleOnClick() {
+                    router.push(PATHS.triathlons.types.specific.replace(':id', name.replace(' ', '-').toLowerCase()))
+                },
+            }))
+        }
+
+    }
+
     const AccountView = () => {
 
         if (auth.loading) {
@@ -93,10 +150,10 @@ function Navbar() {
 
         if (auth.authenticated) {
             return (
-                <Tooltip title="Profile">
+                <Tooltip title={changeFirstLetter(t['account'])}>
                     <Avatar className={styles['navbar__container__menu-container__image-container']} data-image onClick={auth.logout}>
                         <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-                        <AvatarFallback></AvatarFallback>
+                        <AvatarFallback />
                     </Avatar>
                 </Tooltip>
             );
@@ -104,7 +161,7 @@ function Navbar() {
 
         return (
             <RegularButton
-                text="Login"
+                text={changeFirstLetter(t['login'])}
                 variant="default"
                 className="btn tertiary solid"
                 handleOnClick={() => router.push(PATHS.auth.login)}
@@ -130,7 +187,7 @@ function Navbar() {
                     style={triathlonCategoriesStyle}>
                     <div className={styles['navbar__container__content-container-container__item']} data-active={new RegExp(PATHS.triathlons.categories.all + '/*').test(pathname)}>
                         <RegularButton
-                            text="Categories"
+                            text={changeFirstLetter(t['category_plural'])}
                             variant="ghost"
                             endDecorator={<KeyboardArrowDownIcon sx={{ fontSize: 'medium' }} />}
                             className="btn secondary plain"
@@ -146,7 +203,7 @@ function Navbar() {
                     style={triathlonTypesStyle}>
                     <div className={styles['navbar__container__content-container-container__item']} data-active={new RegExp(PATHS.triathlons.types.all + '/*').test(pathname)}>
                         <RegularButton
-                            text="Types"
+                            text={changeFirstLetter(t['type_plural'])}
                             variant="ghost"
                             endDecorator={<KeyboardArrowDownIcon sx={{ fontSize: 'medium' }} />}
                             className="btn secondary plain"
@@ -160,7 +217,7 @@ function Navbar() {
                     {/* TODO: Move into styles */}
                     <CustomTextBox
                         value={search}
-                        placeholder="Search"
+                        placeholder={changeFirstLetter(t['search'])}
                         handleInputFocusChange={setSearchFocused}
                         handleInputChange={handleInputChange}
                         style={{
@@ -176,7 +233,7 @@ function Navbar() {
                     />
                 </div>
                 <div className={styles['navbar__container__menu-container']}>
-                    <Tooltip title={theme === 'light' ? 'Dark mode' : 'Light mode'}>
+                    <Tooltip title={theme === 'light' ? changeFirstLetter(t['dark_mode']) : changeFirstLetter(t['light_mode'])}>
                         <div
                             className={styles['navbar__container__menu-container__image-container']}
                             data-icon
@@ -194,60 +251,5 @@ function Navbar() {
     );
 
 };
-
-function parseTriathlonCategories(triathlonCategories: TriathlonCategories[], router: AppRouterInstance): TabsConfig {
-
-    const obj: TabsConfig = {
-        groupTitle: 'Age group',
-        tabs: {
-            male: {
-                name: 'Male',
-                active: true,
-                items: []
-            },
-            female: {
-                name: 'Female',
-                active: false,
-                items: []
-            }
-        }
-    }
-
-    triathlonCategories.forEach(({ ID, name, acronym, gender }) => {
-
-        if (!gender) {
-            return;
-        }
-
-        obj.tabs[gender].items.push(
-            {
-                uid: ID,
-                name: name + ' (' + acronym + ')',
-                handleOnClick() {
-                    router.push(PATHS.triathlons.categories.specific.replace(':id', acronym))
-                }
-            }
-        );
-
-    });
-
-    return obj;
-
-}
-
-function parseTriathlonTypesToDropdownItem(triathlonTypes: TriathlonTypes[], router: AppRouterInstance): ListConfig {
-
-    return {
-        groupTitle: 'Competitions',
-        list: triathlonTypes.map(({ ID, name }) => ({
-            uid: ID,
-            name,
-            handleOnClick() {
-                router.push(PATHS.triathlons.types.specific.replace(':id', name.replace(' ', '-').toLowerCase()))
-            },
-        }))
-    }
-
-}
 
 export default Navbar;

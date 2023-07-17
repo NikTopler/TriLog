@@ -1,6 +1,6 @@
 'use client';
 
-import { useDataContext } from "@/providers";
+import { useDataContext, useTranslationContext } from "@/providers";
 import { useEffect, useState } from "react";
 import DataTable from "@/components/tables/DataTable/DataTable";
 import { triathlonColumns } from "@/components/tables/columns";
@@ -8,6 +8,8 @@ import { Triathlons } from "@prisma/client";
 import { changeFirstLetter } from "@/helpers";
 
 function TriathlonsPage() {
+
+    const [translationsLoading, lang, t, setLang] = useTranslationContext();
 
     const {
         triathlons,
@@ -72,13 +74,13 @@ function TriathlonsPage() {
 
         return [
             {
-                title: 'Types',
+                title: changeFirstLetter(t['type_plural']),
                 columnName: 'triathlonType',
                 defaultValues: triathlonTypes,
                 options: triathlonTypes?.map(type => ({ label: type, value: type })) || []
             },
             {
-                title: 'Organizations',
+                title: changeFirstLetter(t['organization_plural']),
                 columnName: 'organization',
                 defaultValues: organizations,
                 options: organizations?.map(organization => ({ label: organization, value: organization })) || []
@@ -93,7 +95,7 @@ function TriathlonsPage() {
             year: triathlon.year,
             triathlonType: triathlonTypesData?.find(({ ID }) => ID === triathlon.triathlonTypeID)?.name || 'N/A',
             worldChampionship: triathlon.isWorldChampionship ?? false,
-            location: getLocation(triathlon) || 'unknown',
+            location: getLocation(triathlon) || t['unknown'],
             organization: organizationsData?.find(({ ID }) => ID === triathlonTypesData?.find(({ ID }) => ID === triathlonTypesData?.find(({ ID }) => ID === triathlon.triathlonTypeID)?.ID)?.organizationID)?.acronym || 'N/A'
         }));
 
@@ -102,7 +104,7 @@ function TriathlonsPage() {
                 data={data || []}
                 columns={triathlonColumns}
                 includeSearch={true}
-                searchPlaceholder="Search Triathlons..."
+                searchPlaceholder={t['placeholder-search_triathlons']}
                 filters={getFilters()}
             />
         );
@@ -112,9 +114,11 @@ function TriathlonsPage() {
     return (
         <div>
             <header>
-                <h1 className="text-2xl font-bold tracking-tight">Recent</h1>
+                <h1 className="text-2xl font-bold tracking-tight">
+                    {changeFirstLetter(t['recent'])}
+                </h1>
                 <p className="text-muted-foreground">
-                    Here&apos;s a list of of the most recent triathlons!
+                    {t['triahtlons_page-description']}
                 </p>
             </header>
             <section style={{

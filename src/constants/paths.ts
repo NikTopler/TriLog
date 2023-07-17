@@ -25,6 +25,9 @@ const PATHS = {
         all: '/athletes'
     },
     api: {
+        translations: {
+            specific: '/api/translations/:id',
+        },
         athletes: {
             all: '/api/athletes',
             specific: '/api/athletes/:id'

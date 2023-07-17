@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 
 interface LocalStorageData<T> {
     value: T;
-    expiresAt: number;
+    expiresAt?: number;
 }
 
 const DEFAULT_TTL = 60 * 60 * 1000;
@@ -23,7 +23,7 @@ function getStorageValue<T>(key: string, defaultValue: any) {
 
     const parsed = JSON.parse(saved) as LocalStorageData<T>;
 
-    if (parsed && Date.now() < parsed.expiresAt) {
+    if (parsed && (!parsed.expiresAt || Date.now() < parsed.expiresAt)) {
         return parsed.value;
     }
 
@@ -31,28 +31,28 @@ function getStorageValue<T>(key: string, defaultValue: any) {
 
 }
 
-function setLocalStorageValue(key: string, value: any, ttl: number) {
+function setLocalStorageValue(key: string, value: any, ttl: number | undefined) {
     window.localStorage.setItem(key, JSON.stringify({
         value,
-        expiresAt: Date.now() + ttl
+        expiresAt: ttl ? Date.now() + ttl : undefined
     }));
 }
 
-function useLocalStorage<T>(key: string, defaultValue: T, ttl: number = DEFAULT_TTL) {
+function useLocalStorage<T>(key: string, defaultValue: T, ttl: number | false = DEFAULT_TTL) {
 
     const [value, setValue] = useState<T>(getStorageValue<T>(key, defaultValue));
 
     useEffect(() => {
 
         if (!getStorageValue(key, undefined)) {
-            setLocalStorageValue(key, defaultValue, ttl);
+            setLocalStorageValue(key, defaultValue, ttl || undefined);
         }
 
     }, []);
 
     const updateValue = (newValue: T) => {
         setValue(newValue);
-        setLocalStorageValue(key, newValue, ttl);
+        setLocalStorageValue(key, newValue, ttl || undefined);
     }
 
     return [value, updateValue] as [T, (newValue: T) => void];

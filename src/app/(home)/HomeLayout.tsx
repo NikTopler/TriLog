@@ -7,7 +7,8 @@ import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import { LayoutProps } from "@/types";
 import { BreadCrumb, Navbar, Sidebar } from "@/components/navigation";
-import { useProgressContext } from "@/providers";
+import { useProgressContext, useTranslationContext } from "@/providers";
+import { changeFirstLetter } from "@/helpers";
 import styles from "./home-layout.module.scss";
 
 interface SidebarState {
@@ -25,6 +26,7 @@ export interface StateObject<T> {
 
 function HomeLayout({ children }: LayoutProps) {
 
+    const [translationsLoading, lang, t, setLang] = useTranslationContext();
     const progressContext = useProgressContext();
 
     const [sidebar, setSidebar] = useState<SidebarState>({
@@ -33,9 +35,9 @@ function HomeLayout({ children }: LayoutProps) {
         hovering: false
     });
 
-    const [loading, setLoading] = useState<boolean>(true);
+    const [loading, setLoading] = useState<boolean>(translationsLoading);
 
-    useEffect(() => setLoading(false), []);
+    useEffect(() => setLoading(translationsLoading), [translationsLoading]);
 
     const onSidebarToggle = () => {
 
@@ -67,17 +69,6 @@ function HomeLayout({ children }: LayoutProps) {
         });
     }
 
-    const SkeletonView = () => {
-
-        // TODO: Implement skeleton view
-        return (
-            <div>
-                <span>Loading ...</span>
-            </div>
-        );
-
-    }
-
     return (
         <div className={styles['home']} data-sidebar-open={sidebar.open} data-hovering={sidebar.hovering}>
             {progressContext.value !== null && (
@@ -90,41 +81,74 @@ function HomeLayout({ children }: LayoutProps) {
             )}
             <nav className={styles['home__navbar']}>
                 <div className={styles['home__navbar-main']}>
-                    <Navbar />
+                    {loading && SkeletonNavbarView()}
+                    {!loading && <Navbar />}
                 </div>
             </nav>
 
             <section className={styles['home__sidebar']}>
                 <div className={styles['home__sidebar-container']} onMouseEnter={() => onSidebarHover(true)} onMouseLeave={() => onSidebarHover(false)}>
                     <div className={styles['home__sidebar-container__main']}>
-                        <Sidebar />
+                        {loading && SkeletonSidebarView()}
+                        {!loading && <Sidebar />}
                     </div>
                     <div className={styles['home__sidebar-container__slider']}>
                         <div className={styles['home__sidebar-container__slider-container']} />
-                        <div className={styles['home__sidebar-container__slider-button-container']}>
-                            <div className={styles['home__sidebar-container__slider-button-container--button']} onClick={onSidebarToggle}>
-                                <Tooltip title={sidebar.open ? 'Close' : 'Open'} placement="right">
-                                    <div className={styles['home__sidebar-slider-content-icon']}>
-                                        {sidebar.open
-                                            ? <KeyboardArrowLeftIcon />
-                                            : <KeyboardArrowRightIcon />
-                                        }
-                                    </div>
-                                </Tooltip>
+                        {!loading && (
+                            <div className={styles['home__sidebar-container__slider-button-container']}>
+                                <div className={styles['home__sidebar-container__slider-button-container--button']} onClick={onSidebarToggle}>
+                                    <Tooltip title={changeFirstLetter(sidebar.open ? t['close'] : t['open'])} placement="right">
+                                        <div className={styles['home__sidebar-slider-content-icon']}>
+                                            {sidebar.open
+                                                ? <KeyboardArrowLeftIcon />
+                                                : <KeyboardArrowRightIcon />
+                                            }
+                                        </div>
+                                    </Tooltip>
+                                </div>
                             </div>
-                        </div>
+                        )}
                     </div>
                 </div>
             </section>
 
             <section className={styles['home__content']}>
-                <BreadCrumb />
-                {loading && SkeletonView()}
-                {!loading && children}
+                {loading && SkeletonContentView()}
+                {!loading && (
+                    <>
+                        <BreadCrumb />
+                        {children}
+                    </>
+                )}
             </section>
         </div>
     );
 
+}
+
+// TODO: Implement better skeleton views
+function SkeletonContentView() {
+    return (
+        <div>
+            <span>Loading ...</span>
+        </div>
+    );
+}
+
+function SkeletonNavbarView() {
+    return (
+        <div>
+            <span>Loading ...</span>
+        </div>
+    );
+}
+
+function SkeletonSidebarView() {
+    return (
+        <div>
+            <span>Loading ...</span>
+        </div>
+    );
 }
 
 export default HomeLayout;

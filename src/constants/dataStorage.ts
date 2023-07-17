@@ -8,10 +8,10 @@ const AUTH_STATE_TOKEN_EXPIRATION = 1000 * 60 * 5;
 const ACCESS_TOKEN_EXPIRATION_SECONDS = 2 * 60;
 const REFRESH_TOKEN_EXPIRATION_SECONDS = (5 * 24 * 60 * 60);
 
-const AUTH_FACEBOOK_STATE_COOKIE_KEY = 'trilog-fb_social_auth_state';
-const AUTH_GITHUB_STATE_COOKIE_KEY = 'trilog-gh_social_auth_state';
+const AUTH_FACEBOOK_STATE_COOKIE_KEY = 'fb_social_auth_state';
+const AUTH_GITHUB_STATE_COOKIE_KEY = 'gh_social_auth_state';
 
-const AUTH_COOKIE_KEY = 'trilog-user_auth';
+const AUTH_COOKIE_KEY = 'user_auth';
 const AUTH_COOKIE_OPTIONS = {
     secure: true,
     path: '/',
@@ -19,13 +19,13 @@ const AUTH_COOKIE_OPTIONS = {
     maxAge: REFRESH_TOKEN_EXPIRATION_SECONDS
 } as Partial<ResponseCookie>;
 
-const TRIATHLON_LOCAL_STORAGE_KEY = "trilog-triathlons";
-const TRIATHLON_TYPES_LOCAL_STORAGE_KEY = "trilog-triathlon-types";
-const TRIATHLON_CATEGORIES_LOCAL_STORAGE_KEY = "trilog-triathlon-categories";
-const ORGANIZATIONS_LOCAL_STORAGE_KEY = "trilog-organizations";
-const COUNTRIES_LOCAL_STORAGE_KEY = "trilog-countries";
-const STATES_LOCAL_STORAGE_KEY = "trilog-states";
-const CITIES_LOCAL_STORAGE_KEY = "trilog-cities";
+const TRIATHLON_LOCAL_STORAGE_KEY = "triathlons";
+const TRIATHLON_TYPES_LOCAL_STORAGE_KEY = "triathlon-types";
+const TRIATHLON_CATEGORIES_LOCAL_STORAGE_KEY = "triathlon-categories";
+const ORGANIZATIONS_LOCAL_STORAGE_KEY = "organizations";
+const COUNTRIES_LOCAL_STORAGE_KEY = "countries";
+const STATES_LOCAL_STORAGE_KEY = "states";
+const CITIES_LOCAL_STORAGE_KEY = "cities";
 
 export {
     AUTH_STATE_TOKEN_LENGTH,

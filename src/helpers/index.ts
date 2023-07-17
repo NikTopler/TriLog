@@ -9,11 +9,13 @@ import generateToken from "./generateToken";
 import isUrl from "./isUrl";
 import getCurrentTimestamp from "./getCurrentTimestamp";
 import isIdentifier from "./isIdentifier";
+import isSupportedLanguage from "./isSupportedLanguage";
 
 export {
     isEmail,
     isStringArray,
     isUrl,
+    isSupportedLanguage,
     isIdentifier,
     createQueryString,
     validatePaths,

@@ -3,9 +3,11 @@
 import { isEmail } from "@/helpers";
 import { useContext, useEffect } from "react";
 import { EmailAuthContext } from "../layout";
+import { useTranslationContext } from "@/providers";
 
 function VerificationLinkSent() {
 
+    const [translationsLoading, lang, t, setLang] = useTranslationContext();
     const { email } = useContext(EmailAuthContext);
 
     useEffect(() => {
@@ -18,9 +20,9 @@ function VerificationLinkSent() {
 
     return (
         <div>
-            <h1>Verification Link Sent</h1>
+            <h1>{t['verification_link_sent']}</h1>
             <p>
-                We have sent you a verification link to {email}. Please click the link to authenticate.
+                {t['verification_link_sent_page-description'].replace('%s', email)}
             </p>
         </div>
     );
