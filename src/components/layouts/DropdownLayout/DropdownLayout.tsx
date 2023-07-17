@@ -9,7 +9,7 @@ import styles from "./dropdown-layout.module.scss";
 
 export interface DropdownItem {
     uid: string | number;
-    name: string;
+    label: string;
     active?: boolean;
     handleOnClick?: (...params: any) => void;
 }
@@ -18,7 +18,8 @@ export interface TabsConfig {
     groupTitle?: string;
     tabs: {
         [key: string]: {
-            name: string;
+            uid: string;
+            label: string;
             active: boolean;
             items: DropdownItem[]
         }

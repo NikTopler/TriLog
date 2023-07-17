@@ -91,12 +91,14 @@ function Navbar() {
             groupTitle: changeFirstLetter(t['age_group']),
             tabs: {
                 male: {
-                    name: 'male',
+                    uid: 'male',
+                    label: changeFirstLetter(t['male_plural']),
                     active: true,
                     items: []
                 },
                 female: {
-                    name: 'female',
+                    uid: 'female',
+                    label: changeFirstLetter(t['female_plural']),
                     active: false,
                     items: []
                 }
@@ -112,7 +114,7 @@ function Navbar() {
             obj.tabs[gender].items.push(
                 {
                     uid: ID,
-                    name: name + ' (' + acronym + ')',
+                    label: name + ' (' + acronym + ')',
                     handleOnClick() {
                         router.push(PATHS.triathlons.categories.specific.replace(':id', acronym))
                     }
@@ -131,7 +133,7 @@ function Navbar() {
             groupTitle: changeFirstLetter(t['type_plural']),
             list: triathlonTypes.map(({ ID, name }) => ({
                 uid: ID,
-                name,
+                label: name,
                 handleOnClick() {
                     router.push(PATHS.triathlons.types.specific.replace(':id', name.replace(' ', '-').toLowerCase()))
                 },
