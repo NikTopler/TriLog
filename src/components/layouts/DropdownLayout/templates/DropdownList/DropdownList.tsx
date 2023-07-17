@@ -11,7 +11,7 @@ function DropdownList({ groupTitle, list, setDropdownOpen }: ListTemplateProps) 
     const handleOnItemClick = (e: any, item: DropdownItem) => {
         e.stopPropagation();
         if (item.handleOnClick) {
-            item.handleOnClick(item.name);
+            item.handleOnClick(item.label);
         }
         setDropdownOpen(false);
     }
@@ -31,7 +31,7 @@ function DropdownList({ groupTitle, list, setDropdownOpen }: ListTemplateProps) 
                         key={idx}
                         className={styles['dropdown-container__content--main__buttons-container--button-container']}
                         onClick={(e) => handleOnItemClick(e, item)}>
-                        <span>{item.name}</span>
+                        <span>{item.label}</span>
                     </div>
                 ))}
             </div>

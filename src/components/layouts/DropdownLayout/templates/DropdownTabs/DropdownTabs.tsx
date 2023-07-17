@@ -24,14 +24,14 @@ function DropdownTabs({ tabs, groupTitle, setDropdownOpen }: DropdownTabsProps) 
         tempObj[tab].active = true;
 
         setDropdownTabs(tempObj);
-       
+
     }
 
     const handleOnItemClick = (e: any, item: DropdownItem) => {
         e.stopPropagation();
 
         if (item.handleOnClick) {
-            item.handleOnClick(item.name);
+            item.handleOnClick(item.label);
         }
         setDropdownOpen(false);
     }
@@ -43,10 +43,10 @@ function DropdownTabs({ tabs, groupTitle, setDropdownOpen }: DropdownTabsProps) 
                     {tabNames.map((key: any, idx: number) => (
                         <div
                             key={idx}
-                            onClick={() => onTabChange(dropdownTabs[key].name.toLowerCase())}
+                            onClick={() => onTabChange(dropdownTabs[key].uid)}
                             className={styles['dropdown-container__content__header__tabs-container--tab-container']}
                             data-active={dropdownTabs[key].active}>
-                            <span>{dropdownTabs[key].name}</span>
+                            <span>{dropdownTabs[key].label}</span>
                         </div>
                     ))}
                 </div>
@@ -65,7 +65,7 @@ function DropdownTabs({ tabs, groupTitle, setDropdownOpen }: DropdownTabsProps) 
                             key={idx}
                             className={styles['dropdown-container__content--main__buttons-container--button-container']}
                             onClick={(e) => handleOnItemClick(e, item)}>
-                            <span>{item.name}</span>
+                            <span>{item.label}</span>
                         </div>
                     ))}
                 </div>
