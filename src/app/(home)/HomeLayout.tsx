@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Tooltip } from "@mui/joy";
 import { Progress } from "@/components/ui/progress"
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
@@ -34,10 +34,6 @@ function HomeLayout({ children }: LayoutProps) {
         closing: false,
         hovering: false
     });
-
-    const [loading, setLoading] = useState<boolean>(translationsLoading);
-
-    useEffect(() => setLoading(translationsLoading), [translationsLoading]);
 
     const onSidebarToggle = () => {
 
@@ -81,20 +77,18 @@ function HomeLayout({ children }: LayoutProps) {
             )}
             <nav className={styles['home__navbar']}>
                 <div className={styles['home__navbar-main']}>
-                    {loading && SkeletonNavbarView()}
-                    {!loading && <Navbar />}
+                    <Navbar />
                 </div>
             </nav>
 
             <section className={styles['home__sidebar']}>
                 <div className={styles['home__sidebar-container']} onMouseEnter={() => onSidebarHover(true)} onMouseLeave={() => onSidebarHover(false)}>
                     <div className={styles['home__sidebar-container__main']}>
-                        {loading && SkeletonSidebarView()}
-                        {!loading && <Sidebar />}
+                        <Sidebar />
                     </div>
                     <div className={styles['home__sidebar-container__slider']}>
                         <div className={styles['home__sidebar-container__slider-container']} />
-                        {!loading && (
+                        {!translationsLoading && (
                             <div className={styles['home__sidebar-container__slider-button-container']}>
                                 <div className={styles['home__sidebar-container__slider-button-container--button']} onClick={onSidebarToggle}>
                                     <Tooltip title={changeFirstLetter(sidebar.open ? t['close'] : t['open'])} placement="right">
@@ -113,13 +107,8 @@ function HomeLayout({ children }: LayoutProps) {
             </section>
 
             <section className={styles['home__content']}>
-                {loading && SkeletonContentView()}
-                {!loading && (
-                    <>
-                        <BreadCrumb />
-                        {children}
-                    </>
-                )}
+                <BreadCrumb />
+                {children}
             </section>
         </div>
     );
@@ -128,14 +117,6 @@ function HomeLayout({ children }: LayoutProps) {
 
 // TODO: Implement better skeleton views
 function SkeletonContentView() {
-    return (
-        <div>
-            <span>Loading ...</span>
-        </div>
-    );
-}
-
-function SkeletonNavbarView() {
     return (
         <div>
             <span>Loading ...</span>

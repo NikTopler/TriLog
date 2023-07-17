@@ -10,6 +10,8 @@ import { PATHS } from "@/constants";
 import { Button } from "@/components/ui/button";
 import { useTranslationContext } from "@/providers";
 import { changeFirstLetter } from "@/helpers";
+import { useEffect, useState } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
 import styles from "./sidebar.module.scss";
 
 function Sidebar() {
@@ -18,11 +20,18 @@ function Sidebar() {
     const pathname = usePathname();
     const [translationsLoading, lang, t, setLang] = useTranslationContext();
 
+    const [loading, setLoading] = useState<boolean>(true);
+
+    useEffect(() => setLoading(translationsLoading), [translationsLoading]);
+
     const open = (path: string) => () => router.push(path);
+
+    if (loading) {
+        return <SkeletonLoaderView />;
+    }
 
     return (
         <div className={styles['sidebar']}>
-
             <CollapsibleLayout title="EVENTS">
                 <div className={styles['sidebar--group-item']} data-active={pathname === PATHS.triathlons.all} onClick={open(PATHS.triathlons.all)}>
                     <div className={styles['sidebar--item-icon']}>
@@ -72,6 +81,69 @@ function Sidebar() {
         </div>
     );
 
+}
+
+function SkeletonLoaderView() {
+
+    const DropdownSkeleton = (numOfChildren: number) => {
+        const children = [];
+
+        for (let i = 0; i < numOfChildren; i++) {
+            children.push(
+                <div
+                    key={i}
+                    style={{
+                        height: '2.35rem',
+                        gridRow: `${i + 2}/${i + 3}`,
+                        display: 'grid',
+                        gridTemplateColumns: '1rem 1fr',
+                        gap: '0.5rem'
+                    }}
+                >
+                    <Skeleton className="w-full h-full" style={{
+                        gridColumn: '1/2'
+                    }} />
+                    <Skeleton className="w-full h-full" style={{
+                        gridColumn: '2/3'
+                    }} />
+                </div>
+            );
+        }
+
+        return (
+            <div
+                style={{
+                    display: 'grid',
+                    gridTemplateRows: `auto`,
+                    gap: '0.5rem'
+                }}
+            >
+                <div
+                    style={{
+                        height: '2rem',
+                        gridRow: '1/2'
+                    }}
+                >
+                    <Skeleton className="w-full h-full" />
+                </div>
+                {children}
+            </div>
+        );
+    };
+
+    return (
+        <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '0.5rem',
+            padding: '1rem 0 1rem 1rem'
+        }}>
+            {DropdownSkeleton(1)}
+            {DropdownSkeleton(3)}
+            {DropdownSkeleton(0)}
+            {DropdownSkeleton(0)}
+        </div>
+    );
 }
 
 export default Sidebar;

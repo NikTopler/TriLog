@@ -24,6 +24,8 @@ type StateStatus = ResourceStatus<States[] | null>;
 type CityStatus = ResourceStatus<Cities[] | null>;
 
 interface DataContextProps {
+    dataProviderHasDataLoaded: () => boolean;
+    dataProviderLoading: boolean;
     triathlons: TriathlonStatus;
     triathlonTypes: TriathlonTypeStatus;
     triathlonCategories: TriathlonCategoryStatus;
@@ -52,6 +54,8 @@ const defaultResourceStatus: ResourceStatus<null> = {
 };
 
 const DataContext = createContext<DataContextProps>({
+    dataProviderHasDataLoaded: () => false,
+    dataProviderLoading: true,
     triathlons: defaultResourceStatus,
     triathlonTypes: defaultResourceStatus,
     triathlonCategories: defaultResourceStatus,
@@ -111,11 +115,11 @@ function DataProvider({ children }: LayoutProps) {
         data: citiesLS
     });
 
-    useEffect(() => {
+    const [loading, setLoading] = useState<boolean>(true);
 
-        if (translationsLoading) {
-            return;
-        }
+    useEffect(() => setLoading(translationsLoading), [translationsLoading])
+
+    useEffect(() => {
 
         if (!triathlonLS && !triathlons.loading) {
             fetchAndSetData<Triathlons[]>(
@@ -187,10 +191,23 @@ function DataProvider({ children }: LayoutProps) {
             progressContext.add({ key: 'cities', weight: loadingWeights.cities, loading: true });
         }
 
-    }, [translationsLoading]);
+    }, []);
+
+    const haveAllDataLoaded = () => (
+        !loading
+        && !triathlons.loading
+        && !triathlonTypes.loading
+        && !triathlonCategories.loading
+        && !organizations.loading
+        && !countries.loading
+        && !states.loading
+        && !cities.loading
+    );
 
     return (
         <DataContext.Provider value={{
+            dataProviderHasDataLoaded: haveAllDataLoaded,
+            dataProviderLoading: loading,
             triathlons,
             triathlonTypes,
             triathlonCategories,

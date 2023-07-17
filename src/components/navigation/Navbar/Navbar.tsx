@@ -38,23 +38,18 @@ function Navbar() {
     const router = useRouter();
     const pathname = usePathname();
 
+    const auth = useAuthContext();
     const [translationsLoading, lang, t, setLang] = useTranslationContext();
     const { triathlonCategories, triathlonTypes } = useDataContext();
-    const auth = useAuthContext();
 
-    const [search, setSearch] = useState<string>('');
+    const [search, setSearch] = useState<string>("");
     const [searchFocused, setSearchFocused] = useState<boolean>(false);
-
-    // TODO: Implement theme change
-    // TODO: Remove this temporary state
     const [theme, setTheme] = useState<'light' | 'dark'>('light');
-
     const [categories, setCategories] = useState<StateObject<TabsConfig>>({
         data: { tabs: {} },
         loading: true,
         errors: null
     });
-
     const [types, setTypes] = useState<StateObject<ListConfig>>({
         data: { list: [] },
         loading: true,
@@ -62,6 +57,10 @@ function Navbar() {
     });
 
     useEffect(() => {
+
+        if (translationsLoading) {
+            return;
+        }
 
         if (!triathlonCategories.loading && triathlonCategories.data) {
             setCategories({
@@ -79,7 +78,7 @@ function Navbar() {
             });
         }
 
-    }, [triathlonCategories, triathlonTypes]);
+    }, [translationsLoading, triathlonCategories, triathlonTypes]);
 
     const handleInputChange = (value: string) => {
         setSearch(value);
@@ -144,12 +143,6 @@ function Navbar() {
 
     const AccountView = () => {
 
-        if (auth.loading) {
-            return (
-                <Skeleton className="h-[40px] w-[40px] rounded-full" style={{ backgroundColor: '#ced4da' }} />
-            );
-        }
-
         if (auth.authenticated) {
             return (
                 <Tooltip title={changeFirstLetter(t['account'])}>
@@ -180,78 +173,113 @@ function Navbar() {
             <div className={styles['navbar__container__logo-container']}>
                 <span onClick={() => router.push(PATHS.home)}>TriLog</span>
             </div>
-            <div className={styles['navbar__container__content-container']}>
-                <DropdownLayout
-                    template="tab"
-                    loading={categories.loading}
-                    error={categories.errors}
-                    config={categories.data}
-                    style={triathlonCategoriesStyle}>
-                    <div className={styles['navbar__container__content-container-container__item']} data-active={new RegExp(PATHS.triathlons.categories.all + '/*').test(pathname)}>
-                        <RegularButton
-                            text={changeFirstLetter(t['category_plural'])}
-                            variant="ghost"
-                            endDecorator={<KeyboardArrowDownIcon sx={{ fontSize: 'medium' }} />}
-                            className="btn secondary plain"
-                        />
-                        <div className={styles['navbar__container__content-container-container__item-selector']} />
+            {translationsLoading && <SkeletonLoaderView />}
+            {!translationsLoading && (
+                <>
+                    <div className={styles['navbar__container__content-container']}>
+                        <DropdownLayout
+                            template="tab"
+                            loading={categories.loading}
+                            error={categories.errors}
+                            config={categories.data}
+                            style={triathlonCategoriesStyle}>
+                            <div className={styles['navbar__container__content-container-container__item']} data-active={new RegExp(PATHS.triathlons.categories.all + '/*').test(pathname)}>
+                                <RegularButton
+                                    text={changeFirstLetter(t['category_plural'])}
+                                    variant="ghost"
+                                    endDecorator={<KeyboardArrowDownIcon sx={{ fontSize: 'medium' }} />}
+                                    className="btn secondary plain"
+                                />
+                                <div className={styles['navbar__container__content-container-container__item-selector']} />
+                            </div>
+                        </DropdownLayout>
+                        <DropdownLayout
+                            template="list"
+                            loading={types.loading}
+                            error={types.errors}
+                            config={types.data}
+                            style={triathlonTypesStyle}>
+                            <div className={styles['navbar__container__content-container-container__item']} data-active={new RegExp(PATHS.triathlons.types.all + '/*').test(pathname)}>
+                                <RegularButton
+                                    text={changeFirstLetter(t['type_plural'])}
+                                    variant="ghost"
+                                    endDecorator={<KeyboardArrowDownIcon sx={{ fontSize: 'medium' }} />}
+                                    className="btn secondary plain"
+                                />
+                                <div className={styles['navbar__container__content-container-container__item-selector']} />
+                            </div>
+                        </DropdownLayout>
                     </div>
-                </DropdownLayout>
-                <DropdownLayout
-                    template="list"
-                    loading={types.loading}
-                    error={types.errors}
-                    config={types.data}
-                    style={triathlonTypesStyle}>
-                    <div className={styles['navbar__container__content-container-container__item']} data-active={new RegExp(PATHS.triathlons.types.all + '/*').test(pathname)}>
-                        <RegularButton
-                            text={changeFirstLetter(t['type_plural'])}
-                            variant="ghost"
-                            endDecorator={<KeyboardArrowDownIcon sx={{ fontSize: 'medium' }} />}
-                            className="btn secondary plain"
-                        />
-                        <div className={styles['navbar__container__content-container-container__item-selector']} />
-                    </div>
-                </DropdownLayout>
-            </div>
-            <div className={styles['navbar__container__menu']}>
-                <div className={styles['navbar__container__menu-search']}>
-                    {/* TODO: Move into styles */}
-                    <CustomTextBox
-                        value={search}
-                        placeholder={changeFirstLetter(t['search'])}
-                        handleInputFocusChange={setSearchFocused}
-                        handleInputChange={handleInputChange}
-                        style={{
-                            width: searchFocused ? '600px' : '300px',
-                            backgroundColor: '#f5f5f5',
-                            color: '#000',
-                            border: 'none',
-                            borderRadius: '5px',
-                            padding: '0 10px',
-                            fontSize: '1rem'
-                        }}
-                        startDecorator={<SearchIcon />}
-                    />
-                </div>
-                <div className={styles['navbar__container__menu-container']}>
-                    <Tooltip title={theme === 'light' ? changeFirstLetter(t['dark_mode']) : changeFirstLetter(t['light_mode'])}>
-                        <div
-                            className={styles['navbar__container__menu-container__image-container']}
-                            data-icon
-                            onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}>
-                            {theme === 'light' && <LightModeIcon />}
-                            {theme === 'dark' && <NightlightRoundIcon />}
+                    <div className={styles['navbar__container__menu']}>
+                        <div className={styles['navbar__container__menu-search']}>
+                            {/* TODO: Move into styles */}
+                            <CustomTextBox
+                                value={search}
+                                placeholder={changeFirstLetter(t['search'])}
+                                handleInputFocusChange={setSearchFocused}
+                                handleInputChange={handleInputChange}
+                                style={{
+                                    width: searchFocused ? '600px' : '300px',
+                                    backgroundColor: '#f5f5f5',
+                                    color: '#000',
+                                    border: 'none',
+                                    borderRadius: '5px',
+                                    padding: '0 10px',
+                                    fontSize: '1rem'
+                                }}
+                                startDecorator={<SearchIcon />}
+                            />
                         </div>
-                    </Tooltip>
-                </div>
-                <div className={styles['navbar__container__menu-container']}>
-                    {AccountView()}
-                </div>
-            </div>
+                        <div className={styles['navbar__container__menu-container']}>
+                            <Tooltip title={theme === 'light' ? changeFirstLetter(t['dark_mode']) : changeFirstLetter(t['light_mode'])}>
+                                <div
+                                    className={styles['navbar__container__menu-container__image-container']}
+                                    data-icon
+                                    onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}>
+                                    {theme === 'light' && <LightModeIcon />}
+                                    {theme === 'dark' && <NightlightRoundIcon />}
+                                </div>
+                            </Tooltip>
+                        </div>
+                        <div className={styles['navbar__container__menu-container']}>
+                            {AccountView()}
+                        </div>
+                    </div>
+                </>
+            )}
         </div>
     );
 
 };
+
+// TODO: Move style to .scss file
+function SkeletonLoaderView() {
+    return (
+        <div style={{
+            display: 'grid',
+            gridTemplateColumns: '6rem 6rem 1fr 2.25rem 6rem',
+            gap: '1rem',
+            padding: '0 1rem',
+            alignItems: 'center',
+            height: '100%'
+        }}>
+            <Skeleton className="h-9" style={{
+                gridColumn: '1/2'
+            }} />
+            <Skeleton className="h-9" style={{
+                gridColumn: '2/3'
+            }} />
+            <Skeleton className="h-9" style={{
+                gridColumn: '3/4'
+            }} />
+            <Skeleton className="h-9 rounded-full" style={{
+                gridColumn: '4/5'
+            }} />
+            <Skeleton className="h-9" style={{
+                gridColumn: '5/6'
+            }} />
+        </div>
+    );
+}
 
 export default Navbar;
