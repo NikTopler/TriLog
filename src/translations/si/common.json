@@ -44,5 +44,13 @@
     "continue": "nadaljuj",
     "or": "ali",
     "placeholder-search_triathlons": "Išči triatlone...",
-    "triathlons_page-description": "Tu je seznam najnovejših triatlonov. Lahko iščete po vrsti, kategoriji, državi, zvezni državi, mestu, itd."
+    "triathlons_page-description": "Tu je seznam najnovejših triatlonov. Lahko iščete po vrsti, kategoriji, državi, zvezni državi, mestu, itd.",
+    "ironman": "Ironman",
+    "ironman-70.3": "Ironman 70.3",
+    "double-ultra": "Dvojni Ultra Triatlon",
+    "triple-ultra": "Trojni Ultra Triatlon",
+    "ironman-description": "Triatlon Ironman je vrhunec vzdržljivostnih dogodkov, znan po svojih zahtevnih izzivih. Udeleženci morajo opraviti 2,4 milje (3,86 km) plavanja, nato 112 milj (180,25 km) vožnje s kolesom in zaključiti z maratonom, dolgim 26,2 milje (42,20 km). To zahteva izjemno telesno in mentalno moč ter privablja športnike z vsega sveta, ki iščejo ultimativen preizkus svojih sposobnosti.",
+    "ironman-70.3-description": "Triatlon Ironman 70.3 je krajša različica triatlona Ironman. Udeleženci morajo opraviti 1,2 milje (1,93 km) plavanja, nato 56 milj (90,12 km) vožnje s kolesom in zaključiti z polmaratonom, dolgim 13,1 milje (21,08 km).",
+    "double-ultra-description": "Dvojni ultra triatlon je triatlon dolge razdalje. Udeleženci morajo opraviti 7,6 milje (12,23 km) plavanja, nato 224 milj (360,49 km) vožnje s kolesom in zaključiti z dvojnim maratonom, dolgim 52,4 milje (84,32 km).",
+    "triple-ultra-description": "Trojni triatlon je triatlon dolge razdalje. Udeleženci morajo opraviti 11,4 milje (18,35 km) plavanja, nato 336 milj (540,11 km) vožnje s kolesom in zaključiti z trojnim maratonom, dolgim 78,6 milje (126,49 km)."
 }

@@ -44,5 +44,13 @@
     "continue": "continue",
     "or": "or",
     "placeholder-search_triathlons": "Search triathlons...",
-    "triathlons_page-description": "Here is a list of the latest triathlons. You can search by type, category, country, state, city, etc." 
+    "triathlons_page-description": "Here is a list of the latest triathlons. You can search by type, category, country, state, city, etc." ,
+    "ironman": "Ironman",
+    "ironman-70.3": "Ironman 70.3",
+    "double-ultra": "Double Ultra Triathlon",
+    "triple-ultra": "Triple Ultra Triathlon",
+    "ironman-description": "The Ironman triathlon is the pinnacle of endurance events, known for its grueling challenges. Participants must complete a 2.4-mile (3.86 km) swim, followed by a 112-mile (180.25 km) bike ride, and finish with a full marathon, running 26.2 miles (42.20 km). It demands unparalleled physical and mental strength, attracting athletes from around the world seeking the ultimate test of their abilities.",
+    "ironman-70.3-description": "The Ironman 70.3 triathlon is a shorter version of the Ironman triathlon. Participants must complete a 1.2-mile (1.93 km) swim, followed by a 56-mile (90.12 km) bike ride, and finish with a half marathon, running 13.1 miles (21.08 km).",
+    "double-ultra-description": "The Double Ultra Triathlon is a long-distance triathlon. Participants must complete a 7.6-mile (12.23 km) swim, followed by a 224-mile (360.49 km) bike ride, and finish with a double marathon, running 52.4 miles (84.32 km).",
+    "triple-ultra-description": "The Triple Ultra Triathlon is a long-distance triathlon. Participants must complete a 11.4-mile (18.35 km) swim, followed by a 336-mile (540.11 km) bike ride, and finish with a triple marathon, running 78.6 miles (126.49 km)."
 }

@@ -10,6 +10,8 @@ import isUrl from "./isUrl";
 import getCurrentTimestamp from "./getCurrentTimestamp";
 import isIdentifier from "./isIdentifier";
 import isSupportedLanguage from "./isSupportedLanguage";
+import getLocationFromTriathlon from "./getLocationFromTriathlon";
+import parseTriathlonsToTableData from "./parseTriathlonsToTableData";
 
 export {
     isEmail,
@@ -26,5 +28,7 @@ export {
     apiDelete,
     generateCode,
     generateToken,
-    getCurrentTimestamp
+    getCurrentTimestamp,
+    getLocationFromTriathlon,
+    parseTriathlonsToTableData
 }
