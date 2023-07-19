@@ -18,6 +18,7 @@ import { PATHS } from "@/constants";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context";
 import { changeFirstLetter } from "@/helpers";
 import styles from "./navbar.module.scss";
+import { UsePageOpen, usePage } from "@/hooks";
 
 const triathlonCategoriesStyle = {
     width: '300px',
@@ -35,7 +36,7 @@ const triathlonTypesStyle = {
 
 function Navbar() {
 
-    const router = useRouter();
+    const page = usePage();
     const pathname = usePathname();
 
     const auth = useAuthContext();
@@ -64,7 +65,7 @@ function Navbar() {
 
         if (!triathlonCategories.loading && triathlonCategories.data) {
             setCategories({
-                data: parseTriathlonCategories(triathlonCategories.data, router),
+                data: parseTriathlonCategories(triathlonCategories.data, page.open),
                 loading: false,
                 errors: null
             });
@@ -72,7 +73,7 @@ function Navbar() {
 
         if (!triathlonTypes.loading && triathlonTypes.data) {
             setTypes({
-                data: parseTriathlonTypesToDropdownItem(triathlonTypes.data, router),
+                data: parseTriathlonTypesToDropdownItem(triathlonTypes.data, page.open),
                 loading: false,
                 errors: null
             });
@@ -84,7 +85,7 @@ function Navbar() {
         setSearch(value);
     }
 
-    const parseTriathlonCategories = (triathlonCategories: TriathlonCategories[], router: AppRouterInstance): TabsConfig => {
+    const parseTriathlonCategories = (triathlonCategories: TriathlonCategories[], open: UsePageOpen): TabsConfig => {
 
         const obj: TabsConfig = {
             groupTitle: changeFirstLetter(t['age_group']),
@@ -115,7 +116,7 @@ function Navbar() {
                     uid: ID,
                     label: name + ' (' + acronym + ')',
                     handleOnClick() {
-                        router.push(PATHS.triathlons.categories.specific.replace(':id', acronym))
+                        open(PATHS.triathlons.categories.specific.replace(':id', acronym))
                     }
                 }
             );
@@ -126,7 +127,7 @@ function Navbar() {
 
     }
 
-    const parseTriathlonTypesToDropdownItem = (triathlonTypes: TriathlonTypes[], router: AppRouterInstance): ListConfig => {
+    const parseTriathlonTypesToDropdownItem = (triathlonTypes: TriathlonTypes[], open: UsePageOpen): ListConfig => {
 
         return {
             groupTitle: changeFirstLetter(t['type_plural']),
@@ -134,7 +135,7 @@ function Navbar() {
                 uid: ID,
                 label: name,
                 handleOnClick() {
-                    router.push(PATHS.triathlons.types.specific.replace(':id', name.replace(' ', '-').toLowerCase()))
+                    open(PATHS.triathlons.types.specific.replace(':id', name.replace(' ', '-').toLowerCase()))
                 },
             }))
         }
@@ -159,7 +160,7 @@ function Navbar() {
                 text={changeFirstLetter(t['login'])}
                 variant="default"
                 className="btn tertiary solid"
-                handleOnClick={() => router.push(PATHS.auth.login)}
+                handleOnClick={() => page.open(PATHS.auth.login)}
                 style={{
                     color: '#fff'
                 }}
@@ -171,7 +172,7 @@ function Navbar() {
     return (
         <div className={styles['navbar__container']}>
             <div className={styles['navbar__container__logo-container']}>
-                <span onClick={() => router.push(PATHS.home)}>TriLog</span>
+                <span onClick={() => page.open(PATHS.home)}>TriLog</span>
             </div>
             {translationsLoading && <SkeletonLoaderView />}
             {!translationsLoading && (

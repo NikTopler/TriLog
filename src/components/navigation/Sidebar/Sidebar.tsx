@@ -13,18 +13,19 @@ import { changeFirstLetter } from "@/helpers";
 import { useEffect, useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import styles from "./sidebar.module.scss";
+import { usePage } from "@/hooks";
 
 function Sidebar() {
 
-    const router = useRouter();
     const pathname = usePathname();
+    const page = usePage();
     const [translationsLoading, lang, t, setLang] = useTranslationContext();
 
     const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => setLoading(translationsLoading), [translationsLoading]);
 
-    const open = (path: string) => () => router.push(path);
+    const open = (path: string) => () => page.open(path);
 
     if (loading) {
         return <SkeletonLoaderView />;
