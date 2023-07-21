@@ -5,6 +5,7 @@ import { z } from "zod";
 import { DataTableColumnHeader } from "../DataTable";
 
 const TriathlonTableSchema = z.object({
+  ID: z.number(),
   worldChampionship: z.boolean(),
   year: z.number(),
   triathlonType: z.string(),

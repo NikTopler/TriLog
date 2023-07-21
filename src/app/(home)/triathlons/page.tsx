@@ -6,9 +6,11 @@ import DataTable from "@/components/tables/DataTable/DataTable";
 import { triathlonColumns } from "@/components/tables/columns";
 import { changeFirstLetter, parseTriathlonsToTableData } from "@/helpers";
 import { LoadingTableSkeletonView, MainHeaderSkeletonLoaderView } from "@/components/loaders";
+import { usePage } from "@/hooks";
 
 function TriathlonsPage() {
 
+    const page = usePage();
     const [translationsLoading, lang, t, setLang] = useTranslationContext();
 
     const {
@@ -81,6 +83,7 @@ function TriathlonsPage() {
                 t
             )}
             columns={triathlonColumns}
+            handleRowClick={({ ID }) => page.open(`/triathlons/${ID}`)}
             includeSearch={true}
             searchPlaceholder={t['placeholder-search_triathlons']}
             filters={getFilters()}
