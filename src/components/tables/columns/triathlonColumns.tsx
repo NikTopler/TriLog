@@ -12,7 +12,7 @@ const TriathlonTableSchema = z.object({
   organization: z.string(),
 });
 
-type TriathlonTable = z.infer<typeof TriathlonTableSchema>
+export type TriathlonTable = z.infer<typeof TriathlonTableSchema>
 
 const triathlonColumns: ColumnDef<TriathlonTable>[] = [
   {
