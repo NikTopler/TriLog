@@ -73,6 +73,7 @@ function SpecificTriathlonTypePage() {
                 t
             )}
             columns={triathlonColumns}
+            handleRowClick={({ ID }) => page.open(`/triathlons/${ID}`)}
             includeSearch={true}
             searchPlaceholder={t['placeholder-search_triathlons']}
         />

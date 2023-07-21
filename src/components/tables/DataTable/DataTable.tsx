@@ -14,9 +14,10 @@ import { DataTableToolbarFilterOptions } from "./DataTableToolbar/DataTableToolb
 interface DataTableProps<TData, TValue> extends DataTableToolbarFilterOptions {
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
+    handleRowClick?: (row: TData) => void;
 }
 
-function DataTable<TData, TValue>({ columns, data, includeSearch, searchPlaceholder, filters }: DataTableProps<TData, TValue>) {
+function DataTable<TData, TValue>({ columns, data, includeSearch, searchPlaceholder, filters, handleRowClick }: DataTableProps<TData, TValue>) {
 
     const [rowSelection, setRowSelection] = useState({});
     const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -78,7 +79,9 @@ function DataTable<TData, TValue>({ columns, data, includeSearch, searchPlacehol
                             table.getRowModel().rows.map((row) => (
                                 <TableRow
                                     key={row.id}
+                                    className={handleRowClick && "cursor-pointer"}
                                     data-state={row.getIsSelected() && "selected"}
+                                    onClick={() => handleRowClick && handleRowClick(row.original)}
                                 >
                                     {row.getVisibleCells().map((cell) => (
                                         <TableCell key={cell.id}>
