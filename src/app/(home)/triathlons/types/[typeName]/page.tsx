@@ -26,7 +26,7 @@ function SpecificTriathlonTypePage() {
         cities
     } = useDataContext();
 
-    const getTriathlonTypeIds = () => triathlonTypes.data?.map(({ name }) => name.toLowerCase().replace(/\s/g, '-')) || [];
+    const getTriathlonTypeNames = () => triathlonTypes.data?.map(({ name }) => name.toLowerCase().replace(/\s/g, '-')) || [];
     const getTriathlonType = useCallback(() => pathname.split('/').pop() || '', []);
     const getTitle = useCallback(() => getTriathlonType().replaceAll(' ', '-').toLowerCase(), []);
 
@@ -56,7 +56,7 @@ function SpecificTriathlonTypePage() {
         cities.loading
     ]);
 
-    if (!getTriathlonTypeIds().includes(getTriathlonType())) {
+    if (!getTriathlonTypeNames().includes(getTriathlonType())) {
         page.open('/triathlons/types');
         return null;
     }

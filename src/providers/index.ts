@@ -1,10 +1,11 @@
 import { AuthProvider, SocialLoginProvider, useAuthContext } from "./AuthProvider";
-import { DataProvider, useDataContext } from "./DataProvider";
+import { DataProvider, ResourceStatus, defaultResourceStatus, useDataContext } from "./DataProvider";
 import { ProgressProvider, useProgressContext } from "./ProgressProvider";
 import { TranslationProvider, useTranslationContext } from "./TranslationProvider";
 
 export type {
-    SocialLoginProvider
+    SocialLoginProvider,
+    ResourceStatus
 }
 
 export {
@@ -12,6 +13,7 @@ export {
     AuthProvider,
     useDataContext,
     DataProvider,
+    defaultResourceStatus,
     ProgressProvider,
     useProgressContext,
     TranslationProvider,

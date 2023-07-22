@@ -1,13 +1,19 @@
 import { isIdentifier } from "@/helpers";
 import { RequestParams } from "@/types";
-import { TriathlonCategorySchemaOptional } from "@/schemas";
+import { SpecificTriathlonCategorySchema, TriathlonCategorySchemaOptional } from "@/schemas";
 import TriathlonCategoryService from "@/services/models/TriathlonCategoryService";
 import { NextRequest, NextResponse } from "next/server";
+import { TriathlonCategories, Triathlons } from "@prisma/client";
+import { TriathlonService } from "@/services";
 
 const INVALID_ID_ERROR_MESSAGE = "Invalid triathlon category ID";
 
+export interface SpecificTriathlonCategoryResponse extends TriathlonCategories {
+    triathlons?: Triathlons[]
+}
+
 type TriathlonCategoryParams = RequestParams<{
-    categoryId: string
+    categoryId: string,
 }>;
 
 export async function GET(req: NextRequest, { params }: TriathlonCategoryParams) {
@@ -15,12 +21,23 @@ export async function GET(req: NextRequest, { params }: TriathlonCategoryParams)
     try {
 
         const ID = Number(params.categoryId);
+        const searchParams = Object.fromEntries(req.nextUrl.searchParams);
 
         if (isIdentifier(ID)) {
 
+            const { includeTriathlons } = SpecificTriathlonCategorySchema.parse(searchParams);
+
+            let data: SpecificTriathlonCategoryResponse = await TriathlonCategoryService.getById(ID);
+            if (includeTriathlons === 'true') {
+                data = {
+                    ...data,
+                    triathlons: await TriathlonService.getAllByCategory(ID)
+                }
+            }
+
             return NextResponse.json({
                 success: true,
-                data: await TriathlonCategoryService.getById(ID)
+                data
             }, { status: 200 });
 
         }

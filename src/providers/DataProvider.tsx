@@ -9,7 +9,7 @@ import { Dispatch, SetStateAction, createContext, useContext, useEffect, useStat
 import { useProgressContext } from "./ProgressProvider";
 import { useTranslationContext } from "./TranslationProvider";
 
-interface ResourceStatus<T> {
+export interface ResourceStatus<T> {
     loading: boolean;
     data: T;
     error: any; // TODO: implement error handling
@@ -47,7 +47,7 @@ const loadingWeights = {
 
 const STATIC_DATA_TTL = 10 * 24 * 60 * 60 * 1000;
 
-const defaultResourceStatus: ResourceStatus<null> = {
+export const defaultResourceStatus: ResourceStatus<null> = {
     loading: true,
     data: null,
     error: null
@@ -80,40 +80,13 @@ function DataProvider({ children }: LayoutProps) {
     const [statesLS, setStatesLS] = useLocalStorage<StateStatus['data']>(STATES_LOCAL_STORAGE_KEY, null, STATIC_DATA_TTL);
     const [citiesLS, setCitiesLS] = useLocalStorage<CityStatus['data']>(CITIES_LOCAL_STORAGE_KEY, null, STATIC_DATA_TTL);
 
-    const [triathlons, setTriathlons] = useState<TriathlonStatus>({
-        ...defaultResourceStatus,
-        data: triathlonLS
-    });
-
-    const [triathlonTypes, setTriathlonTypes] = useState<TriathlonTypeStatus>({
-        ...defaultResourceStatus,
-        data: triathlonTypesLS
-    });
-
-    const [triathlonCategories, setTriathlonCategories] = useState<TriathlonCategoryStatus>({
-        ...defaultResourceStatus,
-        data: triathlonCategoriesLS
-    });
-
-    const [organizations, setOrganizations] = useState<OrganizationStatus>({
-        ...defaultResourceStatus,
-        data: organizationsLS
-    });
-
-    const [countries, setCountries] = useState<CountryStatus>({
-        ...defaultResourceStatus,
-        data: countriesLS
-    });
-
-    const [states, setStates] = useState<StateStatus>({
-        ...defaultResourceStatus,
-        data: statesLS
-    });
-
-    const [cities, setCities] = useState<CityStatus>({
-        ...defaultResourceStatus,
-        data: citiesLS
-    });
+    const [triathlons, setTriathlons] = useState<TriathlonStatus>(defaultResourceStatus);
+    const [triathlonTypes, setTriathlonTypes] = useState<TriathlonTypeStatus>(defaultResourceStatus);
+    const [triathlonCategories, setTriathlonCategories] = useState<TriathlonCategoryStatus>(defaultResourceStatus);
+    const [organizations, setOrganizations] = useState<OrganizationStatus>(defaultResourceStatus);
+    const [countries, setCountries] = useState<CountryStatus>(defaultResourceStatus);
+    const [states, setStates] = useState<StateStatus>(defaultResourceStatus);
+    const [cities, setCities] = useState<CityStatus>(defaultResourceStatus);
 
     const [loading, setLoading] = useState<boolean>(true);
 
