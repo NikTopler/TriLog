@@ -48,7 +48,7 @@ const loadingWeights = {
 const STATIC_DATA_TTL = 10 * 24 * 60 * 60 * 1000;
 
 const defaultResourceStatus: ResourceStatus<null> = {
-    loading: false,
+    loading: true,
     data: null,
     error: null
 };
@@ -121,73 +121,80 @@ function DataProvider({ children }: LayoutProps) {
 
     useEffect(() => {
 
-        if (!triathlonLS && !triathlons.loading) {
+        if (triathlonLS) {
+            setTriathlons({ loading: false, data: triathlonLS, error: null });
+        } else {
             fetchAndSetData<Triathlons[]>(
                 apiGet(PATHS.api.triathlons.all, { perPage: 500 }),
                 setTriathlons,
                 setTriathlonLS
             ).finally(() => progressContext.removeLoading('triathlons'));
-
             progressContext.add({ key: 'triathlons', weight: loadingWeights.triathlons, loading: true });
         }
 
-        if (!triathlonTypesLS && !triathlonTypes.loading) {
+        if (triathlonTypesLS) {
+            setTriathlonTypes({ loading: false, data: triathlonTypesLS, error: null });
+        } else {
             fetchAndSetData<TriathlonTypes[]>(
                 apiGet(PATHS.api.triathlons.types.all, {}),
                 setTriathlonTypes,
                 setTriathlonTypesLS
             ).finally(() => progressContext.removeLoading('triathlonTypes'));
-
             progressContext.add({ key: 'triathlonTypes', weight: loadingWeights.triathlonTypes, loading: true });
         }
 
-        if (!triathlonCategoriesLS && !triathlonCategories.loading) {
+        if (triathlonCategoriesLS) {
+            setTriathlonCategories({ loading: false, data: triathlonCategoriesLS, error: null });
+        } else {
             fetchAndSetData<TriathlonCategories[]>(
                 apiGet(PATHS.api.triathlons.categories.all, {}),
                 setTriathlonCategories,
                 setTriathlonCategoriesLS
             ).finally(() => progressContext.removeLoading('triathlonCategories'));
-
             progressContext.add({ key: 'triathlonCategories', weight: loadingWeights.triathlonCategories, loading: true });
         }
 
-        if (!organizationsLS && !organizations.loading) {
+        if (organizationsLS) {
+            setOrganizations({ loading: false, data: organizationsLS, error: null });
+        } else {
             fetchAndSetData<Organizations[]>(
                 apiGet(PATHS.api.organizations.all, {}),
                 setOrganizations,
                 setOrganizationsLS
             ).finally(() => progressContext.removeLoading('organizations'));
-
             progressContext.add({ key: 'organizations', weight: loadingWeights.organizations, loading: true });
         }
 
-        if (!countriesLS && !countries.loading) {
-            fetchAndSetData<any>(
-                apiGet(PATHS.api.countries.all, { perPage: 250 }),
+        if (countriesLS) {
+            setCountries({ loading: false, data: countriesLS, error: null });
+        } else {
+            fetchAndSetData<Countries[]>(
+                apiGet(PATHS.api.countries.all, {}),
                 setCountries,
                 setCountriesLS
             ).finally(() => progressContext.removeLoading('countries'));
-
             progressContext.add({ key: 'countries', weight: loadingWeights.countries, loading: true });
         }
 
-        if (!statesLS && !states.loading) {
-            fetchAndSetData<any>(
-                apiGet(PATHS.api.states.all, { perPage: 100 }),
+        if (statesLS) {
+            setStates({ loading: false, data: statesLS, error: null });
+        } else {
+            fetchAndSetData<States[]>(
+                apiGet(PATHS.api.states.all, {}),
                 setStates,
                 setStatesLS
             ).finally(() => progressContext.removeLoading('states'));
-
             progressContext.add({ key: 'states', weight: loadingWeights.states, loading: true });
         }
 
-        if (!citiesLS && !cities.loading) {
-            fetchAndSetData<any>(
-                apiGet(PATHS.api.cities.all, { perPage: 100 }),
+        if (citiesLS) {
+            setCities({ loading: false, data: citiesLS, error: null });
+        } else {
+            fetchAndSetData<Cities[]>(
+                apiGet(PATHS.api.cities.all, {}),
                 setCities,
                 setCitiesLS
             ).finally(() => progressContext.removeLoading('cities'));
-
             progressContext.add({ key: 'cities', weight: loadingWeights.cities, loading: true });
         }
 
