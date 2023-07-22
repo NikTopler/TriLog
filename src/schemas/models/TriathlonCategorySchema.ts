@@ -7,7 +7,7 @@ const genders = ['male', 'female'] as const;
 const TriathlonCategoryFilterOptionSchema = z.object({
     ID: PositiveIntSchema.optional(),
     name: z.string().optional(),
-    acronym: NullableNonEmptyStringSchema.optional(),
+    acronym: z.string().optional(),
     gender: z.enum(genders).optional(),
 });
 
