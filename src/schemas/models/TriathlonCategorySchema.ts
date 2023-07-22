@@ -11,7 +11,6 @@ const TriathlonCategoryFilterOptionSchema = z.object({
     gender: z.enum(genders).optional(),
 });
 
-
 function createTriathlonCategorySchema(required: boolean) {
 
     return z.object({
@@ -26,8 +25,13 @@ function createTriathlonCategorySchema(required: boolean) {
 const TriathlonCategorySchema = createTriathlonCategorySchema(true);
 const TriathlonCategorySchemaOptional = createTriathlonCategorySchema(false);
 
+const SpecificTriathlonCategorySchema = z.object({
+    includeTriathlons: z.string().refine((value) => value.toLowerCase() === 'true' || value.toLowerCase() === 'false').optional()
+})
+
 export {
     TriathlonCategoryFilterOptionSchema,
     TriathlonCategorySchema,
-    TriathlonCategorySchemaOptional
+    TriathlonCategorySchemaOptional,
+    SpecificTriathlonCategorySchema
 }

@@ -1,7 +1,7 @@
 import { TableName, prismaClient } from "@/db";
 import { Identifier, PaginationOptions } from "@/schemas";
 import { GenericRecord } from "@/types";
-import { Prisma, PrismaPromise } from "@prisma/client";
+import { Prisma, PrismaPromise, TriathlonCategories } from "@prisma/client";
 
 class BaseService {
 
@@ -46,7 +46,7 @@ class BaseService {
 
     getById(ID: Identifier) {
 
-        return handleResult(
+        return handleResult<TriathlonCategories>(
             this._tableClient.findUnique({
                 where: { ID }
             })

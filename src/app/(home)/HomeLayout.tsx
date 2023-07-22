@@ -115,21 +115,4 @@ function HomeLayout({ children }: LayoutProps) {
 
 }
 
-// TODO: Implement better skeleton views
-function SkeletonContentView() {
-    return (
-        <div>
-            <span>Loading ...</span>
-        </div>
-    );
-}
-
-function SkeletonSidebarView() {
-    return (
-        <div>
-            <span>Loading ...</span>
-        </div>
-    );
-}
-
 export default HomeLayout;

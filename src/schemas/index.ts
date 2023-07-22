@@ -2,7 +2,7 @@ import { AthleteFilterOptionSchema, AthleteSchema, AthleteSchemaOptional } from 
 import { NullableIntSchema, NullableNonEmptyStringSchema, NullableStringSchema, NumericStringSchema } from "./FilterOptionSchema";
 import { createPaginationOptionSchema, PaginationOptions } from "./PaginationOptionSchema";
 import { Identifier, PositiveIntSchema } from "./PositiveIntSchema";
-import { TriathlonCategoryFilterOptionSchema, TriathlonCategorySchema, TriathlonCategorySchemaOptional } from "./models/TriathlonCategorySchema";
+import { SpecificTriathlonCategorySchema, TriathlonCategoryFilterOptionSchema, TriathlonCategorySchema, TriathlonCategorySchemaOptional } from "./models/TriathlonCategorySchema";
 import { TriathlonTypeSchema, TriathlonTypeSchemaOptional, TriathlonTypesFilterOptionSchema } from "./models/TriathlonTypesSchema";
 import { OrganizationFilterOptionSchema, OrganizationSchema, OrganizationSchemaOptional } from "./models/OrganizationSchema";
 import { CountryFilterOptionSchema, CountrySchema, CountrySchemaOptional } from "./models/CountrySchema";
@@ -45,6 +45,7 @@ export {
     TriathlonCategoryFilterOptionSchema,
     TriathlonCategorySchema,
     TriathlonCategorySchemaOptional,
+    SpecificTriathlonCategorySchema,
     TriathlonTypesFilterOptionSchema,
     TriathlonTypeSchema,
     TriathlonTypeSchemaOptional,
