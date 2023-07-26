@@ -4,12 +4,12 @@ DROP TABLE IF EXISTS Countries;
 CREATE TABLE Countries (
 
 	ID INT PRIMARY KEY AUTO_INCREMENT,
-	name VARCHAR(150),
-	fullName VARCHAR(200),
-	alpha2 VARCHAR(2),
-	alpha3 VARCHAR(3),
-	continentCode VARCHAR(2),
-	number VARCHAR(3)
+	name VARCHAR(150) NOT NULL,
+	fullName VARCHAR(200) NOT NULL,
+	alpha2 VARCHAR(2) NOT NULL,
+	alpha3 VARCHAR(3) NOT NULL,
+	continentCode VARCHAR(2) NOT NULL,
+	number VARCHAR(3) NOT NULL
 
 );
 
@@ -17,9 +17,9 @@ DROP TABLE IF EXISTS States;
 CREATE TABLE States (
 
 	ID INT PRIMARY KEY AUTO_INCREMENT,
-	name VARCHAR(40),
-	acronym VARCHAR(3),
-	countryID INT NOT NULL,
+	name VARCHAR(40) NOT NULL,
+	acronym VARCHAR(3) NOT NULL,
+	countryID INT NOT NULL NOT NULL,
 	
 	CONSTRAINT `state_country_FK` FOREIGN KEY (countryID) REFERENCES Countries (ID) ON DELETE CASCADE ON UPDATE CASCADE
 	
@@ -30,7 +30,7 @@ DROP TABLE IF EXISTS Cities;
 CREATE TABLE Cities (
 
 	ID INT PRIMARY KEY AUTO_INCREMENT,
-	name VARCHAR(40),
+	name VARCHAR(40) NOT NULL,
 	countryID INT,
 	stateID INT,
 	
@@ -45,8 +45,9 @@ DROP TABLE IF EXISTS Athletes;
 CREATE TABLE Athletes (
 
 	ID INT PRIMARY KEY AUTO_INCREMENT,
-	firstName VARCHAR(50),
-	lastName VARCHAR(50),
+	firstName VARCHAR(50) NOT NULL,
+	lastName VARCHAR(50) NOT NULL,
+	gender ENUM('male', 'female') NOT NULL,
 	age INT,
 	countryID INT,
 	stateID INT,
@@ -103,7 +104,7 @@ CREATE TABLE Triathlons (
 	countryID INT,
 	stateID INT,
 	cityID INT,
-	isWorldChampionship BOOLEAN,
+	isWorldChampionship BOOLEAN NOT NULL,
 	triathlonTypeID INT NOT NULL,
 	triathlonCategoryID INT,
 	
