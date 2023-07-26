@@ -1,0 +1,5 @@
+ALTER TABLE Athletes
+DROP FOREIGN KEY athlete_city_FK,
+DROP FOREIGN KEY athlete_state_FK,
+DROP COLUMN cityID,
+DROP COLUMN stateID;

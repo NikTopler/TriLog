@@ -7,9 +7,7 @@ const AthleteFilterOptionSchema = z.object({
     firstName: NullableNonEmptyStringSchema.optional(),
     lastName: NullableNonEmptyStringSchema.optional(),
     age: NullableIntSchema.optional(),
-    countryID: NullableIntSchema.optional(),
-    stateID: NullableIntSchema.optional(),
-    cityID: NullableIntSchema.optional()
+    countryID: NullableIntSchema.optional()
 });
 
 
@@ -20,9 +18,7 @@ function createAthleteSchema(required: boolean) {
         firstName: required ? NullableNonEmptyStringSchema : NullableNonEmptyStringSchema.optional(),
         lastName: required ? NullableNonEmptyStringSchema : NullableNonEmptyStringSchema.optional(),
         age: required ? PositiveIntSchema.nullable() : NullableIntSchema.optional(),
-        countryID: required ? PositiveIntSchema.nullable() : NullableIntSchema.optional(),
-        stateID: required ? PositiveIntSchema.nullable() : NullableIntSchema.optional(),
-        cityID: required ? PositiveIntSchema.nullable() : NullableIntSchema.optional()
+        countryID: required ? PositiveIntSchema.nullable() : NullableIntSchema.optional()
     });
 
 }

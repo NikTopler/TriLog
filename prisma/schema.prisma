@@ -13,16 +13,10 @@ model Athletes {
   lastName       String?          @db.VarChar(50)
   age            Int?
   countryID      Int?
-  stateID        Int?
-  cityID         Int?
-  Cities         Cities?          @relation(fields: [cityID], references: [ID], onDelete: Cascade, map: "athlete_city_FK")
   Countries      Countries?       @relation(fields: [countryID], references: [ID], onDelete: Cascade, map: "athlete_country_FK")
-  States         States?          @relation(fields: [stateID], references: [ID], onDelete: Cascade, map: "athlete_state_FK")
   Participations Participations[]
 
-  @@index([cityID], map: "athlete_city_FK")
   @@index([countryID], map: "athlete_country_FK")
-  @@index([stateID], map: "athlete_state_FK")
 }
 
 model Cities {
@@ -30,7 +24,6 @@ model Cities {
   name       String?      @db.VarChar(40)
   countryID  Int?
   stateID    Int?
-  Athletes   Athletes[]
   Countries  Countries?   @relation(fields: [countryID], references: [ID], onDelete: Cascade, map: "city_country_FK")
   States     States?      @relation(fields: [stateID], references: [ID], onDelete: Cascade, map: "city_state_FK")
   Triathlons Triathlons[]
@@ -92,7 +85,6 @@ model States {
   name       String?      @db.VarChar(40)
   acronym    String?      @db.VarChar(3)
   countryID  Int
-  Athletes   Athletes[]
   Cities     Cities[]
   Countries  Countries    @relation(fields: [countryID], references: [ID], onDelete: Cascade, map: "state_country_FK")
   Triathlons Triathlons[]
