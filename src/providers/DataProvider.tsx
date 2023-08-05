@@ -142,7 +142,7 @@ function DataProvider({ children }: LayoutProps) {
             setCountries({ loading: false, data: countriesLS, error: null });
         } else {
             fetchAndSetData<Countries[]>(
-                apiGet(PATHS.api.countries.all, {}),
+                apiGet(PATHS.api.countries.all, { perPage: 500 }),
                 setCountries,
                 setCountriesLS
             ).finally(() => progressContext.removeLoading('countries'));
@@ -153,7 +153,7 @@ function DataProvider({ children }: LayoutProps) {
             setStates({ loading: false, data: statesLS, error: null });
         } else {
             fetchAndSetData<States[]>(
-                apiGet(PATHS.api.states.all, {}),
+                apiGet(PATHS.api.states.all, { perPage: 500 }),
                 setStates,
                 setStatesLS
             ).finally(() => progressContext.removeLoading('states'));
@@ -164,7 +164,7 @@ function DataProvider({ children }: LayoutProps) {
             setCities({ loading: false, data: citiesLS, error: null });
         } else {
             fetchAndSetData<Cities[]>(
-                apiGet(PATHS.api.cities.all, {}),
+                apiGet(PATHS.api.cities.all, { perPage: 500 }),
                 setCities,
                 setCitiesLS
             ).finally(() => progressContext.removeLoading('cities'));
