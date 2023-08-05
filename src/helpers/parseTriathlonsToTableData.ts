@@ -17,6 +17,7 @@ function parseTriathlonsToTableData(
 
     return triathlons.map(triathlon => ({
         ID: triathlon.ID,
+        name: triathlon.name,
         year: triathlon.year,
         triathlonType: triathlonTypesData?.find(({ ID }) => ID === triathlon.triathlonTypeID)?.name || 'N/A',
         worldChampionship: triathlon.isWorldChampionship ?? false,

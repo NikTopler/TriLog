@@ -7,6 +7,7 @@ import { DataTableColumnHeader } from "../DataTable";
 const TriathlonTableSchema = z.object({
   ID: z.number(),
   worldChampionship: z.boolean(),
+  name: z.string(),
   year: z.number(),
   triathlonType: z.string(),
   location: z.string(),
@@ -32,6 +33,17 @@ const triathlonColumns: ColumnDef<TriathlonTable>[] = [
     ),
     enableSorting: true,
     enableHiding: false
+  },
+  {
+    accessorKey: "name",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Name" />
+    ),
+    cell: ({ row }) => (
+      <div>
+        {row.getValue("name")}
+      </div>
+    ),
   },
   {
     accessorKey: "year",
