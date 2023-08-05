@@ -83,7 +83,7 @@ function TriathlonsPage() {
                 t
             )}
             columns={triathlonColumns}
-            handleRowClick={({ ID }) => page.open(`/triathlons/${ID}`)}
+            handleRowClick={({ name }) => page.open(`/triathlons/${name.replace(/\s/g, '-').toLowerCase()}`)}
             includeSearch={true}
             searchPlaceholder={t['placeholder-search_triathlons']}
             filters={getFilters()}
