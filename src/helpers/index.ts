@@ -12,6 +12,7 @@ import isIdentifier from "./isIdentifier";
 import isSupportedLanguage from "./isSupportedLanguage";
 import getLocationFromTriathlon from "./getLocationFromTriathlon";
 import parseTriathlonsToTableData from "./parseTriathlonsToTableData";
+import formatTime from "./formatTime";
 
 export {
     isEmail,
@@ -30,5 +31,6 @@ export {
     generateToken,
     getCurrentTimestamp,
     getLocationFromTriathlon,
-    parseTriathlonsToTableData
+    parseTriathlonsToTableData,
+    formatTime
 }
