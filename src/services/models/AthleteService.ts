@@ -11,6 +11,51 @@ class AthleteService {
         return base.getAll(where, paginationOptions, count);
     }
 
+    static getAllByTriathlonName(
+        triathlonName: string,
+        { page, perPage, order, orderBy }: PaginationOptions<ParticipationColumns>,
+        count?: boolean
+    ) {
+
+        if (count) {
+            return prismaClient.athletes.count({
+                where: {
+                    Participations: {
+                        some: {
+                            Triathlons: {
+                                name: triathlonName
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        return prismaClient.participations.findMany({
+            where: {
+                Triathlons: {
+                    name: triathlonName,
+                },
+            },
+            include: {
+                Athletes: {
+                    include: {
+                        Countries: true
+                    }
+                },
+                TriathlonCategories: true
+            },
+            orderBy: {
+                [orderBy]: {
+                    nulls: 'last',
+                    sort: order
+                },
+            },
+            skip: (page - 1) * perPage,
+            take: perPage
+        });
+    }
+
     static getById(ID: Identifier) {
         return base.getById(ID);
     }
