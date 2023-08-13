@@ -5,7 +5,7 @@ import { AthleteFilterOptionSchema, AthleteSchema, createPaginationOptionSchema 
 import { AthleteColumns, Order, ParticipationColumns } from "@/types";
 
 const DEFAULT_PAGE = 1;
-const DEFAULT_PER_PAGE = 50;
+const DEFAULT_PER_PAGE = 20;
 
 const DEFAULT_ATHLETE_ORDER: Order = 'asc';
 const DEFAULT_ATHLETE_ORDER_BY: AthleteColumns = 'lastName';
