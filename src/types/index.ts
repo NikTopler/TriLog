@@ -12,6 +12,7 @@ import SpecialKey from "./SpecialKey";
 import AuthCookie from "./AuthCookie";
 import { RefreshTokenData, AccessTokenData, UserRole } from "./UserTokenData";
 import VerificationTokenData from "./VerificationTokenData";
+import { AthleteColumns, ParticipationColumns, TriathlonCategoryColumns, TriathlonColumns, TriathlonTypeColumns } from "./ModelTableColumns";
 
 export type {
     RequestParams,
@@ -32,5 +33,10 @@ export type {
     RefreshTokenData,
     AccessTokenData,
     SpecialKey,
-    Order
+    Order,
+    AthleteColumns,
+    TriathlonColumns,
+    TriathlonTypeColumns,
+    TriathlonCategoryColumns,
+    ParticipationColumns
 }
