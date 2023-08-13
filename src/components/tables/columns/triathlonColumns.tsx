@@ -1,14 +1,15 @@
 'use client'
 
 import { ColumnDef } from "@tanstack/react-table"
-import { z } from "zod";
+import z from "zod";
 import { DataTableColumnHeader } from "../DataTable";
+import { PositiveIntSchema } from "@/schemas";
 
 const TriathlonTableSchema = z.object({
-  ID: z.number(),
+  ID: PositiveIntSchema,
   worldChampionship: z.boolean(),
   name: z.string(),
-  year: z.number(),
+  year: PositiveIntSchema,
   triathlonType: z.string(),
   location: z.string(),
   organization: z.string(),
