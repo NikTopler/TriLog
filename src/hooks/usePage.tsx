@@ -1,30 +1,37 @@
 import { createQueryString } from "@/helpers";
-import { useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
-export type UsePageOpen = (path: string, includeSearchParams?: boolean, queryParams?: Record<string, string>) => void;
+export type UsePageOpen = (path: string, includeSearchParams?: string[], queryParams?: Record<string, string>) => void;
 
 function usePage() {
 
     const router = useRouter();
+    const pathname = usePathname();
     const searchParams = useSearchParams();
 
-    const open = (path: string, includeSearchParams: boolean = true, queryParams: Record<string, string> = {}) => {
+    const [searchParamsObj, setSearchParamsObj] = useState<Record<string, string>>({});
 
-        let fullPath = path;
+    useEffect(() => router.push(pathname + '?' + createQueryString(searchParams, searchParamsObj)), [searchParamsObj]);
 
-        if (includeSearchParams) {
-            const query = createQueryString(searchParams, queryParams);
-            if (query.length > 0) {
-                fullPath += '?' + query;
+    const open = (path: string, includedSearchParams: string[] = ['lang'], queryParams: Record<string, string> = {}) => {
+
+        let obj: Record<string, string | null | undefined> = {};
+
+        includedSearchParams.forEach((value) => {
+            if (includedSearchParams.includes(value)) {
+                obj[value] = searchParams.get(value);
             }
-        }
+        });
 
-        router.push(fullPath);
-
+        router.push(path + '?' + createQueryString(obj as any, queryParams));
     }
 
+    const setSearchParams = (obj: Record<string, string>) => setSearchParamsObj(obj);
+
     return {
-        open
+        open,
+        setSearchParams
     }
 }
 
