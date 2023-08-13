@@ -1,12 +1,13 @@
-import { GenericRecord } from "@/types";
+import { AthleteColumns, GenericRecord, ParticipationColumns } from "@/types";
 import { Identifier, PaginationOptions } from "@/schemas";
 import { Athletes } from "@prisma/client";
 import BaseService from "../BaseService";
+import { prismaClient } from "@/db";
 
 const base = new BaseService('athletes');
 class AthleteService {
 
-    static getAll(where: GenericRecord, paginationOptions: PaginationOptions, count?: boolean) {
+    static getAll(where: GenericRecord, paginationOptions: PaginationOptions<AthleteColumns>, count?: boolean) {
         return base.getAll(where, paginationOptions, count);
     }
 
