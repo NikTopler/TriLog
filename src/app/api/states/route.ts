@@ -1,5 +1,6 @@
 import { StateFilterOptionSchema, StateSchema, createPaginationOptionSchema } from "@/schemas";
 import { BaseService, StateService } from "@/services";
+import { StateColumns } from "@/types";
 import { States } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -10,7 +11,7 @@ export async function GET(req: NextRequest) {
     try {
 
         const validatedFilter = StateFilterOptionSchema.parse(searchParams);
-        const validatedPagination = createPaginationOptionSchema(BaseService.getColumnNames('States') || []).parse(searchParams);
+        const validatedPagination = createPaginationOptionSchema<StateColumns>(BaseService.getColumnNames('States') || []).parse(searchParams);
 
         const [count, data] = await Promise.all([
             StateService.getAll(validatedFilter, validatedPagination, true),

@@ -1,5 +1,6 @@
 import { OrganizationFilterOptionSchema, createPaginationOptionSchema } from "@/schemas";
 import { BaseService, OrganizationService } from "@/services";
+import { OrganizationColumns } from "@/types";
 import { Organizations } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -10,7 +11,7 @@ export async function GET(req: NextRequest) {
     try {
 
         const validatedFilter = OrganizationFilterOptionSchema.parse(searchParams);
-        const validatedPagination = createPaginationOptionSchema(BaseService.getColumnNames('Organizations') || []).parse(searchParams);
+        const validatedPagination = createPaginationOptionSchema<OrganizationColumns>(BaseService.getColumnNames('Organizations') || []).parse(searchParams);
 
         const [count, data] = await Promise.all([
             OrganizationService.getAll(validatedFilter, validatedPagination, true),

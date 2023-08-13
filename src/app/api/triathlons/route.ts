@@ -1,5 +1,6 @@
 import { TriathlonSchema, TriathlonTypesFilterOptionSchema, createPaginationOptionSchema } from "@/schemas";
 import { BaseService, TriathlonService } from "@/services";
+import { TriathlonColumns } from "@/types";
 import { Triathlons } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -10,7 +11,7 @@ export async function GET(req: NextRequest) {
     try {
 
         const validatedFilter = TriathlonTypesFilterOptionSchema.parse(searchParams);
-        const validatedPagination = createPaginationOptionSchema(BaseService.getColumnNames('Triathlons') || []).parse(searchParams);
+        const validatedPagination = createPaginationOptionSchema<TriathlonColumns>(BaseService.getColumnNames('Triathlons') || []).parse(searchParams);
 
         const [count, data] = await Promise.all([
             TriathlonService.getAll(validatedFilter, validatedPagination, true),

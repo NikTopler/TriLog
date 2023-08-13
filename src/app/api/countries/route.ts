@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { Countries } from "@prisma/client";
 import { CountryService, BaseService } from "@/services";
 import { CountryFilterOptionSchema, CountrySchema, createPaginationOptionSchema } from "@/schemas";
+import { CountryColumns } from "@/types";
 
 export async function GET(req: NextRequest) {
 
@@ -10,7 +11,7 @@ export async function GET(req: NextRequest) {
     try {
 
         const validatedFilter = CountryFilterOptionSchema.parse(searchParams);
-        const validatedPagination = createPaginationOptionSchema(BaseService.getColumnNames('Countries') || []).parse(searchParams);
+        const validatedPagination = createPaginationOptionSchema<CountryColumns>(BaseService.getColumnNames('Countries') || []).parse(searchParams);
 
         const [count, data] = await Promise.all([
             CountryService.getAll(validatedFilter, validatedPagination, true),

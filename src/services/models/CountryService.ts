@@ -1,4 +1,4 @@
-import { GenericRecord } from "@/types";
+import { CountryColumns, GenericRecord } from "@/types";
 import { Identifier, PaginationOptions } from "@/schemas";
 import { Countries } from "@prisma/client";
 import BaseService from "../BaseService";
@@ -6,7 +6,7 @@ import BaseService from "../BaseService";
 const base = new BaseService('countries');
 class CountryService extends BaseService {
 
-    static getAll(where: GenericRecord, paginationOptions: PaginationOptions, count?: boolean) {
+    static getAll(where: GenericRecord, paginationOptions: PaginationOptions<CountryColumns>, count?: boolean) {
         return base.getAll(where, paginationOptions, count);
     }
 

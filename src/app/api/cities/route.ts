@@ -1,5 +1,6 @@
 import { CityFilterOptionSchema, CitySchema, createPaginationOptionSchema } from "@/schemas";
 import { BaseService, CityService } from "@/services";
+import { CityColumns } from "@/types";
 import { Cities } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -10,7 +11,7 @@ export async function GET(req: NextRequest) {
     try {
 
         const validatedFilter = CityFilterOptionSchema.parse(searchParams);
-        const validatedPagination = createPaginationOptionSchema(BaseService.getColumnNames('Cities') || []).parse(searchParams);
+        const validatedPagination = createPaginationOptionSchema<CityColumns>(BaseService.getColumnNames('Cities') || []).parse(searchParams);
 
         const [count, data] = await Promise.all([
             CityService.getAll(validatedFilter, validatedPagination, true),

@@ -12,7 +12,7 @@ import SpecialKey from "./SpecialKey";
 import AuthCookie from "./AuthCookie";
 import { RefreshTokenData, AccessTokenData, UserRole } from "./UserTokenData";
 import VerificationTokenData from "./VerificationTokenData";
-import { AthleteColumns, ParticipationColumns, TriathlonCategoryColumns, TriathlonColumns, TriathlonTypeColumns } from "./ModelTableColumns";
+import { AthleteColumns, CityColumns, CountryColumns, OrganizationColumns, ParticipationColumns, StateColumns, TriathlonCategoryColumns, TriathlonColumns, TriathlonTypeColumns } from "./ModelTableColumns";
 
 export type {
     RequestParams,
@@ -38,5 +38,9 @@ export type {
     TriathlonColumns,
     TriathlonTypeColumns,
     TriathlonCategoryColumns,
-    ParticipationColumns
+    ParticipationColumns,
+    CityColumns,
+    CountryColumns,
+    StateColumns,
+    OrganizationColumns
 }

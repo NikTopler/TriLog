@@ -1,4 +1,4 @@
-import { GenericRecord } from "@/types";
+import { GenericRecord, TriathlonCategoryColumns } from "@/types";
 import { Identifier, PaginationOptions } from "@/schemas";
 import { TriathlonCategories } from "@prisma/client";
 import BaseService from "../BaseService";
@@ -6,7 +6,7 @@ import BaseService from "../BaseService";
 const base = new BaseService('triathlonCategories');
 class TriathlonCategoryService {
 
-    static getAll(where: GenericRecord, paginationOptions: PaginationOptions, count: boolean = false) {
+    static getAll(where: GenericRecord, paginationOptions: PaginationOptions<TriathlonCategoryColumns>, count: boolean = false) {
         return base.getAll(where, paginationOptions, count);
     }
 

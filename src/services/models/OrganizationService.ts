@@ -1,4 +1,4 @@
-import { GenericRecord } from "@/types";
+import { GenericRecord, OrganizationColumns } from "@/types";
 import { Identifier, PaginationOptions } from "@/schemas";
 import { Organizations } from "@prisma/client";
 import BaseService from "../BaseService";
@@ -6,7 +6,7 @@ import BaseService from "../BaseService";
 const base = new BaseService('organizations');
 class OrganizationService {
 
-    static getAll(where: GenericRecord, paginationOptions: PaginationOptions, count: boolean = false) {
+    static getAll(where: GenericRecord, paginationOptions: PaginationOptions<OrganizationColumns>, count: boolean = false) {
         return base.getAll(where, paginationOptions, count);
     }
 
