@@ -27,11 +27,9 @@ function usePage() {
         router.push(path + '?' + createQueryString(obj as any, queryParams));
     }
 
-    const setSearchParams = (obj: Record<string, string>) => setSearchParamsObj(obj);
-
     return {
         open,
-        setSearchParams
+        setSearchParams: setSearchParamsObj
     }
 }
 

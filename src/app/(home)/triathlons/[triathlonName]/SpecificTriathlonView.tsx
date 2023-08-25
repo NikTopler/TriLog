@@ -55,7 +55,12 @@ function SpecificTriathlonView({ triathlonName, count, data, pagination }: Speci
             .catch(console.error)
             .finally(() => setLoading(false));
 
-        page.setSearchParams(pagination as unknown as Record<string, string>);
+        page.setSearchParams({
+            page: pageIndex + 1,
+            perPage: pageSize,
+            order: pagination.order,
+            orderBy: pagination.orderBy
+        } as unknown as Record<string, string>);
 
     }, [pageIndex, pageSize]);
 
